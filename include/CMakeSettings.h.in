@@ -1,0 +1,16 @@
+/*
+ * CMakeSettings.h
+ *
+ *  Created on: 11.02.2021
+ *      Author: konstantin
+ */
+
+#ifndef CMAKESETTINGS_H_IN_
+#define CMAKESETTINGS_H_IN_
+
+#define RAYCHEL_VERSION "@PROJECT_VERSION@"
+#define RAYCHEL_VERSION_MAJOR "@PROJECT_VERSION_MAJOR@"
+#define RAYCHEL_VERSION_MINOR "@PROJECT_VERSION_MINOR@"
+#define RAYCHEL_VERSION_PATCH "@PROJECT_VERSION_PATCH@"
+
+#endif /* CMAKESETTINGS_H_IN_ */

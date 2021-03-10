@@ -1,0 +1,8 @@
+Debug/*
+Release/*
+build/* 
+/Debug/
+/.settings/
+/CMakeFiles/
+/.cproject
+/.project
