@@ -231,7 +231,7 @@ namespace Logger {
 	LOGGER_API duration_t getTimer(std::string_view label);
 
 	//log the duration since the last call to startTimer(label). removes label from the list of active labels
-	LOGGER_API void logDuration(std::string_view label, const std::string& prefix = ""s, const std::string& suffix = "\n"s);
+	LOGGER_API void logDuration(std::string_view label, const std::string& prefix = ""s, const std::string& suffix = "ms\n"s);
 
 	//log the duration since the last call to startTimer(label). does NOT remove label from the list of acitve labels
 	LOGGER_API void logDurationPersistent(std::string_view label, const std::string& prefix=""s, const std::string& suffix = "ms\n"s);

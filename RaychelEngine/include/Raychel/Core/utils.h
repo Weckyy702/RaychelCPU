@@ -9,6 +9,7 @@
 #include <gsl/gsl>
 #include <cstddef>
 #include <type_traits>
+#include <cmath>
 #include "RaychelMath/constants.h"
 
 #if __has_cpp_attribute(__cpp_concepts) >= 201907L
@@ -25,6 +26,10 @@ namespace Raychel {
 #define RAYCHEL_NUMBER typename
 #define RAYCHEL_ENSURE_NUMBER(t_arg, msg) static_assert(std::is_arithmetic_v<t_arg>, msg)
 
+#endif
+
+#ifndef NDEBUG
+	#define RAYCHEL_DEBUG
 #endif
 
 #define RAYCHEL_THROW_EXCEPTION(exception_type, msg, fatal) { \

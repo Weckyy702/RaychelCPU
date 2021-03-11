@@ -1,12 +1,8 @@
-#include "CMakeSettings.h"
+#include <iostream>
+
 #include "Logger.h"
-
-
-int main(int argc, const char** argv)
+int main(int argc, char** argv)
 {
-	Logger::disableColor();
-
-	Logger::log("Hello, World!\n");
-
+    Logger::log("Hello, World!\n");
     return 0;
 }

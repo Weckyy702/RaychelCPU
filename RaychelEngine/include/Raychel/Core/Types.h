@@ -2,7 +2,6 @@
 #define RAYCHEL_TYPES_H
 #pragma once
 
-#include <vector>
 #include "utils.h"
 #include "RaychelMath/vec2.h"
 #include "RaychelMath/vec3.h"
