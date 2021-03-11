@@ -1,8 +1,5 @@
-Debug/*
-Release/*
-build/* 
-/Debug/
-/.settings/
-/CMakeFiles/
-/.cproject
-/.project
+#build dir
+/build/
+
+#editor dir
+/.vscode/
