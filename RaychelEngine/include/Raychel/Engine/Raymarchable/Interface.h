@@ -2,48 +2,45 @@
 #define SD_OBJECT_INTERFACE_H
 #pragma once
 
-#include <functional>
 #include "Raychel/Core/Types.h"
+#include "Raychel/Core/LinkTypes.h"
 
 namespace Raychel {
-    
-    //type-deleted interface for SDF functors
-    struct _sdCallable
+
+    //Interface for Raymarchable Objects
+    struct IRaymarchable
     {
 
-        template<typename T>
-        _sdCallable(T&& _obj)
-        {
-            do_call = [](const void* obj, const vec3& v) {
-                return static_cast<const T*>(obj)->eval(v);
-            };
+        IRaymarchable()=default;
 
-            do_delete = [](void* obj) {
-                delete static_cast<T*>(obj);
-            };
+        IRaymarchable(const IRaymarchable&)=delete;
+        IRaymarchable(IRaymarchable&&)=delete;
 
-            obj_ = new T(std::forward<T>(_obj));
-        }
+        IRaymarchable& operator=(const IRaymarchable&)=delete;
+        IRaymarchable& operator=(IRaymarchable&&)=delete;
 
-        double eval (const vec3& v) const
-        {
-            return do_call(obj_, v);
-        }
 
-        
+        virtual double eval(const vec3&) const=0;
 
-        ~_sdCallable()
-        {
-            do_delete(obj_);
-        }
+        virtual vec3 get_direction(const vec3&) const=0;
+    };
 
-        private:
-            typedef double(*sdf_t)(const void*, const vec3&);
-            typedef void(*destructor_t)(void*);
 
-            void* obj_;
-            sdf_t do_call = nullptr;
-            destructor_t do_delete = nullptr;
+
+    struct SdObject : IRaymarchable
+    {
+
+        SdObject(const ObjectData& _data)
+        {}
+
+        Transform transform;
+    };
+
+    struct SdLamp : IRaymarchable
+    {
+
+        SdLamp(const LampData& _data)
+        {}
     };
 
 }

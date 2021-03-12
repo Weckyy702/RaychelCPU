@@ -10,6 +10,11 @@
 #include <cstddef>
 #include <type_traits>
 #include <cmath>
+
+//convenience headers
+#include <memory>
+#include <utility>
+
 #include "RaychelMath/constants.h"
 
 #if __has_cpp_attribute(__cpp_concepts) >= 201907L
@@ -51,6 +56,9 @@ namespace Raychel {
 	struct colorImp;
 	template<RAYCHEL_NUMBER _num>
 	struct QuaternionImp;
+	template<RAYCHEL_NUMBER _num>
+	struct TransformImp;
+
 
 	struct exception_context {
 		exception_context(const char* _msg, const char* _originFunc, bool _fatal)

@@ -3,9 +3,10 @@
 #pragma once
 
 #include "../../Types.h"
-#include "../Impl/vec2Impl.inl"
-#include "../Impl/vec3Impl.inl"
-#include "../Impl/colorImpl.inl"
-#include "../Impl/QuaternionImpl.inl"
+#include "vec2Impl.inl"
+#include "vec3Impl.inl"
+#include "colorImpl.inl"
+#include "QuaternionImpl.inl"
+#include "TransformImpl.inl"
 
 #endif /*!RAYCHEL_TYPES_IMPL_H*/

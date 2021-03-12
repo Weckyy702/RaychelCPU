@@ -1,8 +1,11 @@
-#build dir
+#build files
 /build/
 
 #editor dir
 /.vscode/
 
 #generated file
-RaychelEngine/include/CMakeSettings.h
+CMakeSettings.h
+
+#log files
+*.log

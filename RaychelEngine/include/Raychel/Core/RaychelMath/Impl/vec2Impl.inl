@@ -214,7 +214,7 @@ namespace Raychel {
 	template<typename T>
 	vec2Imp<T> normalize(const vec2Imp<T>& v)
 	{
-		return v * inv_sqrt(magSq(v));
+		return v / magSq(v);
 	}
 
 	template<typename T>

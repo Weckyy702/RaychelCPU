@@ -2,10 +2,21 @@ cmake_minimum_required(VERSION 3.10)
 
 project(RaychelCPU_test VERSION 0.0.1)
 
-add_executable(RaychelCPU_test src/test/InheritanceVsTypeDeletion.cpp)
+set(RAYCHEL_SOURCE_DIR ${PROJECT_SOURCE_DIR}/src/Raychel)
 
-configure_file(${PROJECT_SOURCE_DIR}/include/CMakeSettings.h.in
-${PROJECT_SOURCE_DIR}/include/CMakeSettings.h)
+set(SOURCES 
+${RAYCHEL_SOURCE_DIR}/Engine/Raymarchable/Interface.cpp
+${RAYCHEL_SOURCE_DIR}/Engine/Raymarchable/sdObjects.cpp
+)
+
+add_executable(RaychelCPU_test 
+    ${PROJECT_SOURCE_DIR}/src/test/main.cpp
+    ${SOURCES}
+)
+
+configure_file( ${PROJECT_SOURCE_DIR}/include/CMakeSettings.h.in
+                ${PROJECT_SOURCE_DIR}/include/CMakeSettings.h
+)
 
 target_include_directories(RaychelCPU_test PUBLIC
     ${PROJECT_SOURCE_DIR}/include
