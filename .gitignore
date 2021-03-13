@@ -3,6 +3,7 @@
 
 #editor dir
 /.vscode/
+/RaychelEngine/.vscode
 
 #generated file
 CMakeSettings.h
