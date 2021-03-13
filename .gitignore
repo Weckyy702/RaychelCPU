@@ -2,7 +2,6 @@
 /build/
 
 #editor dir
-.vscode
 **/.vscode
 
 #generated file

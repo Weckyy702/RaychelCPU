@@ -3,8 +3,6 @@
 
 #include "Raychel/Core/Types.h"
 #include "Raychel/Core/LinkTypes.h"
-#include "Pipeline/Tracing.h"
-#include "Pipeline/Shading.h"
 
 namespace Raychel
 {
@@ -19,16 +17,13 @@ namespace Raychel
 
             void setCurrentScene(const not_null<Scene*> newScene);
 
-            std::vector<RenderResult> getRenderedImage();
+            std::vector<RenderResult> getRenderedImage() const;
 
         private:
             //Scene* current_scene=nullptr;
 
-            RaymarchController tracer_;
-            ShadingController shader_;
-
             std::vector<RaymarchRequest> requests_;
-    }
+    };
 
 } 
 

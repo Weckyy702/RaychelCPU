@@ -41,7 +41,7 @@ General Information
 -
 RaychelCPU is written in standard C++17 using the C++ Guideline Suport Library  at https://github.com/Microsoft/GSL.
 I try to keep all the code as standard and "C++17-ish" as possible.
-I have not tested Compiler compatibility aside from MSVC and GCC, so please report any issues to me.
+I have not tested Compiler compatibility aside from clang and GCC, so please report any issues to me.
 
 Library Credit
 -

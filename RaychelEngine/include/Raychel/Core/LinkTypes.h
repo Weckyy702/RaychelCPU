@@ -1,6 +1,6 @@
 /*
 *   
-*   Helper Classes to pass between the different modules of the RaymarchController
+*   Helper Classes to pass between the different modules of the Rendering Pipeline
 *   Should all be POD types
 */
 

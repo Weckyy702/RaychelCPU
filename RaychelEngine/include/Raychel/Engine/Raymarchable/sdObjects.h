@@ -6,10 +6,11 @@
 
 namespace Raychel {
     
-    struct SdSphere : public IRaymarchable
+    struct SdSphere : public SdObject
     {
 
         SdSphere(const ObjectData& _t, double _r)
+            :SdObject{_t}, radius{_r}
         {}
 
         double eval(const vec3&) const override;
@@ -17,7 +18,6 @@ namespace Raychel {
         vec3 get_direction(const vec3&) const override;
 
         private:
-            Transform transform;
             double radius=0;
     };
 
