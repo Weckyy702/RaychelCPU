@@ -2,12 +2,11 @@
 /build/
 
 #editor dir
-/.vscode/
-RaychelEngine/.vscode/
+.vscode
+**/.vscode
 
 #generated file
 CMakeSettings.h
 
 #log files
 *.log
-RaychelEngine/.vscode/c_cpp_properties.json
