@@ -2,7 +2,7 @@
 #define RAYCHEL_TRACING_H
 #pragma once
 
-#include "Raychel/Engine/Raymarchable/Interface.h"
+#include "Raychel/Engine/Objects/Interface.h"
 
 namespace Raychel {
 
@@ -10,12 +10,15 @@ namespace Raychel {
     {
         public:
 
-            RaymarchController(const std::vector<IRaymarchable>* objects);
+            RaymarchController(const std::vector<IRaymarchable*>* objects)
+                :objects_{objects}
+            {}
 
-            std::vector<HitData>
+            std::vector<HitData> trace(const std::vector<RaymarchRequest>& requests) const;
 
         private:
-            const std::vector<IRaymarchable>* objects_;
+            const std::vector<IRaymarchable*>* objects_;
+            const Camera* cam_;
     };
 
 }

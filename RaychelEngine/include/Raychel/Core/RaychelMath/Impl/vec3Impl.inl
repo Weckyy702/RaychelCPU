@@ -106,6 +106,12 @@ namespace Raychel {
 	}
 
 	template<typename T>
+	std::ostream& operator<< (std::ostream& os, const vec3Imp<T>& v)
+	{
+		return os << "{ " << v.x << ", " << v.y << ", " << v.z << " }";
+	}
+
+	template<typename T>
 	vec3Imp<T> operator-(const vec3Imp<T>& v)
 	{
 		return { -v.x, -v.y, -v.z };

@@ -14,7 +14,9 @@
 //convenience headers
 #include <memory>
 #include <utility>
+#include <vector>
 
+#include "Logger.h"
 #include "RaychelMath/constants.h"
 
 #if __has_cpp_attribute(__cpp_concepts) >= 201907L
@@ -37,16 +39,21 @@ namespace Raychel {
 	#define RAYCHEL_DEBUG
 #endif
 
+#ifdef RAYCHEL_DEBUG
+	#define RAYCHEL_LOG(...) Logger::debug(__VA_ARGS__);
+#else
+	#defein RAYCHEL_LOG(...)
+#endif
+
 #define RAYCHEL_THROW_EXCEPTION(exception_type, msg, fatal) { \
 				static_assert(std::is_base_of_v<::Raychel::exception_context, exception_type>, "Raychel exceptions must be derived from Raychel::exception_context!"); \
 				throw ::exception_type{msg, __FUNCTION__, fatal}; \
 			}
 
 namespace Raychel {
-	using size_t = std::uint32_t;
-	using byte = gsl::byte;
 
-	using gsl::not_null;
+	using gsl::byte, gsl::not_null;
+	using std::size_t;
 
 	template<RAYCHEL_NUMBER _num>
 	struct vec2Imp;

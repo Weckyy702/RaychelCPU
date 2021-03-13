@@ -5,8 +5,10 @@ project(RaychelCPU_test VERSION 0.0.1)
 set(RAYCHEL_SOURCE_DIR ${PROJECT_SOURCE_DIR}/src/Raychel)
 
 set(SOURCES 
-${RAYCHEL_SOURCE_DIR}/Engine/Raymarchable/Interface.cpp
-${RAYCHEL_SOURCE_DIR}/Engine/Raymarchable/sdObjects.cpp
+    ${RAYCHEL_SOURCE_DIR}/Engine/Objects/Interface.cpp
+    ${RAYCHEL_SOURCE_DIR}/Engine/Objects/sdObjects.cpp
+    ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/Pipeline/Tracing.cpp
+    ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/Renderer.cpp
 )
 
 add_executable(RaychelCPU_test 
@@ -24,6 +26,7 @@ target_include_directories(RaychelCPU_test PUBLIC
 
 target_link_libraries(RaychelCPU_test PRIVATE
     RaychelLogger
+    tbb
 )
 
 target_compile_features(RaychelCPU_test PUBLIC cxx_std_17)

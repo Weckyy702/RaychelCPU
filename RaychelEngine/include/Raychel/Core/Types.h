@@ -10,7 +10,7 @@
 #include "RaychelMath/Transform.h"
 
 //forward declarations for pointer-only types
-#include "forward.h"
+#include "Forward.h"
 
 namespace Raychel {
 

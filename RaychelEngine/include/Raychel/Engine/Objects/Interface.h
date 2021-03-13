@@ -39,7 +39,7 @@ namespace Raychel {
 
 
 
-    struct SdObject : IRaymarchable
+    struct SdObject : public IRaymarchable
     {
 
         SdObject(const ObjectData& _data)
@@ -49,7 +49,7 @@ namespace Raychel {
         Transform transform;
     };
 
-    struct SdLamp : IRaymarchable
+    struct SdLamp : public IRaymarchable
     {
 
         SdLamp(const LampData& _data)

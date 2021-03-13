@@ -53,6 +53,9 @@ namespace Raychel {
 	};
 
 	template<typename T>
+	std::ostream& operator<<(std::ostream&, const vec3Imp<T>&);
+
+	template<typename T>
 	vec3Imp<T> operator-(const vec3Imp<T>&);
 
 	template<typename T>

@@ -17,10 +17,16 @@ namespace Raychel
 
             void setCurrentScene(const not_null<Scene*> newScene);
 
-            std::vector<RenderResult> getRenderedImage() const;
+            Texture<RenderResult> getRenderedImage() const;
 
         private:
-            //Scene* current_scene=nullptr;
+
+            void _refillRequestBuffer(const vec2i& new_size);
+
+            RaymarchRequest _getRootRequest(size_t x, size_t y) const;
+
+            Scene* current_scene_ =nullptr;
+            vec2i output_size_;
 
             std::vector<RaymarchRequest> requests_;
     };

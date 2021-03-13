@@ -1,8 +1,5 @@
-/*
-*   
-*   Helper Classes to pass between the different modules of the Rendering Pipeline
-*   Should all be POD types
-*/
+#ifndef RAYCHEL_LINKERTYPES_H
+#define RAYCHEL_LINKERTYPES_H
 
 #include "Types.h"
 
@@ -25,14 +22,9 @@ namespace Raychel {
 
     struct RaymarchRequest
     {
-        vec2 uv;
-    };
+        vec3 origin, direction;
 
-    struct RemarchRequest
-    {
-        vec3 p, dir;
-
-        size_t recurstion_depth;
+        size_t recursionDepth;
     };
 
     struct RaymarchHitData
@@ -53,7 +45,9 @@ namespace Raychel {
 
     struct RenderResult
     {
-        color output;
+        vec3 output;
     };
 
 }
+
+#endif // RAYCHEL_LINKERTYPES_H
