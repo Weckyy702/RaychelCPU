@@ -11,7 +11,7 @@ namespace Raychel {
         std::vector<HitData> res;
         res.reserve(requests.size());
 
-        std::transform(std::execution::seq, requests.cbegin(), requests.cend(), std::back_inserter(res),
+        std::transform(requests.cbegin(), requests.cend(), std::back_inserter(res),
             [](const RaymarchRequest& req) -> HitData
             {
                 return HitData{vec3{}, req.direction};
