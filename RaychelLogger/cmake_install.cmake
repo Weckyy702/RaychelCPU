@@ -1,4 +1,4 @@
-# Install script for directory: /home/konstantin/Downloads/RaychelCPU/RaychelEngine
+# Install script for directory: /home/konstantin/Downloads/RaychelCPU/RaychelLogger
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

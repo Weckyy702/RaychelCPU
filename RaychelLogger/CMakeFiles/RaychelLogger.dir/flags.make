@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/konstantin/Downloads/RaychelCPU/RaychelEngine/include -I/home/konstantin/Downloads/RaychelCPU/RaychelLogger/include
+CXX_INCLUDES = -I/home/konstantin/Downloads/RaychelCPU/RaychelLogger/include
 
 CXX_FLAGS = -std=gnu++17
 

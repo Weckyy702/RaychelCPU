@@ -1,0 +1,2 @@
+/usr/bin/ar qc libRaychelLogger.a CMakeFiles/RaychelLogger.dir/src/Logger.cpp.o
+/usr/bin/ranlib libRaychelLogger.a
