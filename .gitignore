@@ -1,5 +1,12 @@
 #build files
 /build/
+**/CMakeFiles
+CMake**
+cmake**
+Makefile
+
+#binary files
+*.a
 
 #editor dir
 **/.vscode
