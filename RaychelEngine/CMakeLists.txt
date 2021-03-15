@@ -7,7 +7,7 @@ set(RAYCHEL_SOURCE_DIR ${PROJECT_SOURCE_DIR}/src/Raychel)
 set(SOURCES 
     ${RAYCHEL_SOURCE_DIR}/Engine/Objects/Interface.cpp
     ${RAYCHEL_SOURCE_DIR}/Engine/Objects/sdObjects.cpp
-    ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/Pipeline/Tracing.cpp
+    ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/Pipeline/Shading.cpp
     ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/Renderer.cpp
 )
 

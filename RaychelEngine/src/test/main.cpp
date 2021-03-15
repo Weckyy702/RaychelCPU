@@ -21,10 +21,10 @@ int main(int argc, char** argv)
     renderer.setCurrentScene(&scene);
     renderer.setOutputSize({4, 4});
 
-    auto results = renderer.getRenderedImage();
+    auto results = renderer.getImageRendered();
 
     for(const auto& res : results) {
-        Logger::debug(res.output, '\n');
+        Logger::log(res, '\n');
     }
 
     return 0;

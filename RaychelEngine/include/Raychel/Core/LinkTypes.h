@@ -5,6 +5,8 @@
 
 namespace Raychel {
 
+#pragma region initializer classes
+
     struct ObjectData
     {
         Transform t;
@@ -19,6 +21,10 @@ namespace Raychel {
         double sz;
 
     };
+
+#pragma endregion
+
+#pragma region Render classes
 
     struct RaymarchRequest
     {
@@ -36,7 +42,7 @@ namespace Raychel {
 
     };
 
-    struct HitData
+    struct ShadingData
     {
 
         vec3 hit_point, hit_normal;
@@ -45,8 +51,10 @@ namespace Raychel {
 
     struct RenderResult
     {
-        vec3 output;
+        color output;
     };
+
+#pragma endregion
 
 }
 
