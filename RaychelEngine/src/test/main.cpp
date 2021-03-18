@@ -14,7 +14,7 @@ int main(int argc, char** argv)
 
     Scene scene;
 
-    scene.addObject( SdSphere{ObjectData{Transform{}}, 1.0} );
+    scene.addObject( SdSphere{ ObjectData{Transform{}} , 1.0 } );
 
     RenderController renderer;
 
@@ -24,7 +24,7 @@ int main(int argc, char** argv)
     auto results = renderer.getImageRendered();
 
     for(const auto& res : results) {
-        Logger::log(res, '\n');
+        RAYCHEL_LOG(res.output);
     }
 
     return 0;

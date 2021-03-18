@@ -11,11 +11,11 @@ namespace Raychel {
 
         RaymarchRenderer()=default;
 
-        void setObjects(const not_null<std::vector<IRaymarchable_p>*> objects);
+        void setRenderSize(const vec2i& new_size);
 
-        //void setMaterials(const not_null<std::vector<IMaterial_p>*> materials);
+        void setSceneData(const not_null<Camera*> cam, const not_null<std::vector<IRaymarchable_p>*> objects, const TextureProvider<color>* background_texture);
 
-        Texture<RenderResult> renderImage(const vec2i& window_size, const Camera& cam) const;
+        Texture<RenderResult> renderImage() const;
 
     private:
 
@@ -23,9 +23,14 @@ namespace Raychel {
 
         RaymarchRequest _getRootRequest(const vec2i& output_size, size_t x, size_t y) const;
 
-        const std::vector<IRaymarchable_p>* objects_;
-        //const std::vector<IMaterial_p>* materials_;
-        
+        void _renderToTexture(Texture<RenderResult>& output) const;
+
+        //Non-owning references to scene specific data
+        std::vector<IRaymarchable_p>* objects_;
+        Camera* cam_;
+        TextureProvider<color>* background_;
+
+        //Buffer of all UVs for which to raymarch
         std::vector<RaymarchRequest> requests_;
 
     };

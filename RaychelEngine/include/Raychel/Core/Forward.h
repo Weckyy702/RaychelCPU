@@ -5,9 +5,14 @@
 
 namespace Raychel {
 
+    //Image Texture
     template<typename T>
     //class Texture; 
     using Texture = std::vector<T>;
+
+    //Wrapper for either an Image or procedural Texture
+    template<typename T>
+    class TextureProvider;
 
     class Scene;
 

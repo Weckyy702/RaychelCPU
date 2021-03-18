@@ -7,7 +7,7 @@ namespace Raychel {
     {
         output_size_ = new_size;
 
-        renderer_.setOutuptSize(new_size);
+        renderer_.setRenderSize(new_size /* * RenderOptions.AA_factor*/);
 
         return output_size_;
     }
@@ -20,9 +20,9 @@ namespace Raychel {
     }
 
 
-    Texture<color> RenderController::getImageRendered() const
+    Texture<RenderResult> RenderController::getImageRendered() const
     {
-        
+        return renderer_.renderImage();
     }
 
 }

@@ -102,6 +102,12 @@ namespace Raychel {
 	}
 
 	template<typename T>
+	std::ostream& operator<<(std::ostream& os, const colorImp<T>& c)
+	{
+		return os << "{ " << c.r << ", " << c.g << ", " << c.b << " }";
+	}
+
+	template<typename T>
 	colorImp<T> operator-(const colorImp<T>& c)
 	{
 		return _ensureValid({ 1.0 - c.r, 1.0 - c.g, 1.0 - c.b});

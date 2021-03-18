@@ -19,7 +19,7 @@ namespace Raychel
             void setCurrentScene(const not_null<Scene*> newScene);
 
             //may become private later
-            Texture<color> getImageRendered() const;
+            Texture<RenderResult> getImageRendered() const;
 
             Texture<color> getImagePostprocessed() const;
 
@@ -31,6 +31,7 @@ namespace Raychel
             vec2i output_size_;
 
             RaymarchRenderer renderer_;
+            //PostProcessor postprecessor_;
     };
 
 } 

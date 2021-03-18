@@ -40,14 +40,14 @@ namespace Raychel {
 #endif
 
 #ifdef RAYCHEL_DEBUG
-	#define RAYCHEL_LOG(...) Logger::debug(__VA_ARGS__);
+	#define RAYCHEL_LOG(...) Logger::debug( __PRETTY_FUNCTION__, ": ", __VA_ARGS__, '\n');
 #else
-	#defein RAYCHEL_LOG(...)
+	#define RAYCHEL_LOG(...)
 #endif
 
 #define RAYCHEL_THROW_EXCEPTION(exception_type, msg, fatal) { \
 				static_assert(std::is_base_of_v<::Raychel::exception_context, exception_type>, "Raychel exceptions must be derived from Raychel::exception_context!"); \
-				throw ::exception_type{msg, __FUNCTION__, fatal}; \
+				throw ::exception_type{msg, __PRETTY_FUNCTION__, fatal}; \
 			}
 
 namespace Raychel {

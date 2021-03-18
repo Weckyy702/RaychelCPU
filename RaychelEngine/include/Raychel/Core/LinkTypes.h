@@ -29,23 +29,14 @@ namespace Raychel {
     struct RaymarchRequest
     {
         vec3 origin, direction;
-
-        size_t recursionDepth;
-    };
-
-    struct RaymarchHitData
-    {
-
-        vec3 hit_point;
-        size_t obj_index;
-        bool did_hit; //did the ray hit an object or "the sky"?
-
     };
 
     struct ShadingData
     {
 
         vec3 hit_point, hit_normal;
+        size_t num_ray_steps;
+        double ray_depth;
 
     };
 
