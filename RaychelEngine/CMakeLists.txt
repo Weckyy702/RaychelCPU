@@ -27,6 +27,7 @@ target_include_directories(RaychelCPU_test PUBLIC
 target_link_libraries(RaychelCPU_test PRIVATE
     RaychelLogger
     tbb
+    png
 )
 
 target_compile_features(RaychelCPU_test PUBLIC cxx_std_17)

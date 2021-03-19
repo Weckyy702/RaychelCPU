@@ -228,7 +228,7 @@ namespace Raychel {
 	template<typename T>
 	vec3Imp<T> normalize(const vec3Imp<T>& v)
 	{
-		return v / magSq(v);
+		return v / mag(v);
 	}
 
 	template<typename T>

@@ -2,6 +2,8 @@
 #define RAYCHEL_COLOR_IMP
 #pragma once
 
+#include <limits>
+
 #include "../color.h"
 #include "../vec2.h"
 #include "../vec3.h"
@@ -36,6 +38,22 @@ namespace Raychel {
 		r = abs(v.x);
 		g = abs(v.y);
 		b = 0;
+	}
+
+	template<typename T>
+	template<typename To>
+	colorImp<To> colorImp<T>::to() const
+	{
+		using vt = typename colorImp<To>::value_type;
+		static_assert(std::is_convertible_v<value_type, To>, "ColorImp<T>::to<To> requires T to be convertible to To!");
+		
+		constexpr vt max = std::numeric_limits<vt>::max()-1;
+
+		if constexpr (std::is_integral_v<vt>) {
+			return _ensureValid<vt>({ static_cast<vt>(r*max), static_cast<vt>(g*max), static_cast<vt>(b*max) });
+		} else {
+			return _ensureValid<vt>({ static_cast<vt>(r), static_cast<vt>(g), static_cast<vt>(b) });
+		}
 	}
 
 	template<typename T>

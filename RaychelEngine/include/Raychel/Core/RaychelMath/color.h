@@ -35,6 +35,9 @@ namespace Raychel {
 			:r(_r), g(_g), b(_b)
 		{}
 
+		template<typename _To>
+		colorImp<_To> to() const;
+		
 		//for use with function which expect an rgb* such as most OpenGL functions
 		explicit operator const value_type* () const;
 

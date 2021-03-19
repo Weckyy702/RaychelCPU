@@ -13,17 +13,21 @@ namespace Raychel {
 
         void setRenderSize(const vec2i& new_size);
 
-        void setSceneData(const not_null<Camera*> cam, const not_null<std::vector<IRaymarchable_p>*> objects, const TextureProvider<color>* background_texture);
+        void setSceneData(  const not_null<Camera*> cam,
+                            const not_null<std::vector<IRaymarchable_p>*> objects,
+                            const not_null<TextureProvider<color>*> background_texture);
 
         Texture<RenderResult> renderImage() const;
 
     private:
 
-        void _refillRequestBuffer(const vec2i& new_size);
+        void _refillRequestBuffer();
 
-        RaymarchRequest _getRootRequest(const vec2i& output_size, size_t x, size_t y) const;
+        RaymarchRequest _getRootRequest(size_t x, size_t y) const;
 
         void _renderToTexture(Texture<RenderResult>& output) const;
+
+        vec2i output_size_;
 
         //Non-owning references to scene specific data
         std::vector<IRaymarchable_p>* objects_;

@@ -42,7 +42,7 @@ namespace Raychel {
 
     struct RenderResult
     {
-        color output;
+        color output; //actually color output
     };
 
 #pragma endregion

@@ -47,6 +47,8 @@ Library Credit
 -
 Credit where credit is due. I am using the following libraries:
 * C++ Guideline Suport Library by Microsoft: https://github.com/Microsoft/GSL
+* PNG++ is a modern wrapper around libPNG: https://github.com/mecwerks/png-plusplus
+* libPNG is the official library to create PNG images: https://github.com/glennrp/libpng
 
 I found a bug!!!
 -

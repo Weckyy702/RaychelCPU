@@ -10,23 +10,33 @@ namespace Raychel {
 
     void RaymarchRenderer::setRenderSize(const vec2i& new_size)
     {
-        RAYCHEL_LOG("Refilling requests Buffer to ", new_size);
-        _refillRequestBuffer(new_size);
+        RAYCHEL_LOG("Settings render output size to ", new_size);
+        output_size_ = new_size;
+        _refillRequestBuffer();
     }
 
-    void RaymarchRenderer::_refillRequestBuffer(const vec2i& new_size)
+    void RaymarchRenderer::setSceneData(const not_null<Camera*> cam,
+                                        const not_null<std::vector<IRaymarchable_p>*> objects,
+                                        const not_null<TextureProvider<color>*> background_texture)
+    {
+        objects_ = objects;
+        cam_ = cam;
+        background_ = background_texture;
+    }
+
+    void RaymarchRenderer::_refillRequestBuffer()
     {
         
-        RAYCHEL_LOG("Refilling request buffer\n");
+        RAYCHEL_LOG("Refilling request buffer");
 
         requests_.clear();
-        size_t request_count = new_size.x * new_size.y;
+        size_t request_count = output_size_.x * output_size_.y;
         requests_.reserve(request_count);
 
-        for(auto i = 0; i < new_size.y; i++) {
-            for(auto j = 0; j < new_size.x; j++) {
-                auto idx = i * new_size.y + j;
-                requests_.push_back(_getRootRequest(new_size, j, i));
+        for(auto i = 0; i < output_size_.y; i++) {
+            for(auto j = 0; j < output_size_.x; j++) {
+                auto idx = i * output_size_.y + j;
+                requests_.push_back(_getRootRequest(j, i));
             }
         }
 
@@ -34,17 +44,17 @@ namespace Raychel {
         requests_.shrink_to_fit();
     }
 
-    RaymarchRequest RaymarchRenderer::_getRootRequest(const vec2i& output_size, size_t x, size_t y) const
+    RaymarchRequest RaymarchRenderer::_getRootRequest(size_t x, size_t y) const
     {
         // vec3 origin = cam_.transform.position;
 
         //vec3 dir = (cam_.forward() * cam_.zoom()) + (cam_.right() * dx) + (cam_.up() * dy);
 
-        double dx = static_cast<double>(x) /  output_size.x;
-        double dy = static_cast<double>(y) / output_size.y;
+        double dx = ( static_cast<double>(x) / (output_size_.x) ) - 0.5;
+        double dy = -( static_cast<double>(y) / (output_size_.y) ) + 0.5;
 
         vec3 origin = vec3{0, 1, 0};
-        vec3 dir = vec3{dx, dy, 1};
+        vec3 dir = (vec3{dx, dy, 1}) / (sq(dx) + sq(dy) + 1);
 
         return {origin, dir};
     }
@@ -55,7 +65,7 @@ namespace Raychel {
 
     Texture<RenderResult> RaymarchRenderer::renderImage() const
     {
-        Texture<RenderResult> output{requests_.size()};
+        Texture<RenderResult> output{/*output_size_*/requests_.size()};
 
         _renderToTexture(output);
 
