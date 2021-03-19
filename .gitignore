@@ -16,3 +16,7 @@ CMakeSettings.h
 
 #log files
 *.log
+
+#images except for the logo
+*.png
+!logo.png
