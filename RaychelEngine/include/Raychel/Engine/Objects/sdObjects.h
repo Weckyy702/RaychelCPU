@@ -14,12 +14,10 @@ namespace Raychel {
         {}
 
         SdSphere(SdSphere&& rhs)
-            :SdObject{{rhs.transform}}, radius{rhs.radius}
+            :SdObject{{rhs.transform_}}, radius{rhs.radius}
         {}
 
         double eval(const vec3&) const override;
-
-        vec3 get_direction(const vec3&) const override;
 
         private:
             double radius=0;

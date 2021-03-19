@@ -14,17 +14,17 @@ int main(int argc, char** argv)
 
     Scene scene;
 
-    scene.addObject( SdSphere{ObjectData{Transform{}}, 1.0} );
+    scene.addObject( SdSphere{ ObjectData{Transform{}} , 1.0 } );
 
     RenderController renderer;
 
     renderer.setCurrentScene(&scene);
     renderer.setOutputSize({4, 4});
 
-    auto results = renderer.getRenderedImage();
+    auto results = renderer.getImageRendered();
 
     for(const auto& res : results) {
-        Logger::debug(res.output, '\n');
+        RAYCHEL_LOG(res.output);
     }
 
     return 0;

@@ -2,8 +2,6 @@
 #define SD_OBJECT_INTERFACE_H
 #pragma once
 
-#include <atomic>
-
 #include "Raychel/Core/Types.h"
 #include "Raychel/Core/LinkTypes.h"
 
@@ -13,9 +11,7 @@ namespace Raychel {
     struct IRaymarchable
     {
 
-        IRaymarchable()
-            :obj_index_{instance_count++}
-        {}
+        IRaymarchable()=default;
 
         IRaymarchable(const IRaymarchable&)=delete;
         IRaymarchable(IRaymarchable&&)=delete;
@@ -28,34 +24,37 @@ namespace Raychel {
 
         virtual vec3 get_direction(const vec3&) const=0;
 
-        size_t get_object_id() const {
-            return obj_index_;
-        }
-
-        private:
-            static std::atomic_size_t instance_count;
-            const size_t obj_index_;
+        virtual color get_surface_color(const ShadingData&) const=0;
     };
 
 
-
-    struct SdObject : public IRaymarchable
+    //Base class for Raymarchable Objects
+    class SdObject : public IRaymarchable
     {
-
+    
+    public:
         SdObject(const ObjectData& _data)
-            :transform{_data.t}
+            :transform_{_data.t} //, material_{_data.mat}
         {}
 
-        Transform transform;
+    vec3 get_direction(const vec3& p) const override;
+
+    color get_surface_color(const ShadingData& data) const override;
+
+    protected:
+        Transform transform_;
+        //IMaterial_p material_;
     };
 
-    struct SdLamp : public IRaymarchable
+    class SdLamp : public IRaymarchable
     {
 
+    public:
         SdLamp(const LampData& _data)
             :lampColor{_data.c}, lampBrightness{_data.b}, lampSize{_data.sz}
         {}
 
+    protected:
         color lampColor;
         double lampBrightness=1.0;
         double lampSize=1.0;

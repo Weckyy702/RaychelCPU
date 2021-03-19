@@ -54,6 +54,9 @@ namespace Raychel {
 	};
 
 	template<typename T>
+	std::ostream& operator<<(std::ostream& os, const colorImp<T>& c);
+
+	template<typename T>
 	colorImp<T> operator-(const colorImp<T>&);
 
 	template<typename T>

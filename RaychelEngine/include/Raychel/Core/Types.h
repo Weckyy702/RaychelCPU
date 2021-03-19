@@ -48,6 +48,8 @@ namespace Raychel {
 	using color = colorImp<number_t>;
 	using Quaternion = QuaternionImp<number_t>;
 	using Transform = TransformImp<number_t>;
+
+	using IRaymarchable_p = not_null<IRaymarchable*>;
 }
 
 //Implementations
