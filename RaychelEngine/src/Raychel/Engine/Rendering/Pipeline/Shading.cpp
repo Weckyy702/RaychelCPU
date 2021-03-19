@@ -10,7 +10,7 @@ namespace Raychel {
 
     void RaymarchRenderer::setRenderSize(const vec2i& new_size)
     {
-        RAYCHEL_LOG("Settings render output size to ", new_size);
+        RAYCHEL_LOG("Setting render output size to ", new_size, " (aspect ratio of ", (static_cast<double>(new_size.x)/new_size.y), ")");
         output_size_ = new_size;
         _refillRequestBuffer();
     }
@@ -50,11 +50,20 @@ namespace Raychel {
 
         //vec3 dir = (cam_.forward() * cam_.zoom()) + (cam_.right() * dx) + (cam_.up() * dy);
 
-        double dx = ( static_cast<double>(x) / (output_size_.x) ) - 0.5;
-        double dy = -( static_cast<double>(y) / (output_size_.y) ) + 0.5;
+        //vec3 dir = (vec3{dx, dy, 0}) / (sq(dx) + sq(dy)); this produces some crazy stuff
 
-        vec3 origin = vec3{0, 1, 0};
-        vec3 dir = (vec3{dx, dy, 1}) / (sq(dx) + sq(dy) + 1);
+        double ar = static_cast<double>(output_size_.x) / output_size_.y;
+
+        double dx = ( static_cast<double>(x) / (output_size_.x-1) ) - 0.5;
+        double dy = - ( static_cast<double>(y) / (output_size_.y-1) ) + 0.5;
+
+        if(ar > 1.0)
+            dx *= ar;
+        else
+            dy /= ar;
+
+        vec3 origin = vec3{0, 0, 0};
+        vec3 dir = normalize(vec3{dx, dy, 1});
 
         return {origin, dir};
     }

@@ -35,6 +35,9 @@ namespace Raychel {
 			: x(_x), y(_y), z(_z)
 		{}
 
+		template<typename To>
+		vec3Imp<To> to() const;
+
 		explicit vec3Imp(const vec2&);
 		explicit vec3Imp(const color&);
 

@@ -55,7 +55,7 @@ namespace Raychel {
 
     template<typename T>
     QuaternionImp<T>& QuaternionImp<T>::operator*=(const QuaternionImp<T>& q)
-     {
+    {
         value_type _r = r, _i = i, _j = j, _k = k;
 
         r = _r*q.r - _i*q.i - _j*q.j - _k*q.k;
@@ -68,7 +68,7 @@ namespace Raychel {
 
     template<typename T>
     QuaternionImp<T>& QuaternionImp<T>::operator/=(value_type s)
-     {
+    {
         r /= s;
         i /= s;
         j /= s;
@@ -80,13 +80,13 @@ namespace Raychel {
     template<typename T>
 	QuaternionImp<T> operator+(const QuaternionImp<T>& a, const QuaternionImp<T>& b)
 	{
-	    return { a.r+b.r, a.i+b.i, a.j+b.j, a.k+b.k };
+        return { a.r+b.r, a.i+b.i, a.j+b.j, a.k+b.k };
 	}
 
     template<typename T>
 	QuaternionImp<T> operator-(const QuaternionImp<T>& a, const QuaternionImp<T>& b)
 	{
-	    return { a.r - b.r, a.i - b.i, a.j - b.j, a.k - b.k };
+        return { a.r - b.r, a.i - b.i, a.j - b.j, a.k - b.k };
 	}
 
     template<typename T>
@@ -118,7 +118,7 @@ namespace Raychel {
 	template<typename T>
 	QuaternionImp<T> operator/ (const QuaternionImp<T>& q, T s)
 	{
-	    return {q.r / s, q.i / s, q.j / s, q.k / s};
+        return {q.r / s, q.i / s, q.j / s, q.k / s};
 	}
 
     template<typename T>
@@ -136,7 +136,7 @@ namespace Raychel {
     template<typename T>
 	T mag(const QuaternionImp<T>& q)
 	{
-	    return std::sqrt(sq(q.r) + sq(q.i) + sq(q.j) + sq(q.k));
+        return std::sqrt(sq(q.r) + sq(q.i) + sq(q.j) + sq(q.k));
 	}
 
     template<typename T>
@@ -154,7 +154,7 @@ namespace Raychel {
     template<typename T>
 	QuaternionImp<T> conjugate(const QuaternionImp<T>& q)
 	{
-	    return { q.r, -q.i, -q.j, -q.k };
+        return { q.r, -q.i, -q.j, -q.k };
 	}
 
     template<typename T>

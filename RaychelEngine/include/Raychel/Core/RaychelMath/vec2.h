@@ -31,6 +31,9 @@ namespace Raychel {
 			:x(_x), y(_y)
 		{}
 
+		template<typename To>
+		vec2Imp<To> to() const;
+
 		explicit vec2Imp(const vec3&);
 		explicit vec2Imp(const color&);
 
@@ -47,6 +50,9 @@ namespace Raychel {
 
 		value_type x= value_type(0), y= value_type(0);
 	};
+
+	template<typename T>
+	std::ostream& operator<< (std::ostream&, const vec2Imp<T>&);
 
 	template<typename T>
 	vec2Imp<T> operator-(const vec2Imp<T>&);

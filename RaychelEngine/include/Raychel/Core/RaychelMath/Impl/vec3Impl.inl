@@ -18,6 +18,16 @@ namespace Raychel {
 	{}
 
 	template<typename T>
+	template<typename To>
+	vec3Imp<To> vec3Imp<T>::to() const
+	{
+		using vt = typename colorImp<To>::value_type;
+		static_assert(std::is_convertible_v<value_type, To>, "Vec3Imp<T>::to<To> requires T to be convertible to To!");
+
+		return { static_cast<vt>(x), static_cast<vt>(y), static_cast<vt>(z) };
+	}
+
+	template<typename T>
 	vec3Imp<T>& vec3Imp<T>::operator=(const vec2& v)
 	{
 		x = v.x;

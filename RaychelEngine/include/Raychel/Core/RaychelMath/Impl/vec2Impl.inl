@@ -19,6 +19,16 @@ namespace Raychel {
 	{}
 
 	template<typename T>
+	template<typename To>
+	vec2Imp<To> vec2Imp<T>::to() const
+	{
+		using vt = typename colorImp<To>::value_type;
+		static_assert(std::is_convertible_v<value_type, To>, "Vec2Imp<T>::to<To> requires T to be convertible to To!");
+
+		return { static_cast<vt>(x), static_cast<vt>(y) };
+	}
+
+	template<typename T>
 	vec2Imp<T>& vec2Imp<T>::operator=(const vec3& v)
 	{
 		x = v.x;
@@ -95,6 +105,12 @@ namespace Raychel {
 			y = T(fmodl(y, v.y));
 		}
 		return *this;
+	}
+
+	template<typename T>
+	std::ostream& operator<<(std::ostream& os, const vec2Imp<T>& v)
+	{
+		return os << "{ " << v.x << ", " << v.y << " }";
 	}
 
 	template<typename T>

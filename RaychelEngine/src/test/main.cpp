@@ -19,25 +19,31 @@ int main(int argc, char** argv)
 
     RenderController renderer;
 
+    const vec2i size = {1080, 1920};
+
     renderer.setCurrentScene(&scene);
-    renderer.setOutputSize({1000, 1000});
+    renderer.setOutputSize(size);
 
     auto results = renderer.getImageRendered();
 
-    png::image<png::rgb_pixel_16> image{1000, 1000};
+    using rgb_t = png::byte;
+    using pixel_t = png::basic_rgb_pixel<rgb_t>;
+
+    png::image<pixel_t, png::solid_pixel_buffer<pixel_t>> image{size.x, size.y};
 
     for(auto y = 0; y < image.get_height(); y++) {
         for(auto x = 0; x < image.get_width(); x++) {
             auto idx = y * image.get_width() + x;
-            //RAYCHEL_LOG(results.at(idx).output);
-            auto col = color{results.at(idx).output}.to<uint16_t>();
-            //RAYCHEL_LOG("Saving color ", col);
-            image.set_pixel(x, y, png::rgb_pixel_16{col.r, col.g, col.b});
+            auto col = color{results.at(idx).output}.to<rgb_t>();
+            image.set_pixel(x, y, pixel_t{col.r, col.g, col.b});
 
         }
     }
 
-    image.write("res_16.png");
+    if(size.x > size.y)
+        image.write("../../res_wide.png");
+    else 
+        image.write("../../res_tall.png");
 
     return 0;
 }

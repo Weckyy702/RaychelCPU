@@ -49,9 +49,12 @@ namespace Raychel {
 		
 		constexpr vt max = std::numeric_limits<vt>::max()-1;
 
-		if constexpr (std::is_integral_v<vt>) {
+		if constexpr (std::is_integral_v<vt> && std::is_floating_point_v<value_type>) {
+
+			//if the internal representatino is in 0...1 range, convert to 0...max
 			return _ensureValid<vt>({ static_cast<vt>(r*max), static_cast<vt>(g*max), static_cast<vt>(b*max) });
 		} else {
+			
 			return _ensureValid<vt>({ static_cast<vt>(r), static_cast<vt>(g), static_cast<vt>(b) });
 		}
 	}
