@@ -9,6 +9,7 @@ set(SOURCES
     ${RAYCHEL_SOURCE_DIR}/Engine/Objects/sdObjects.cpp
     ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/Pipeline/Shading.cpp
     ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/Renderer.cpp
+    ${RAYCHEL_SOURCE_DIR}/Engine/Interface/Camera.cpp
 )
 
 add_executable(RaychelCPU_test 
@@ -29,5 +30,7 @@ target_link_libraries(RaychelCPU_test PRIVATE
     tbb
     png
 )
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
 
 target_compile_features(RaychelCPU_test PUBLIC cxx_std_17)

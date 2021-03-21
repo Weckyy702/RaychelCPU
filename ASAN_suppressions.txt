@@ -1,0 +1,2 @@
+#TBB, the threading library used by GCCs standard implementation, uses memory blocks which are returned after program exit. This triggers ASAN
+leak:libtbb.so
