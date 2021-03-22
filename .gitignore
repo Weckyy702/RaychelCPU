@@ -3,10 +3,12 @@ build/
 **/CMakeFiles
 CMake**
 cmake**
+!CMakeLists.txt
 Makefile
 
 #binary files
 *.a
+*.o
 
 #editor dir
 **/.vscode
@@ -20,3 +22,4 @@ CMakeSettings.h
 #images except for the logo
 *.png
 !logo.png
+!/RaychelEngine/res/*.png
