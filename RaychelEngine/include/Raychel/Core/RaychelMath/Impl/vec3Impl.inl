@@ -19,7 +19,7 @@ namespace Raychel {
 
 	template<typename T>
 	template<typename To>
-	vec3Imp<To> vec3Imp<T>::to() const
+	constexpr vec3Imp<To> vec3Imp<T>::to() const
 	{
 		using vt = typename colorImp<To>::value_type;
 		static_assert(std::is_convertible_v<value_type, To>, "Vec3Imp<T>::to<To> requires T to be convertible to To!");
@@ -178,19 +178,11 @@ namespace Raychel {
 	template<typename T>
 	bool operator==(const vec3Imp<T>& a, const vec3Imp<T>& b)
 	{
+#ifdef RAYCHEL_LOGICALLY_EQUAL
+		return equivalent(a.x, b.x) && equivalent(a.y, b.y) && equivalent(a.z, b.z);
+#else
 		return (a.x == b.x) && (a.y == b.y) && (a.z == b.z);
-	}
-
-	template<typename T>
-	vec3Imp<bool> operator==(const vec3Imp<T>& a, const vec3Imp<T>& b)
-	{
-		return { a.x == b.x, a.y == b.y, a.z == b.z};
-	}
-
-	template<typename T>
-	vec3Imp<bool> operator!=(const vec3Imp<T>& a, const vec3Imp<T>& b)
-	{
-		return { a.x != b.x, a.y != b.y, a.z != b.z };
+#endif
 	}
 
 	template<typename T>

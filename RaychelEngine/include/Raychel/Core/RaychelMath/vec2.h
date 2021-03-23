@@ -21,18 +21,18 @@ namespace Raychel {
 
 	public:
 
-		vec2Imp() = default;
+		constexpr vec2Imp() = default;
 
-		explicit vec2Imp(value_type _x)
+		explicit constexpr vec2Imp(value_type _x)
 			:x(_x), y(0)
 		{}
 
-		vec2Imp(value_type _x, value_type _y)
+		constexpr vec2Imp(value_type _x, value_type _y)
 			:x(_x), y(_y)
 		{}
 
 		template<typename To>
-		vec2Imp<To> to() const;
+		constexpr vec2Imp<To> to() const; 
 
 		explicit vec2Imp(const vec3&);
 		explicit vec2Imp(const color&);
@@ -92,12 +92,6 @@ namespace Raychel {
 	{
 		return !(a == b);
 	}
-
-	template<typename T>
-	vec2Imp<bool> operator==(const vec2Imp<T>&, const vec2Imp<T>&);
-
-	template<typename T>
-	vec2Imp<bool> operator!=(const vec2Imp<T>&, const vec2Imp<T>&);
 
 	template<typename T>
 	vec2Imp<bool> operator<(const vec2Imp<T>&, const vec2Imp<T>&);

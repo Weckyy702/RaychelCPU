@@ -19,8 +19,10 @@ namespace Raychel {
 
 	public:
 
-
-		QuaternionImp()=default;
+		//rotation of 0° around +y
+		QuaternionImp()
+			:QuaternionImp(vec3{0, 1, 0}, 0)
+		{}
 
 		QuaternionImp(value_type _r, value_type _i, value_type _j, value_type _k)
             :r{_r}, i{_i}, j{_j}, k{_k}
@@ -44,6 +46,9 @@ namespace Raychel {
 
         value_type r, i, j, k;
 	};
+
+	template<typename T>
+	std::ostream& operator<<(std::ostream&, const QuaternionImp<T>&);
 
 	template<typename T>
 	QuaternionImp<T> operator+(const QuaternionImp<T>&, const QuaternionImp<T>&);

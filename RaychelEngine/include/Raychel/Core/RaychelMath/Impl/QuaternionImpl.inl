@@ -78,6 +78,12 @@ namespace Raychel {
     }
 
     template<typename T>
+    std::ostream& operator<<(std::ostream& os, const QuaternionImp<T>& obj)
+    {
+        return os << "{ " << obj.r << ", " << obj.i << ", " << obj.j << ", " << obj.k << " }";
+    }
+
+    template<typename T>
 	QuaternionImp<T> operator+(const QuaternionImp<T>& a, const QuaternionImp<T>& b)
 	{
         return { a.r+b.r, a.i+b.i, a.j+b.j, a.k+b.k };
@@ -124,7 +130,11 @@ namespace Raychel {
     template<typename T>
 	bool operator==(const QuaternionImp<T>& a, const QuaternionImp<T>& b)
 	{
+#ifdef RAYCHEL_LOGICALLY_EQUAL
+        return equivalent(a.r, b.r) && equivalent(a.i, b.i) && equivalent(a.j, b.j) && equivalent(a.k, b.k);
+#else
         return (a.r == b.r) && (a.i == b.i) && (a.j == b.j) && (a.k == b.k);
+#endif
 	}
 
     template<typename T>
@@ -148,7 +158,7 @@ namespace Raychel {
     template<typename T>
 	QuaternionImp<T> normalize(const QuaternionImp<T>& q)
 	{
-	    return q * inv_sqrt(magSq(q));
+	    return q / mag(q);
 	}
 
     template<typename T>

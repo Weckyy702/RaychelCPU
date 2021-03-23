@@ -45,6 +45,12 @@ namespace Raychel {
 	#define RAYCHEL_LOG(...)
 #endif
 
+//terminate the application with the provided message
+#define RAYCHEL_TERMINATE(...) Logger::fatal( __PRETTY_FUNCTION__, "(", __FILE__, " : ", __LINE__, "): ", __VA_ARGS__, '\n');	\
+								Ensures(false)
+
+//#define RAYCHEL_LOGICALLY_EQUAL //<-- activates logical equivalency for vector-like types
+
 #define RAYCHEL_THROW_EXCEPTION(exception_type, msg, fatal) { \
 				static_assert(std::is_base_of_v<::Raychel::exception_context, exception_type>, "Raychel exceptions must be derived from Raychel::exception_context!"); \
 				throw ::exception_type{msg, __PRETTY_FUNCTION__, fatal}; \
@@ -66,7 +72,6 @@ namespace Raychel {
 	template<RAYCHEL_NUMBER _num>
 	struct TransformImp;
 
-
 	struct exception_context {
 		exception_context(const char* _msg, const char* _originFunc, bool _fatal)
 			:what(_msg), originFunction(_originFunc), fatal(_fatal)
@@ -87,6 +92,35 @@ namespace Raychel {
 	constexpr _integral bit(size_t shift) {
 		static_assert(std::is_integral_v<_integral>, "Raychel::bit<T> requires T to be of integral type!");
 		return static_cast<_integral>( 1 << shift);
+	}
+
+	constexpr double abs(double x)
+	{
+		uint64_t rep = *reinterpret_cast<uint64_t*>(&x);
+		rep &= 0x7fffffffffffffff;
+		return *reinterpret_cast<double*>(&rep);
+	}
+
+	///\brief Return wether two floating point numbers are logically equivalent
+	template<typename _float>
+	constexpr bool equivalent(_float a, _float b)
+	{
+		static_assert(std::is_floating_point_v<_float>, "Raychel::equivalent<T> requires T to be a floating-point type!");
+
+		constexpr _float epsilon = std::numeric_limits<_float>::epsilon() * 5;
+
+		const double min = std::min(a, b);
+
+		const double diff = std::abs(a-b);
+
+		double e = epsilon;
+		if(min != 0)
+			e = std::abs(min) * epsilon;
+
+		const bool is_equal = a == b;
+		const bool is_equivalent = diff < e;
+
+		return  is_equal || is_equivalent;
 	}
 
 }
