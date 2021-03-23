@@ -133,74 +133,74 @@ namespace Logger {
 		}
 	}
 
-	/// @brief Log a message with the provided level. Can log multiple objects seperated by a comma
-	/// @tparam ...Args Types of the objects to be logged
-	/// @param lv the level with which to log
-	/// @param ...args Objects to be logged
+	/// \brief Log a message with the provided level. Can log multiple objects seperated by a comma
+	/// \tparam ...Args Types of the objects to be logged
+	/// \param lv the level with which to log
+	/// \param ...args Objects to be logged
 	template<typename... Args>
 	void log(LogLevel lv, Args&&... args)
 	{
 		_::log(lv, 0, std::forward<Args>(args)...);
 	}
 
-	/// @brief Log a message with the DEBUG level. Can log multiple objects seperated by comma
-	/// @tparam ...Args Types of the objects to be logged
-	/// @param ...args Objects to be logged
+	/// \brief Log a message with the DEBUG level. Can log multiple objects seperated by comma
+	/// \tparam ...Args Types of the objects to be logged
+	/// \param ...args Objects to be logged
 	template<typename... Args>
 	void debug(Args&&... args)
 	{
 		_::log(LogLevel::debug, 0, std::forward<Args>(args)...);
 	}
 
-	/// @brief Log a message with the INFO level. Can log multiple objects seperated by comma
-	/// @tparam ...Args Types of the objects to be logged
-	/// @param ...args Objects to be logged
+	/// \brief Log a message with the INFO level. Can log multiple objects seperated by comma
+	/// \tparam ...Args Types of the objects to be logged
+	/// \param ...args Objects to be logged
 	template<typename... Args>
 	void info(Args&&... args)
 	{
 		_::log(LogLevel::info, 0, std::forward<Args>(args)...);
 	}
 
-	/// @brief Log a message with the WARN level. Can log multiple objects seperated by comma
-	/// @tparam ...Args Types of the objects to be logged
-	/// @param ...args Objects to be logged
+	/// \brief Log a message with the WARN level. Can log multiple objects seperated by comma
+	/// \tparam ...Args Types of the objects to be logged
+	/// \param ...args Objects to be logged
 	template<typename... Args>
 	void warn(Args&&... args)
 	{
 		_::log(LogLevel::warn, 0, std::forward<Args>(args)...);
 	}
 
-	/// @brief Log a message with the ERROR level. Can log multiple objects seperated by comma
-	/// @tparam ...Args Types of the objects to be logged
-	/// @param ...args Objects to be logged
+	/// \brief Log a message with the ERROR level. Can log multiple objects seperated by comma
+	/// \tparam ...Args Types of the objects to be logged
+	/// \param ...args Objects to be logged
 	template<typename... Args>
 	void error(Args&&... args)
 	{
 		_::log(LogLevel::error, 0, std::forward<Args>(args)...);
 	}
 
-	/// @brief Log a message with the ERROR level. Can log multiple objects seperated by comma
-	/// @tparam ...Args Types of the objects to be logged
-	/// @param ...args Objects to be logged
+	/// \brief Log a message with the ERROR level. Can log multiple objects seperated by comma
+	/// \tparam ...Args Types of the objects to be logged
+	/// \param ...args Objects to be logged
 	template<typename... Args>
 	void critical(Args&&... args)
 	{
 		_::log(LogLevel::critical, 0, std::forward<Args>(args)...);
 	}
 
-	/// @brief Log a message with the FATAL level. Can log multiple objects seperated by comma
-	/// @tparam ...Args Types of the objects to be logged
-	/// @param ...args Objects to be logged
+	/// \brief Log a message with the FATAL level. Can log multiple objects seperated by comma
+	/// \tparam ...Args Types of the objects to be logged
+	/// \param ...args Objects to be logged
 	template<typename... Args>
 	void fatal(Args&&... args)
 	{
 		_::log(LogLevel::fatal, 0, std::forward<Args>(args)...);
 	}
 
-	/// @brief Log a message regardless of the minimum required log level. Can log multiple objects seperated by a comma.
+	/// \brief Log a message regardless of the minimum required log level. Can log multiple objects seperated by a comma.
 	///        will not display a label [LEVEL] in front of the message
-	/// @tparam ...Args Types of the objects to be logged
-	/// @param ...args Objects to be logged
+	/// \tparam ...Args Types of the objects to be logged
+	/// \param ...args Objects to be logged
 	template<typename... Args>
 	void log(Args&&... args) {
 		_::log(LogLevel::log, 1, std::forward<Args>(args)...);
@@ -239,9 +239,9 @@ namespace Logger {
 	//set minimum level the Message has to be sent with in order to show up. Default: INFO
 	LOGGER_API LogLevel setMinimumLogLevel(LogLevel);
 
-	/// @brief Configure the Logger to log into a file instead of a std::ostream
-	/// @param directory Directory of the logfile. must end with "/"
-	/// @param fileName Name of the logfile. Does not need an extension
+	/// \brief Configure the Logger to log into a file instead of a std::ostream
+	/// \param directory Directory of the logfile. must end with "/"
+	/// \param fileName Name of the logfile. Does not need an extension
 	LOGGER_API void initLogFile(const std::string& directory, const std::string& fileName = "Log.log");
 
 	LOGGER_API void dumpLogFile();

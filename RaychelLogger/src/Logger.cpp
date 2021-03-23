@@ -14,7 +14,7 @@ namespace Logger {
 	static LogLevel minLogLevel = LogLevel::info;
 
 	static bool doColor = true;
-	constexpr std::string_view reset_col = "\x1b[0;0m";
+	constexpr std::string_view reset_col = "\e[0m";
 
 	static std::ostream outStream { std::cout.rdbuf() };
 	static std::ofstream logFile;
@@ -38,8 +38,8 @@ namespace Logger {
 			"\x1b[32m",		//INFO, green
 			"\x1b[33m",		//WARNING, yellow
 			"\x1b[31m",		//ERROR, red
-			"\x1b[31;43m",	//CRITICAL, red;orange background
-			"\x1b[0;41m",	//FATAL white;red background
+			"\x1b[1;31m",	//CRITICAL, bold red
+			"\x1b[4;1;31m",	//FATAL bold underlined red
 			"\x1b[34m"		//LOG, blue
 	};
 
