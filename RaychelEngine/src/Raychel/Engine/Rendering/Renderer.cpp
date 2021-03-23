@@ -17,12 +17,14 @@ namespace Raychel {
     void RenderController::setCurrentScene(const not_null<Scene*> new_scene) 
     {
         current_scene_ = new_scene;
+        renderer_.setSceneData(&current_scene_->objects_/*, &current_scene->background_texture_*/);
     }
 
 
-    Texture<RenderResult> RenderController::getImageRendered() const
+    Texture<RenderResult> RenderController::getImageRendered()
     {
-        return renderer_.renderImage();
+        //TODO implement postprocessing
+        return renderer_.renderImage(current_scene_->cam);
     }
 
 }

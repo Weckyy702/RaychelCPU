@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <iomanip>
 #include <png++/png.hpp>
 
 #include "Raychel/Raychel.h"
@@ -15,35 +15,46 @@ int main(int argc, char** argv)
 
     Scene scene;
 
-    scene.addObject( SdSphere{ ObjectData{Transform{}} , 1.0 } );
+    scene.cam = Camera{Transform{vec3(0, 0, 0)}, 1.0};
+
+    scene.addObject( SdSphere{ ObjectData{Transform{vec3{0, 0, 7.5}}} , 1.0 } );
+    scene.addObject( SdSphere{ ObjectData{Transform{vec3{0, -7.5, 0}}}, 1.0 } );
+    scene.addObject( SdSphere{ ObjectData{Transform{vec3{0, 0, -7.5}}}, 1.0 } );
+    scene.addObject( SdSphere{ ObjectData{Transform{vec3{0, 7.5, 0}}}, 1.0 } );
 
     RenderController renderer;
 
-    const vec2i size = {1080, 1920};
+    const vec2Imp<png::uint_32> size = {1280, 720};
 
     renderer.setCurrentScene(&scene);
-    renderer.setOutputSize(size);
+    renderer.setOutputSize(size.to<size_t>());
 
-    auto results = renderer.getImageRendered();
+    for(int i = 0; i < 360; i++) {
 
-    using rgb_t = png::byte;
-    using pixel_t = png::basic_rgb_pixel<rgb_t>;
+        auto results = renderer.getImageRendered();
 
-    png::image<pixel_t, png::solid_pixel_buffer<pixel_t>> image{size.x, size.y};
+        using rgb_t = png::uint_16;
+        using pixel_t = png::basic_rgb_pixel<rgb_t>;
 
-    for(auto y = 0; y < image.get_height(); y++) {
-        for(auto x = 0; x < image.get_width(); x++) {
-            auto idx = y * image.get_width() + x;
-            auto col = color{results.at(idx).output}.to<rgb_t>();
-            image.set_pixel(x, y, pixel_t{col.r, col.g, col.b});
+        png::image<pixel_t, png::solid_pixel_buffer<pixel_t>> image{size.x, size.y};
 
+        for(auto y = 0; y < image.get_height(); y++) {
+            for(auto x = 0; x < image.get_width(); x++) {
+                auto idx = y * image.get_width() + x;
+                auto col = results.at(idx).output.to<rgb_t>();
+                image.set_pixel(x, y, pixel_t{col.r, col.g, col.b});
+            }
         }
-    }
 
-    if(size.x > size.y)
-        image.write("../../res_wide.png");
-    else 
-        image.write("../../res_tall.png");
+        std::ostringstream os;
+        os << "../../res_" << std::setw(4) << std::setfill('0') << i << ".png";
+
+        image.write(os.str());
+
+        RAYCHEL_LOG("Finished writing image!");
+
+        scene.cam.transform_.rotation *= Quaternion{ scene.cam.up(), 1_deg };
+    }
 
     return 0;
 }

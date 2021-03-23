@@ -19,14 +19,15 @@ namespace Raychel
             void setCurrentScene(const not_null<Scene*> newScene);
 
             //may become private later
-            Texture<RenderResult> getImageRendered() const;
+            Texture<RenderResult> getImageRendered();
 
             Texture<color> getImagePostprocessed() const;
 
-            void renderImage() const;
+            void renderImage();
 
         private:
 
+            //non-owning reference to current scene
             Scene* current_scene_ =nullptr;
             vec2i output_size_;
 
