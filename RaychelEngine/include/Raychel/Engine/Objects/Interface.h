@@ -25,6 +25,8 @@ namespace Raychel {
         virtual vec3 get_direction(const vec3&) const=0;
 
         virtual color get_surface_color(const ShadingData&) const=0;
+
+        virtual ~IRaymarchable()=default;
     };
 
 
@@ -40,6 +42,8 @@ namespace Raychel {
     vec3 get_direction(const vec3& p) const override;
 
     color get_surface_color(const ShadingData& data) const override;
+
+    virtual ~SdObject()=default;
 
     protected:
         Transform transform_;
