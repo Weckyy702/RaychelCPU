@@ -19,7 +19,7 @@ CMakeSettings.h
 #log files
 *.log
 
-#images except for the logo
+#rendering results except for the logo
 *.png
+*.mkv
 !logo.png
-!/RaychelEngine/res/*.png
