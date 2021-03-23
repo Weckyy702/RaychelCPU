@@ -13,13 +13,11 @@ Makefile
 #editor dir
 **/.vscode
 
-#generated file
-CMakeSettings.h
-
 #log files
 *.log
 
-#rendering results except for the logo
+#rendering results
 *.png
 *.mkv
 !logo.png
+/resutls/
