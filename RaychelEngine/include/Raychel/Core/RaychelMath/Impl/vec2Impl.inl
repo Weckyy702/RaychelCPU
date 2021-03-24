@@ -49,8 +49,8 @@ namespace Raychel {
 	template<typename To>
 	constexpr vec2Imp<To> vec2Imp<T>::to() const
 	{
-		using vt = typename colorImp<To>::value_type;
-		static_assert(std::is_convertible_v<value_type, To>, "Vec2Imp<T>::to<To> requires T to be convertible to To!");
+		using vt = typename vec2Imp<To>::value_type;
+		static_assert(std::is_convertible_v<value_type, vt>, "Vec2Imp<T>::to<To> requires T to be convertible to To!");
 
 		return { static_cast<vt>(x), static_cast<vt>(y) };
 	}

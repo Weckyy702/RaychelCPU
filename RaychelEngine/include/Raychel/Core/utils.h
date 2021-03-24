@@ -88,12 +88,28 @@ namespace Raychel {
 		return x * x;
 	}
 
+	/**
+	*\brief Linearly interpolate between two numbers
+	*
+	*\tparam _number Type of number to interpolate. Must be arithmetic
+	*\param a first number (x=0.0)
+	*\param b second number (x=1.0)
+	*\param x value of interpolation
+	*\return _number
+	*/
+	template<typename _number, typename = std::enable_if_t<std::is_arithmetic_v<_number>>>
+	constexpr _number lerp(_number a, _number b, double x)
+	{
+		return (x * b) + ((1.0-x) * a);
+	}
+
 	template<typename _integral>
 	constexpr _integral bit(size_t shift) {
 		static_assert(std::is_integral_v<_integral>, "Raychel::bit<T> requires T to be of integral type!");
 		return static_cast<_integral>( 1 << shift);
 	}
 
+#if 0
 	constexpr double abs(double x)
 	{
 		uint64_t rep = *reinterpret_cast<uint64_t*>(&x);
@@ -122,7 +138,7 @@ namespace Raychel {
 
 		return  is_equal || is_equivalent;
 	}
-
+#endif
 }
 
 #endif // !RAYCHEL_CORE_H

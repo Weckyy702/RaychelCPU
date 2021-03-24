@@ -80,7 +80,7 @@ namespace Raychel
         *\return TransformImp<T> 
         */
         template<typename To>
-        constexpr TransformImp<To> to() const noexcept;
+        TransformImp<To> to() const noexcept;
 
         vec3 position;
         Quaternion rotation;

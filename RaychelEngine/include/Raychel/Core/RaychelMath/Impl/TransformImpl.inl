@@ -37,11 +37,16 @@ namespace Raychel {
 
     template<typename T>
     template<typename To>
-    constexpr TransformImp<To> TransformImp<T>::to() const noexcept
+    TransformImp<To> TransformImp<T>::to() const noexcept
     {
-        static_assert(std::is_convertible_v<T, To>, "Raychel::TransformImp<T>::to<To>() requires T to be convertible to To!");
+        using vt = typename TransformImp<To>::value_type;
+        static_assert(std::is_convertible_v<value_type, vt>, "Raychel::TransformImp<T>::to<To>() requires T to be convertible to To!");
+
+        //wtf. Why is it like that???
+        vec3Imp<vt> v = position.template to<vt>();
+        QuaternionImp<vt> q = rotation.template to<vt>();
         
-        return { position.to<To>(), rotation.to<To>() };
+        return { v, q };
     }
 
 }

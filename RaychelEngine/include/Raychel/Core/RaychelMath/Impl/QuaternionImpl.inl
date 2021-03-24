@@ -51,7 +51,7 @@ namespace Raychel {
 
     template<typename T>
     template<typename To>
-    constexpr QuaternionImp<To> QuaternionImp<T>::to() const noexcept
+    QuaternionImp<To> QuaternionImp<T>::to() const noexcept
     {
         static_assert(std::is_convertible_v<T, To>, "Raychel::QuaternionImp<T>::to<To> requires T to be convetibel to To!");
         

@@ -46,7 +46,7 @@ namespace Raychel {
         requests_.shrink_to_fit();
     }
 
-    RaymarchRequest RaymarchRenderer::_getRootRequest(size_t x, size_t y, double ar) const
+    RaymarchData RaymarchRenderer::_getRootRequest(size_t x, size_t y, double ar) const
     {
         //generate UVs in range [-0.5; 0.5]
 
@@ -82,7 +82,7 @@ namespace Raychel {
     {
 
         using namespace std::placeholders;
-        static const auto f = [this](const RaymarchRequest& req){
+        static const auto f = [this](const RaymarchData& req){
             return _raymarchFunction(req);
         };
 
@@ -113,7 +113,7 @@ namespace Raychel {
                             (cam_data_.up * uv.y) );
     }
 
-    RenderResult RaymarchRenderer::_raymarchFunction(const RaymarchRequest& req) const
+    RenderResult RaymarchRenderer::_raymarchFunction(const RaymarchData& req) const
     {
         double depth=0;
         const vec3 origin = cam_data_.position;

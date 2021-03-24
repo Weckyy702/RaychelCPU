@@ -73,7 +73,7 @@ namespace Raychel {
 		*\return colorImp<_To> 
 		*/
 		template<typename _To>
-		constexpr colorImp<_To> to() const;
+		colorImp<_To> to() const noexcept;
 		
 		/**
 		*\brief Convert the color to a pointer-to-red. For functions that need colors as arrays

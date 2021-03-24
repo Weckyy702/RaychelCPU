@@ -69,7 +69,7 @@ namespace Raychel {
 
 	template<typename T>
 	template<typename To>
-	constexpr colorImp<To> colorImp<T>::to() const
+	colorImp<To> colorImp<T>::to() const noexcept
 	{
 		using vt = typename colorImp<To>::value_type;
 		static_assert(std::is_convertible_v<value_type, To>, "ColorImp<T>::to<To> requires T to be convertible to To!");

@@ -38,10 +38,10 @@ int main(int argc, char** argv)
 
         png::image<pixel_t, png::solid_pixel_buffer<pixel_t>> image{size.x, size.y};
 
-        for(auto y = 0; y < image.get_height(); y++) {
-            for(auto x = 0; x < image.get_width(); x++) {
-                auto idx = y * image.get_width() + x;
-                auto col = results.at(idx).output.to<rgb_t>();
+        for(auto y = 0u; y < image.get_height(); y++) {
+            for(auto x = 0u; x < image.get_width(); x++) {
+                const auto idx = y * image.get_width() + x;
+                const auto col = results.at(idx).output.to<rgb_t>();
                 image.set_pixel(x, y, pixel_t{col.r, col.g, col.b});
             }
         }

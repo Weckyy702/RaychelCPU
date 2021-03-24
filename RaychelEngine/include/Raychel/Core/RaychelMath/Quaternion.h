@@ -100,7 +100,7 @@ namespace Raychel {
 		*\return QuaternionImp<To> 
 		*/
 		template<typename To>
-		constexpr QuaternionImp<To> to() const noexcept;
+		QuaternionImp<To> to() const noexcept;
 
         QuaternionImp& operator+=(const QuaternionImp&);
         QuaternionImp& operator-=(const QuaternionImp&);
@@ -170,6 +170,47 @@ namespace Raychel {
 
 	template<typename T>
 	QuaternionImp<T> inverse(const QuaternionImp<T>&);
+
+		/**
+	*\brief Linearly interpolate two Quaternions
+	*
+	*\tparam T Type of the quaternion
+	*\param _a first quaternion (x=0.0)
+	*\param _b second quaternion (x=1.0)
+	*\param x value of interpolation
+	*\return QuaternionImp<T> 
+	*/
+	template<typename T>
+	QuaternionImp<T> lerp(const QuaternionImp<T>& _a, const QuaternionImp<T>& _b, double x)
+	{
+		constexpr auto threshold = 0.995;
+
+		auto a = normalize(_a);
+		auto b = normalize(_b);
+
+		double d = dot(a.v(), b.v());
+
+		if(d < 0.0) {
+			a *= -1;
+			b *= -1;
+		}
+
+		//if the Quaternions are very similar, just lerp them
+		if(d >= threshold) {
+			return normalize(a * x + b * (1.0 - x));
+		}
+
+		double theta0 = std::acos(d);
+		double theta = theta0 * x;
+		double sinTheta = std::sin(theta);
+		double sinTheta0 = std::sin(theta0);
+
+		double s1 = sinTheta / sinTheta0;
+		double s0 = std::cos(theta) - (d * s1);
+
+		return (a * s0) + (b * s1);
+
+	}
 
 }
 

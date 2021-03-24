@@ -22,7 +22,7 @@ namespace Raychel {
 
         void _refillRequestBuffer();
 
-        RaymarchRequest _getRootRequest(size_t x, size_t y, double ar) const;
+        RaymarchData _getRootRequest(size_t x, size_t y, double ar) const;
 
         void _renderToTexture(Texture<RenderResult>& output) const;
 
@@ -32,7 +32,7 @@ namespace Raychel {
 
         vec3 _getRayDirectionFromUV(const vec2&) const noexcept;
 
-        RenderResult _raymarchFunction(const RaymarchRequest& req) const;
+        RenderResult _raymarchFunction(const RaymarchData& req) const;
 
         double sdScene(const vec3& p) const;
 
@@ -48,7 +48,7 @@ namespace Raychel {
         TextureProvider<color> const* background_;
 
         //Buffer of all UVs for which to raymarch
-        std::vector<RaymarchRequest> requests_;
+        std::vector<RaymarchData> requests_;
 
         //buffer forward, right and up vectors here
         struct {
