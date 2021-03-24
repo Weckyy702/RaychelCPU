@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.10)
 
 project(RaychelCPU_test VERSION 0.0.1)
 
+option(ASAN_SUPPORT "If ASAN (address sanitizer) should be used" OFF)
+
 set(RAYCHEL_SOURCE_DIR ${PROJECT_SOURCE_DIR}/src/Raychel)
 
 set(SOURCES 
@@ -31,6 +33,9 @@ target_link_libraries(RaychelCPU_test PRIVATE
     png
 )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
+if(${ASAN_SUPPORT})
+    target_compile_options(RaychelCPU_test PUBLIC -fsanitize=address -fno-omit-frame-pointer)
+endif()
+# target_compile_options(RaychelCPU_test PUBLIC -Wall -Wextra -pedantic)
 
 target_compile_features(RaychelCPU_test PUBLIC cxx_std_17)
