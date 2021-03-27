@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(RaychelCPU_test VERSION 0.0.1)
 
-option(ASAN_SUPPORT "If ASAN (address sanitizer) should be used" OFF)
+option(USE_ASAN "If ASAN (address sanitizer) should be used" OFF)
 
 set(RAYCHEL_SOURCE_DIR ${PROJECT_SOURCE_DIR}/src/Raychel)
 
@@ -12,6 +12,7 @@ set(SOURCES
     ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/Pipeline/Shading.cpp
     ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/Renderer.cpp
     ${RAYCHEL_SOURCE_DIR}/Engine/Interface/Camera.cpp
+    ${RAYCHEL_SOURCE_DIR}/Types.cpp
 )
 
 add_executable(RaychelCPU_test 
@@ -33,9 +34,11 @@ target_link_libraries(RaychelCPU_test PRIVATE
     png
 )
 
-if(${ASAN_SUPPORT})
+if(${USE_ASAN})
     target_compile_options(RaychelCPU_test PUBLIC -fsanitize=address -fno-omit-frame-pointer)
+    target_link_options(RaychelCPU_test PUBLIC -fsanitize=address)
 endif()
-# target_compile_options(RaychelCPU_test PUBLIC -Wall -Wextra -pedantic)
+
+target_compile_options(RaychelCPU_test PUBLIC -Wall -Wextra -pedantic)
 
 target_compile_features(RaychelCPU_test PUBLIC cxx_std_17)
