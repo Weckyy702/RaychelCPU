@@ -1,14 +1,6 @@
 #include "Raychel/Engine/Interface/Camera.h"
-#include <cmath>
-#include <cassert>
 
 namespace Raychel {
-
-    static constexpr vec3 g_forward = vec3{ 0, 0, 1 };
-    static constexpr vec3 g_up = vec3{ 0, 1, 0 };
-
-    //cos(45°) with a little padding
-    static constexpr double cos_45_degrees = 0.707106781187 * 0.99;
 
     vec3 Camera::forward() const noexcept
     {
@@ -22,7 +14,42 @@ namespace Raychel {
 
     vec3 Camera::right() const noexcept
     {
-        return -cross(forward(), up());
+        return normalize(g_right * transform_.rotation);
+    }
+
+
+
+    void Camera::setRoll(double a) noexcept
+    {
+        transform_.rotation = Quaternion(forward(), a);
+    }
+
+    void Camera::setPitch(double a) noexcept
+    {
+        transform_.rotation = Quaternion(right(), a);
+    }
+
+    void Camera::setYaw(double a) noexcept
+    {
+        transform_.rotation = Quaternion(up(), a);
+    }
+
+    Quaternion Camera::updateRoll(double da) noexcept
+    {
+        transform_.rotation *= Quaternion(forward(), da);
+        return transform_.rotation;
+    }
+
+    Quaternion Camera::updatePitch(double da) noexcept
+    {
+        transform_.rotation *= Quaternion(right(), da);
+        return transform_.rotation;
+    }
+
+    Quaternion Camera::updateYaw(double da) noexcept
+    {
+        transform_.rotation *= Quaternion(up(), da);
+        return transform_.rotation;
     }
 
 }

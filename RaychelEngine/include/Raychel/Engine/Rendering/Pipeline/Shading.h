@@ -22,7 +22,7 @@ namespace Raychel {
 
         void _refillRequestBuffer();
 
-        RaymarchData _getRootRequest(size_t x, size_t y, double ar) const;
+        RaymarchData _getRootRequest(size_t x, size_t y) const;
 
         void _renderToTexture(Texture<RenderResult>& output) const;
 
@@ -40,8 +40,11 @@ namespace Raychel {
 
         #pragma endregion
 
+        vec2 _getScreenspaceUV(const vec2& uv) const noexcept;
+
 
         vec2i output_size_;
+        double aspect_ratio;
 
         //Non-owning references to scene specific data
         std::vector<IRaymarchable_p> const* objects_;
