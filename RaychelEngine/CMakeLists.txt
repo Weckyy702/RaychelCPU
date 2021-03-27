@@ -13,6 +13,7 @@ set(SOURCES
     ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/Renderer.cpp
     ${RAYCHEL_SOURCE_DIR}/Engine/Interface/Camera.cpp
     ${RAYCHEL_SOURCE_DIR}/Types.cpp
+    ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/RenderTarget/ImageTarget.cpp
 )
 
 add_executable(RaychelCPU_test 
@@ -39,6 +40,6 @@ if(${USE_ASAN})
     target_link_options(RaychelCPU_test PUBLIC -fsanitize=address)
 endif()
 
-target_compile_options(RaychelCPU_test PUBLIC -Wall -Wextra -pedantic)
+target_compile_options(RaychelCPU_test PUBLIC -Wall -Wextra -pedantic -Wno-unknown-pragmas)
 
 target_compile_features(RaychelCPU_test PUBLIC cxx_std_17)
