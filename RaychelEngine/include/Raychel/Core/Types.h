@@ -77,6 +77,11 @@ namespace Raychel {
 	using Transform = TransformImp<number_t>;
 
 	using IRaymarchable_p = not_null<IRaymarchable*>;
+
+
+	extern const vec3 g_forward;
+	extern const vec3 g_up;
+	extern const vec3 g_right;
 }
 
 //Implementations
