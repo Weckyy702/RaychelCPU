@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.10)
 
 project(RaychelCPU_test VERSION 0.0.1)
 
-option(USE_ASAN "If ASAN (address sanitizer) should be used" OFF)
-
 set(RAYCHEL_SOURCE_DIR ${PROJECT_SOURCE_DIR}/src/Raychel)
 
 set(SOURCES 
@@ -36,10 +34,31 @@ target_link_libraries(RaychelCPU_test PRIVATE
 )
 
 if(${USE_ASAN})
-    target_compile_options(RaychelCPU_test PUBLIC -fsanitize=address -fno-omit-frame-pointer)
-    target_link_options(RaychelCPU_test PUBLIC -fsanitize=address)
+    if(MSVC)
+        target_compile_options(RaychelCPU_test PUBLIC /fsanitize=address /fno-omit-frame-pointer)
+        target_link_options(RaychelCPU_test PUBLIC /fsanitize=address)
+    else()
+        target_compile_options(RaychelCPU_test PUBLIC -fsanitize=address -fno-omit-frame-pointer)
+        target_link_options(RaychelCPU_test PUBLIC -fsanitize=address)
+    endif()
 endif()
 
-target_compile_options(RaychelCPU_test PUBLIC -Wall -Wextra -pedantic -Wno-unknown-pragmas)
+if(${USE_UBSAN})
+
+    if(MSVC)
+        target_compile_options(RaychelCPU_test PUBLIC /fsanitize=undefined /fno-omit-frame-pointer)
+        target_link_options(RaychelCPU_test PUBLIC /fsanitize=undefined)
+    else()
+        target_compile_options(RaychelCPU_test PUBLIC -fsanitize=undefined -fno-sanitize-recover -fno-omit-frame-pointer)
+        target_link_options(RaychelCPU_test PUBLIC -fsanitize=undefined)
+    endif()
+
+endif()
+
+if(MSVC)
+    target_compile_options(RaychelCPU_test PUBLIC /Wall /Wextra /pedantic /Wno-unknown-pragmas)
+else()
+    target_compile_options(RaychelCPU_test PUBLIC -Wall -Wextra -Weffc++ -pedantic -Wno-unknown-pragmas)
+endif()
 
 target_compile_features(RaychelCPU_test PUBLIC cxx_std_17)
