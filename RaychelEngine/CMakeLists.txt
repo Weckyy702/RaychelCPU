@@ -58,7 +58,7 @@ endif()
 if(MSVC)
     target_compile_options(RaychelCPU_test PUBLIC /Wall /Wextra /pedantic /Wno-unknown-pragmas)
 else()
-    target_compile_options(RaychelCPU_test PUBLIC -Wall -Wextra -Weffc++ -pedantic -Wno-unknown-pragmas)
+    target_compile_options(RaychelCPU_test PUBLIC -Wall -Wextra -pedantic -Wno-unknown-pragmas)
 endif()
 
 target_compile_features(RaychelCPU_test PUBLIC cxx_std_17)
