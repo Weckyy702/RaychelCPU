@@ -4,12 +4,14 @@
 
 #include "Raychel/Core/Types.h"
 #include "Raychel/Core/LinkTypes.h"
+#include "Raychel/Engine/Materials/Interface.h"
 
 namespace Raychel {
 
     //Interface for Raymarchable Objects
     struct IRaymarchable
     {
+    protected:
 
         IRaymarchable()=default;
 
@@ -19,12 +21,13 @@ namespace Raychel {
         IRaymarchable& operator=(const IRaymarchable&)=delete;
         IRaymarchable& operator=(IRaymarchable&&)=delete;
 
+    public:
 
         virtual double eval(const vec3&) const=0;
 
-        virtual vec3 get_direction(const vec3&) const=0;
+        virtual vec3 getDirection(const vec3&) const=0;
 
-        virtual color get_surface_color(const ShadingData&) const=0;
+        virtual color getSurfaceColor(const ShadingData&) const=0;
 
         virtual ~IRaymarchable()=default;
     };
@@ -34,26 +37,30 @@ namespace Raychel {
     class SdObject : public IRaymarchable
     {
     
-    public:
+    protected:
         SdObject(const ObjectData& _data)
-            :transform_{_data.t} //, material_{_data.mat}
+            :transform_{_data.t} , material_{_data.mat}
         {}
 
-    vec3 get_direction(const vec3& p) const override;
+    public:
 
-    color get_surface_color(const ShadingData& data) const override;
+    vec3 getDirection(const vec3& p) const override;
+
+    color getSurfaceColor(const ShadingData& data) const override;
 
     virtual ~SdObject()=default;
 
+    friend ObjectData makeObjectData(SdObject&&);
+
     protected:
         Transform transform_;
-        //IMaterial_p material_;
+        IMaterial_p material_;
     };
 
     class SdLamp : public IRaymarchable
     {
 
-    public:
+    protected:
         SdLamp(const LampData& _data)
             :lampColor{_data.c}, lampBrightness{_data.b}, lampSize{_data.sz}
         {}
@@ -63,6 +70,15 @@ namespace Raychel {
         double lampBrightness=1.0;
         double lampSize=1.0;
     };
+
+    inline ObjectData makeObjectData(SdObject&& rhs)
+    {
+        //release the previous objects ownership of the material
+        IMaterial* mat = rhs.material_.release();
+
+        return {rhs.transform_, mat};
+    }
+
 
 }
 

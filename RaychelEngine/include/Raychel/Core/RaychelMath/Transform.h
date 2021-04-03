@@ -60,11 +60,11 @@ namespace Raychel
         TransformImp()=default;
 
         TransformImp(const vec3& pos)
-            :position{ pos }
+            :position{ pos }, rotation{}
         {}
 
         TransformImp(const Quaternion& rot)
-            :rotation{ rot }
+            :position{}, rotation{ rot }
         {}
 
         TransformImp(const vec3& pos, const Quaternion& rot)

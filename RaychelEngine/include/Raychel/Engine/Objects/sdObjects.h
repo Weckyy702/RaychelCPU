@@ -14,7 +14,7 @@ namespace Raychel {
         {}
 
         SdSphere(SdSphere&& rhs)
-            :SdObject{{rhs.transform_}}, radius{rhs.radius}
+            :SdObject{makeObjectData(std::move(rhs))}, radius{rhs.radius}
         {}
 
         double eval(const vec3&) const override;

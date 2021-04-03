@@ -40,13 +40,14 @@ namespace Raychel {
     */
     class RenderTarget {
 
-    public:
+    protected:
 
         RenderTarget(const vec2i& size)
             :output_size_{size}
         {}
 
-        inline vec2i getSize() const noexcept
+    public:
+        inline vec2i size() const noexcept
         {
             return output_size_;
         }
