@@ -33,12 +33,11 @@ namespace Raychel {
         size_t request_count = output_size_.x * output_size_.y;
         requests_.reserve(request_count);
 
-        double aspect_ratio = static_cast<double>(output_size_.x) / output_size_.y;
+        aspect_ratio = static_cast<double>(output_size_.x) / output_size_.y;
 
-        for(auto i = 0; i < output_size_.y; i++) {
-            for(auto j = 0; j < output_size_.x; j++) {
-                auto idx = i * output_size_.y + j;
-                requests_.push_back(_getRootRequest(j, i, aspect_ratio));
+        for(auto i = 0u; i < output_size_.y; i++) {
+            for(auto j = 0u; j < output_size_.x; j++) {
+                requests_.push_back(_getRootRequest(j, i));
             }
         }
 
@@ -46,18 +45,18 @@ namespace Raychel {
         requests_.shrink_to_fit();
     }
 
-    RaymarchRequest RaymarchRenderer::_getRootRequest(size_t x, size_t y, double ar) const
+    RaymarchData RaymarchRenderer::_getRootRequest(size_t x, size_t y) const
     {
         //generate UVs in range [-0.5; 0.5]
 
-        double dx = ( static_cast<double>(x) / (output_size_.x-1) ) - 0.5;
-        double dy = -( static_cast<double>(y) / (output_size_.y-1) ) + 0.5;
+        double dx = ( static_cast<double>(x) / (output_size_.x) ) - 0.5;
+        double dy = ( static_cast<double>(y) / (output_size_.y) ) - 0.5;
 
         //handle non-square aspect ratios
-        if(ar > 1.0)
-            dx *= ar;
+        if(aspect_ratio > 1.0)
+            dx *= aspect_ratio;
         else
-            dy /= ar;
+            dy /= aspect_ratio;
 
         return {vec2{dx, dy}};
     }
@@ -68,7 +67,6 @@ namespace Raychel {
 
     Texture<RenderResult> RaymarchRenderer::renderImage(const Camera& cam)
     {
-
         _setupCamData(cam);
 
         Texture<RenderResult> output{/*output_size_*/requests_.size()};
@@ -82,11 +80,12 @@ namespace Raychel {
     {
 
         using namespace std::placeholders;
-        static const auto f = [this](const RaymarchRequest& req){
+
+        static const auto f = [this](const RaymarchData& req){
             return _raymarchFunction(req);
         };
 
-        RAYCHEL_LOG("Starting render...")
+        RAYCHEL_LOG("Starting render...");
 
         std::transform(std::execution::par, requests_.cbegin(), requests_.cend(), output_texture.begin(), f);
 
@@ -101,7 +100,8 @@ namespace Raychel {
         cam_data_.up = cam.up();
         cam_data_.zoom = cam.zoom();
 
-        RAYCHEL_LOG("Rendering with Camera at ", cam_data_.position, ", looking in direction: ", cam_data_.forward);
+        RAYCHEL_LOG("Rendering with Camera at ", cam_data_.position,
+        ", with local coordinate frame: { +x: ", cam_data_.right, ", +y: ", cam_data_.up, ", +z: ", cam_data_.forward, " }");
     }
 
     #pragma region Raymarch Functions
@@ -113,15 +113,19 @@ namespace Raychel {
                             (cam_data_.up * uv.y) );
     }
 
-    RenderResult RaymarchRenderer::_raymarchFunction(const RaymarchRequest& req) const
+    RenderResult RaymarchRenderer::_raymarchFunction(const RaymarchData& req) const
     {
-        double depth=0;
+        const vec2 screenspace_uv = _getScreenspaceUV(req.uv);
         const vec3 origin = cam_data_.position;
         vec3 direction = _getRayDirectionFromUV(req.uv);
 
-        if(raymarch(origin, direction, 10, &depth))
-            return {req.uv, color{1-(depth/10.0)}};
-        return {req.uv, color{direction}};
+        //TODO: do the magic thingy
+
+        if(raymarch(origin, direction, 10, nullptr)) {
+            return {screenspace_uv, color{1, 0, 0}};
+        }
+
+        return {screenspace_uv, color{direction}};
     }
 
     double RaymarchRenderer::sdScene(const vec3& p) const
@@ -155,5 +159,22 @@ namespace Raychel {
     #pragma endregion
 
 #pragma endregion
+
+    vec2 RaymarchRenderer::_getScreenspaceUV(const vec2& uv) const noexcept
+    {
+        vec2 actual_uv = uv;
+        
+        if(aspect_ratio > 1.0) {
+            actual_uv.x /= aspect_ratio;
+        } else {
+            actual_uv.y *= aspect_ratio;
+        }
+
+        actual_uv += vec2{0.5, 0.5};
+
+        actual_uv.y = 1.0 - actual_uv.y;
+
+        return actual_uv;
+    }
 
 }

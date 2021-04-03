@@ -1,8 +1,8 @@
 /**
-*\file Camera.h
+*\file RenderTarget.h
 *\author weckyy702 (weckyy702@gmail.com)
-*\brief Header file for Camera class
-*\date 2021-03-25
+*\brief Header file for Render targets
+*\date 2021-03-27
 *
 *MIT License
 *Copyright (c) [2021] [Weckyy702 (weckyy702@gmail.com | https://github.com/Weckyy702)]
@@ -25,69 +25,51 @@
 *SOFTWARE.
 *
 */
-#ifndef RAYCHEL_CAMERA_H
-#define RAYCHEL_CAMERA_H
+#ifndef RAYCHEL_RENDER_TARGET_H
+#define RAYCHEL_RENDER_TARGET_H
+#pragma once
 
-#include <array>
 #include "Raychel/Core/Types.h"
+#include "Raychel/Core/LinkTypes.h"
 
 namespace Raychel {
 
     /**
-    *\brief Freely orientable Camera used for rendering.
+    *\brief Abstract base for render targets. The rendered image will be written in here as a texture of colors
     *
     */
-    class Camera {
+    class RenderTarget {
 
-    public:
+    protected:
 
-        Camera()=default;
-
-        Camera(const Transform& _t, double _zoom)
-            :transform_(_t), zoom_(_zoom)
+        RenderTarget(const vec2i& size)
+            :output_size_{size}
         {}
 
-        vec3 forward() const noexcept;
-
-        vec3 right() const noexcept;
-
-        vec3 up() const noexcept;
-
-        inline double zoom() const noexcept
+    public:
+        inline vec2i size() const noexcept
         {
-            return zoom_;
+            return output_size_;
         }
 
+        /**
+        *\brief Write the provided framebuffer into the target
+        *
+        *\param framebuffer Framebuffer to write
+        */
+        virtual void writeFramebuffer(const Texture<RenderResult>& framebuffer)=0;
 
-        void setRoll(double angle) noexcept;
-
-        void setPitch(double angle) noexcept;
-
-        void setYaw(double angle) noexcept;
-
-        Quaternion updateRoll(double da) noexcept;
-
-        Quaternion updatePitch(double da) noexcept;
-
-        Quaternion updateYaw(double da) noexcept;
-        
-        friend class RaymarchRenderer;
-
+        virtual ~RenderTarget()=default;
+    
     private:
+        vec2i output_size_;
 
-            Transform transform_;
-            double zoom_=1.0;
-
-            //double exposure;
-
-            //colors that each channel reacts to. Essential for color bleed etc.
-            std::array<color, 3> color_channels_ = {
-                color(1, 0, 0),
-                color(0, 1, 0),
-                color(0, 0, 1)
-            };
     };
+
+    inline void operator<<(RenderTarget& t, const Texture<RenderResult>& framebuffer) {
+        t.writeFramebuffer(framebuffer);
+    }
 
 }
 
-#endif //RAYCHEL_CAMERA_H
+#endif //RAYCHEL_RENDER_TARGET_H

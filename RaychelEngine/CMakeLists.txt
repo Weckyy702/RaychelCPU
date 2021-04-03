@@ -10,6 +10,8 @@ set(SOURCES
     ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/Pipeline/Shading.cpp
     ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/Renderer.cpp
     ${RAYCHEL_SOURCE_DIR}/Engine/Interface/Camera.cpp
+    ${RAYCHEL_SOURCE_DIR}/Types.cpp
+    ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/RenderTarget/ImageTarget.cpp
 )
 
 add_executable(RaychelCPU_test 
@@ -31,6 +33,32 @@ target_link_libraries(RaychelCPU_test PRIVATE
     png
 )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
+if(${USE_ASAN})
+    if(MSVC)
+        target_compile_options(RaychelCPU_test PUBLIC /fsanitize=address /fno-omit-frame-pointer)
+        target_link_options(RaychelCPU_test PUBLIC /fsanitize=address)
+    else()
+        target_compile_options(RaychelCPU_test PUBLIC -fsanitize=address -fno-omit-frame-pointer)
+        target_link_options(RaychelCPU_test PUBLIC -fsanitize=address)
+    endif()
+endif()
+
+if(${USE_UBSAN})
+
+    if(MSVC)
+        target_compile_options(RaychelCPU_test PUBLIC /fsanitize=undefined /fno-omit-frame-pointer)
+        target_link_options(RaychelCPU_test PUBLIC /fsanitize=undefined)
+    else()
+        target_compile_options(RaychelCPU_test PUBLIC -fsanitize=undefined -fno-sanitize-recover -fno-omit-frame-pointer)
+        target_link_options(RaychelCPU_test PUBLIC -fsanitize=undefined)
+    endif()
+
+endif()
+
+if(MSVC)
+    target_compile_options(RaychelCPU_test PUBLIC /Wall /Wextra /pedantic /Wno-unknown-pragmas)
+else()
+    target_compile_options(RaychelCPU_test PUBLIC -Wall -Wextra -pedantic -Wno-unknown-pragmas)
+endif()
 
 target_compile_features(RaychelCPU_test PUBLIC cxx_std_17)

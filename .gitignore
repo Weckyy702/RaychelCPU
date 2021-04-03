@@ -19,5 +19,6 @@ Makefile
 #rendering results
 *.png
 *.mkv
+*.mp4
 !logo.png
 /resutls/

@@ -1,3 +1,30 @@
+/**
+*\file vec3Impl.inl
+*\author weckyy702 (weckyy702@gmail.com)
+*\brief Implementation for 3D vectors
+*\date 2021-03-23
+*
+*MIT License
+*Copyright (c) [2021] [Weckyy702 (weckyy702@gmail.com | https://github.com/Weckyy702)]
+*Permission is hereby granted, free of charge, to any person obtaining a copy
+*of this software and associated documentation files (the "Software"), to deal
+*in the Software without restriction, including without limitation the rights
+*to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+*copies of the Software, and to permit persons to whom the Software is
+*furnished to do so, subject to the following conditions:
+*
+*The above copyright notice and this permission notice shall be included in all
+*copies or substantial portions of the Software.
+*
+*THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+*IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+*FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+*AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+*LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+*OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+*SOFTWARE.
+*
+*/
 #ifndef RAYCHEL_VEC3_IMP
 #define RAYCHEL_VEC3_IMP
 #pragma once
@@ -19,10 +46,10 @@ namespace Raychel {
 
 	template<typename T>
 	template<typename To>
-	constexpr vec3Imp<To> vec3Imp<T>::to() const
+	vec3Imp<To> vec3Imp<T>::to() const noexcept
 	{
-		using vt = typename colorImp<To>::value_type;
-		static_assert(std::is_convertible_v<value_type, To>, "Vec3Imp<T>::to<To> requires T to be convertible to To!");
+		using vt = typename vec3Imp<To>::value_type;
+		static_assert(std::is_convertible_v<value_type, vt>, "Vec3Imp<T>::to<To> requires T to be convertible to To!");
 
 		return { static_cast<vt>(x), static_cast<vt>(y), static_cast<vt>(z) };
 	}

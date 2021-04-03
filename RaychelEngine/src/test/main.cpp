@@ -1,11 +1,10 @@
 #include <iostream>
-#include <iomanip>
-#include <png++/png.hpp>
 
 #include "Raychel/Raychel.h"
 #include "Raychel/Engine/Objects/sdObjects.h"
 #include "Raychel/Engine/Rendering/Renderer.h"
 #include "Raychel/Engine/Interface/Scene.h"
+#include "Raychel/Engine/Rendering/RenderTarget/ImageTarget.h"
 
 using namespace Raychel;
 
@@ -15,46 +14,42 @@ int main(int argc, char** argv)
 
     Scene scene;
 
-    scene.cam = Camera{Transform{vec3(0, 0, 0)}, 1.0};
+    Quaternion start_rotation = Quaternion{};
 
-    scene.addObject( SdSphere{ ObjectData{Transform{vec3{0, 0, 7.5}}} , 1.0 } );
-    scene.addObject( SdSphere{ ObjectData{Transform{vec3{0, -7.5, 0}}}, 1.0 } );
-    scene.addObject( SdSphere{ ObjectData{Transform{vec3{0, 0, -7.5}}}, 1.0 } );
-    scene.addObject( SdSphere{ ObjectData{Transform{vec3{0, 7.5, 0}}}, 1.0 } );
+    scene.cam = Camera{Transform{vec3(0, 0, 0), start_rotation}, 0.5};
+
+    scene.addObject( SdSphere{ ObjectData{Transform{vec3{0, 0, 7.5}}, nullptr}, 1.0 } );
+    scene.addObject( SdSphere{ ObjectData{Transform{vec3{0, -7.5, 0}}, nullptr}, 1.0 } );
+    scene.addObject( SdSphere{ ObjectData{Transform{vec3{0, 0, -7.5}}, nullptr}, 1.0 } );
+    scene.addObject( SdSphere{ ObjectData{Transform{vec3{0, 7.5, 0}}, nullptr}, 1.0 } );
+
+    const vec2Imp<size_t> size = {100, 100};
 
     RenderController renderer;
 
-    const vec2Imp<png::uint_32> size = {1280, 720};
-
     renderer.setCurrentScene(&scene);
-    renderer.setOutputSize(size.to<size_t>());
+    renderer.setOutputSize(size);
+
+    RenderTarget* target = new ImageTarget{size, "../../res", 4};
+
+    auto label = Logger::startTimer("Total time");
 
     for(int i = 0; i < 360; i++) {
 
+        RAYCHEL_LOG(i);
+
+        auto render_label = Logger::startTimer("Render time");
         auto results = renderer.getImageRendered();
+        Logger::logDuration(render_label);
 
-        using rgb_t = png::uint_16;
-        using pixel_t = png::basic_rgb_pixel<rgb_t>;
+        target->writeFramebuffer(results);
 
-        png::image<pixel_t, png::solid_pixel_buffer<pixel_t>> image{size.x, size.y};
-
-        for(auto y = 0; y < image.get_height(); y++) {
-            for(auto x = 0; x < image.get_width(); x++) {
-                auto idx = y * image.get_width() + x;
-                auto col = results.at(idx).output.to<rgb_t>();
-                image.set_pixel(x, y, pixel_t{col.r, col.g, col.b});
-            }
-        }
-
-        std::ostringstream os;
-        os << "../../res_" << std::setw(4) << std::setfill('0') << i << ".png";
-
-        image.write(os.str());
-
-        RAYCHEL_LOG("Finished writing image!");
-
-        scene.cam.transform_.rotation *= Quaternion{ scene.cam.up(), 1_deg };
+        scene.cam.updatePitch(1_deg);
     }
+
+    Logger::logDuration(label);
+
+    delete target;
 
     return 0;
 }

@@ -1,3 +1,30 @@
+/**
+*\file color.h
+*\author weckyy702 (weckyy702@gmail.com)
+*\brief Header file for RGB colors
+*\date 2021-03-23
+*
+*MIT License
+*Copyright (c) [2021] [Weckyy702 (weckyy702@gmail.com | https://github.com/Weckyy702)]
+*Permission is hereby granted, free of charge, to any person obtaining a copy
+*of this software and associated documentation files (the "Software"), to deal
+*in the Software without restriction, including without limitation the rights
+*to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+*copies of the Software, and to permit persons to whom the Software is
+*furnished to do so, subject to the following conditions:
+*
+*The above copyright notice and this permission notice shall be included in all
+*copies or substantial portions of the Software.
+*
+*THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+*IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+*FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+*AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+*LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+*OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+*SOFTWARE.
+*
+*/
 #ifndef RAYCHEL_COLOR_H
 #define RAYCHEL_COLOR_H
 #pragma once
@@ -6,7 +33,11 @@
 
 namespace Raychel {
 
-	//RGB color
+	/**
+	*\brief RGB color value
+	*
+	*\tparam _number Type of color value. Must be arithmetic
+	*/
 	template<RAYCHEL_NUMBER _number>
 	struct colorImp {
 	
@@ -35,10 +66,20 @@ namespace Raychel {
 			:r(_r), g(_g), b(_b)
 		{}
 
+		/**
+		*\brief Convert the color to another color of type _To
+		*
+		*\tparam _To Type of the converted color
+		*\return colorImp<_To> 
+		*/
 		template<typename _To>
-		colorImp<_To> to() const;
+		colorImp<_To> to() const noexcept;
 		
-		//for use with function which expect an rgb* such as most OpenGL functions
+		/**
+		*\brief Convert the color to a pointer-to-red. For functions that need colors as arrays
+		*
+		*\return const value_type* 
+		*/
 		explicit operator const value_type* () const;
 
 		explicit colorImp(const vec3&);
@@ -91,12 +132,6 @@ namespace Raychel {
 	{
 		return !(a == b);
 	}
-
-	template<typename T>
-	colorImp<bool> operator==(const colorImp<T>&, const colorImp<T>&);
-
-	template<typename T>
-	colorImp<bool> operator!=(const colorImp<T>&, const colorImp<T>&);
 
 	template<typename T>
 	colorImp<bool> operator<(const colorImp<T>&, const colorImp<T>&);

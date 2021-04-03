@@ -1,8 +1,8 @@
 /**
-*\file Camera.h
+*\file Interface.h
 *\author weckyy702 (weckyy702@gmail.com)
-*\brief Header file for Camera class
-*\date 2021-03-25
+*\brief Header for Material interface
+*\date 2021-03-27
 *
 *MIT License
 *Copyright (c) [2021] [Weckyy702 (weckyy702@gmail.com | https://github.com/Weckyy702)]
@@ -25,69 +25,51 @@
 *SOFTWARE.
 *
 */
-#ifndef RAYCHEL_CAMERA_H
-#define RAYCHEL_CAMERA_H
+#ifndef RAYCHEL_IMATERIAL_H
+#define RAYCHEL_IMATERIAL_H
+#pragma once
 
-#include <array>
+#include "Raychel/Core/LinkTypes.h"
 #include "Raychel/Core/Types.h"
+#include "Raychel/Core/Forward.h"
 
 namespace Raychel {
 
     /**
-    *\brief Freely orientable Camera used for rendering.
+    *\brief Abstract interface for Materials
     *
     */
-    class Camera {
+    struct IMaterial {
+
+    protected:
+        IMaterial()=default; //TODO: change that
+
+        virtual void initializeTextureProviders(const vec3& parent_position, const vec3& parent_size)=0;
 
     public:
-
-        Camera()=default;
-
-        Camera(const Transform& _t, double _zoom)
-            :transform_(_t), zoom_(_zoom)
-        {}
-
-        vec3 forward() const noexcept;
-
-        vec3 right() const noexcept;
-
-        vec3 up() const noexcept;
-
-        inline double zoom() const noexcept
-        {
-            return zoom_;
-        }
-
-
-        void setRoll(double angle) noexcept;
-
-        void setPitch(double angle) noexcept;
-
-        void setYaw(double angle) noexcept;
-
-        Quaternion updateRoll(double da) noexcept;
-
-        Quaternion updatePitch(double da) noexcept;
-
-        Quaternion updateYaw(double da) noexcept;
         
-        friend class RaymarchRenderer;
+        virtual color getSurfaceColor(const ShadingData& data)const =0;
 
-    private:
-
-            Transform transform_;
-            double zoom_=1.0;
-
-            //double exposure;
-
-            //colors that each channel reacts to. Essential for color bleed etc.
-            std::array<color, 3> color_channels_ = {
-                color(1, 0, 0),
-                color(0, 1, 0),
-                color(0, 0, 1)
-            };
+        virtual ~IMaterial()=default;
     };
 
+    /**
+    *\brief Base class for all Materials
+    *
+    */
+    class Material : public IMaterial {
+    
+    protected:
+        Material()=default;
+
+    public:
+        void setParentRenderer(const not_null<RaymarchRenderer*> new_renderer) noexcept;
+
+    protected:
+        //Reference to renderer that renders this materials scene
+        const RaymarchRenderer* parent_renderer_=nullptr;
+    };
+    
 }
 
-#endif //RAYCHEL_CAMERA_H
+#endif //RAYCHEL_IMATERIAL_H

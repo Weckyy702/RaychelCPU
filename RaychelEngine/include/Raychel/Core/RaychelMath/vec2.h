@@ -1,3 +1,30 @@
+/**
+*\file vec2.h
+*\author weckyy702 (weckyy702@gmail.com)
+*\brief Header file for 2 dimensional vector quantities
+*\date 2021-03-24
+*
+*MIT License
+*Copyright (c) [2021] [Weckyy702 (weckyy702@gmail.com | https://github.com/Weckyy702)]
+*Permission is hereby granted, free of charge, to any person obtaining a copy
+*of this software and associated documentation files (the "Software"), to deal
+*in the Software without restriction, including without limitation the rights
+*to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+*copies of the Software, and to permit persons to whom the Software is
+*furnished to do so, subject to the following conditions:
+*
+*The above copyright notice and this permission notice shall be included in all
+*copies or substantial portions of the Software.
+*
+*THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+*IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+*FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+*AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+*LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+*OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+*SOFTWARE.
+*
+*/
 #ifndef RAYCHEL_VEC2_H
 #define RAYCHEL_VEC2_H
 #pragma once
@@ -6,7 +33,11 @@
 
 namespace Raychel {
 
-	//2-dimensional vector
+	/**
+	*\brief 2D vector
+	*
+	*\tparam _number Type of the vector. Must be arithmetic
+	*/
 	template<RAYCHEL_NUMBER _number>
 	struct vec2Imp {
 
@@ -31,6 +62,12 @@ namespace Raychel {
 			:x(_x), y(_y)
 		{}
 
+		/**
+		*\brief Convert the vector to another vector
+		*
+		*\tparam To Type of the converted vector
+		*\return vec2Imp<To> 
+		*/
 		template<typename To>
 		constexpr vec2Imp<To> to() const; 
 
@@ -144,10 +181,31 @@ namespace Raychel {
 	template<typename T>
 	T distSq(const vec2Imp<T>&, const vec2Imp<T>&);
 
+	/**
+	*\brief Rotate the 2D vector
+	*
+	*\tparam T Type of the vector
+	*\param v Vector to rotate
+	*\param theta Angle to rotate by. Must be in radians
+	*\return vec2Imp<T> 
+	*/
 	template<typename T>
-	//rotate v on the xy-plane
-	//theta in radians
 	vec2Imp<T> rotate(const vec2Imp<T>& v, T theta);
+
+	/**
+	*\brief Linearly interpolate two vectors
+	*
+	*\tparam T Type of the vector
+	*\param a first vector (x=0.0)
+	*\param b second vector (x=1.0)
+	*\param x value of interpolation
+	*\return constexpr vec2Imp<T> 
+	*/
+	template<typename T>
+	constexpr vec2Imp<T> lerp(const vec2Imp<T>& a, const vec2Imp<T>& b, double x)
+	{
+		return (x * b) + ((1.0-x) * a);
+	}
 }
 
 #endif // !RAYCHEL_VEC2_H
