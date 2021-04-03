@@ -38,10 +38,10 @@ namespace Raychel
 
         //RAYCHEL_ASSERT(framebuffer.size() == getSize());
 
-        const auto size = getSize().to<png::uint_32>();
-        const auto _size = size.to<double>() - vec2{1, 1};
+        const auto image_size = size().to<png::uint_32>();
+        const auto _size = image_size.to<double>() - vec2{1, 1};
 
-        image_t image{size.x, size.y};
+        image_t image{image_size.x, image_size.y};
 
 
         static const auto write_pixel = [&](const RenderResult& res) {

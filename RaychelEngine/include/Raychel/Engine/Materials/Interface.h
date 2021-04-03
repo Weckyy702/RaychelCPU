@@ -1,8 +1,8 @@
 /**
-*\file Forward.h
+*\file Interface.h
 *\author weckyy702 (weckyy702@gmail.com)
-*\brief Header for forward declarations
-*\date 2021-03-24
+*\brief Header for Material interface
+*\date 2021-03-27
 *
 *MIT License
 *Copyright (c) [2021] [Weckyy702 (weckyy702@gmail.com | https://github.com/Weckyy702)]
@@ -25,32 +25,51 @@
 *SOFTWARE.
 *
 */
-#ifndef RAYCHEL_FORWARD_H
-#define RAYCHEL_FORWARD_H
+#ifndef RAYCHEL_IMATERIAL_H
+#define RAYCHEL_IMATERIAL_H
+#pragma once
 
-#include <vector>
+#include "Raychel/Core/LinkTypes.h"
+#include "Raychel/Core/Types.h"
+#include "Raychel/Core/Forward.h"
 
 namespace Raychel {
 
-    //Image Texture
-    template<typename T>
-    //class Texture; 
-    using Texture = std::vector<T>;
+    /**
+    *\brief Abstract interface for Materials
+    *
+    */
+    struct IMaterial {
 
-    //Wrapper for either an Image or procedural Texture
-    template<typename T>
-    class TextureProvider;
+    protected:
+        IMaterial()=default; //TODO: change that
 
-    class Scene;
+        virtual void initializeTextureProviders(const vec3& parent_position, const vec3& parent_size)=0;
 
-    struct Camera;
+    public:
+        
+        virtual color getSurfaceColor(const ShadingData& data)const =0;
 
-    struct IRaymarchable;
-    struct IMaterial;
+        virtual ~IMaterial()=default;
+    };
 
-    class Material;
+    /**
+    *\brief Base class for all Materials
+    *
+    */
+    class Material : public IMaterial {
+    
+    protected:
+        Material()=default;
 
-    class RaymarchRenderer;
+    public:
+        void setParentRenderer(const not_null<RaymarchRenderer*> new_renderer) noexcept;
+
+    protected:
+        //Reference to renderer that renders this materials scene
+        const RaymarchRenderer* parent_renderer_=nullptr;
+    };
+    
 }
 
-#endif //RAYCHEL_FORWARD_H
+#endif //RAYCHEL_IMATERIAL_H

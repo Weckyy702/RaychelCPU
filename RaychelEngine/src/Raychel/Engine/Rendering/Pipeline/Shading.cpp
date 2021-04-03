@@ -115,17 +115,17 @@ namespace Raychel {
 
     RenderResult RaymarchRenderer::_raymarchFunction(const RaymarchData& req) const
     {
-        double depth=0;
+        const vec2 screenspace_uv = _getScreenspaceUV(req.uv);
         const vec3 origin = cam_data_.position;
         vec3 direction = _getRayDirectionFromUV(req.uv);
-        vec2 screenspace_uv = _getScreenspaceUV(req.uv);
 
-        if(raymarch(origin, direction, 10, &depth))
-            return {screenspace_uv, color{1-(depth/10.0)}};
+        //TODO: do the magic thingy
 
-        direction = max(direction, vec3{});
+        if(raymarch(origin, direction, 10, nullptr)) {
+            return {screenspace_uv, color{1, 0, 0}};
+        }
 
-        return {screenspace_uv, color{direction.x, direction.y, 0.0}};
+        return {screenspace_uv, color{direction}};
     }
 
     double RaymarchRenderer::sdScene(const vec3& p) const

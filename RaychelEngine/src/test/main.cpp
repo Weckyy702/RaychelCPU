@@ -14,38 +14,42 @@ int main(int argc, char** argv)
 
     Scene scene;
 
-    Quaternion start_rotation = Quaternion{ vec3{0, 0, -1}, 45_deg };
+    Quaternion start_rotation = Quaternion{};
 
     scene.cam = Camera{Transform{vec3(0, 0, 0), start_rotation}, 0.5};
 
-    scene.addObject( SdSphere{ ObjectData{Transform{vec3{0, 0, 7.5}}}, 1.0 } );
-    scene.addObject( SdSphere{ ObjectData{Transform{vec3{0, -7.5, 0}}}, 1.0 } );
-    scene.addObject( SdSphere{ ObjectData{Transform{vec3{0, 0, -7.5}}}, 1.0 } );
-    scene.addObject( SdSphere{ ObjectData{Transform{vec3{0, 7.5, 0}}}, 1.0 } );
+    scene.addObject( SdSphere{ ObjectData{Transform{vec3{0, 0, 7.5}}, nullptr}, 1.0 } );
+    scene.addObject( SdSphere{ ObjectData{Transform{vec3{0, -7.5, 0}}, nullptr}, 1.0 } );
+    scene.addObject( SdSphere{ ObjectData{Transform{vec3{0, 0, -7.5}}, nullptr}, 1.0 } );
+    scene.addObject( SdSphere{ ObjectData{Transform{vec3{0, 7.5, 0}}, nullptr}, 1.0 } );
 
-    const vec2Imp<size_t> size = {1280, 720};
+    const vec2Imp<size_t> size = {100, 100};
 
     RenderController renderer;
 
     renderer.setCurrentScene(&scene);
     renderer.setOutputSize(size);
 
-    ImageTarget target{size, "../../res", 4};
+    RenderTarget* target = new ImageTarget{size, "../../res", 4};
 
     auto label = Logger::startTimer("Total time");
 
     for(int i = 0; i < 360; i++) {
 
+        RAYCHEL_LOG(i);
+
         auto render_label = Logger::startTimer("Render time");
         auto results = renderer.getImageRendered();
         Logger::logDuration(render_label);
 
-        target.writeFramebuffer(results);
+        target->writeFramebuffer(results);
 
         scene.cam.updatePitch(1_deg);
     }
 
     Logger::logDuration(label);
+
+    delete target;
 
     return 0;
 }

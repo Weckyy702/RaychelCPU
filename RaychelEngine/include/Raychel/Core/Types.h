@@ -29,14 +29,14 @@
 #define RAYCHEL_TYPES_H
 #pragma once
 
+#include <memory>
+
 #include "utils.h"
 #include "RaychelMath/vec2.h"
 #include "RaychelMath/vec3.h"
 #include "RaychelMath/color.h"
 #include "RaychelMath/Quaternion.h"
 #include "RaychelMath/Transform.h"
-
-//forward declarations for pointer-only types
 #include "Forward.h"
 
 namespace Raychel {
@@ -77,6 +77,7 @@ namespace Raychel {
 	using Transform = TransformImp<number_t>;
 
 	using IRaymarchable_p = not_null<IRaymarchable*>;
+	using IMaterial_p = std::unique_ptr<IMaterial>;
 
 
 	extern const vec3 g_forward;
