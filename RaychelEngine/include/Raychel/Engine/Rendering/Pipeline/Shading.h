@@ -28,15 +28,16 @@ namespace Raychel {
 
         void _setupCamData(const Camera& cam) noexcept;
 
+        //these functions are defined in RaymarchMath.cpp
         #pragma region Raymarching functions
 
         vec3 _getRayDirectionFromUV(const vec2&) const noexcept;
 
         RenderResult _raymarchFunction(const RaymarchData& req) const;
 
-        double sdScene(const vec3& p) const;
+        float sdScene(const vec3& p) const;
 
-        bool raymarch(const vec3& origin, const vec3& direction, double max_depth, double* out_depth) const noexcept;
+        bool raymarch(const vec3& origin, const vec3& direction, float max_depth, float* out_depth) const noexcept;
 
         #pragma endregion
 
@@ -44,7 +45,7 @@ namespace Raychel {
 
 
         vec2i output_size_;
-        double aspect_ratio;
+        float aspect_ratio;
 
         //Non-owning references to scene specific data
         std::vector<IRaymarchable_p> const* objects_;
@@ -56,8 +57,14 @@ namespace Raychel {
         //buffer forward, right and up vectors here
         struct {
             vec3 position, forward, right, up;
-            double zoom;
+            float zoom;
         } cam_data_;
+
+        //these values are dependent on RaymarchOptions::_epsilon
+        struct {
+            float _normalBias = 1e-7;
+            float _surfaceBias = 5e-6;
+        } raymarch_data_;
 
     };
 

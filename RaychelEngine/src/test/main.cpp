@@ -1,4 +1,6 @@
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 #include "Raychel/Raychel.h"
 #include "Raychel/Engine/Objects/sdObjects.h"
@@ -6,11 +8,14 @@
 #include "Raychel/Engine/Interface/Scene.h"
 #include "Raychel/Engine/Rendering/RenderTarget/ImageTarget.h"
 
+
 using namespace Raychel;
 
-int main(int argc, char** argv)
+int main(int, char**)
 {
     Logger::setMinimumLogLevel(Logger::LogLevel::debug);
+
+    Logger::log("Welcome to Raychel Version ", RAYCHEL_VERSION_TAG, '\n');
 
     Scene scene;
 
@@ -30,7 +35,7 @@ int main(int argc, char** argv)
     renderer.setCurrentScene(&scene);
     renderer.setOutputSize(size);
 
-    RenderTarget* target = new ImageTarget{size, "../../res", 4};
+    RenderTarget* target = new ImageTargetPng{size, "../../res", 4};
 
     auto label = Logger::startTimer("Total time");
 
@@ -42,7 +47,9 @@ int main(int argc, char** argv)
         auto results = renderer.getImageRendered();
         Logger::logDuration(render_label);
 
+        auto file_label = Logger::startTimer("Write time");
         target->writeFramebuffer(results);
+        Logger::logDuration(file_label);
 
         scene.cam.updatePitch(1_deg);
     }

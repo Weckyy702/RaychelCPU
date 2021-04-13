@@ -23,7 +23,7 @@ namespace Raychel {
 
     public:
 
-        virtual double eval(const vec3&) const=0;
+        virtual float eval(const vec3&) const=0;
 
         virtual vec3 getDirection(const vec3&) const=0;
 
@@ -67,8 +67,8 @@ namespace Raychel {
 
     protected:
         color lampColor;
-        double lampBrightness=1.0;
-        double lampSize=1.0;
+        float lampBrightness=1.0;
+        float lampSize=1.0;
     };
 
     inline ObjectData makeObjectData(SdObject&& rhs)

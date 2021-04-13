@@ -155,6 +155,9 @@ namespace Raychel {
 	colorImp<T> min(const colorImp<T>&, const colorImp<T>&);
 
 	template<typename T>
+	T brightness(const colorImp<T>&);
+
+	template<typename T>
 	inline colorImp<T> _ensureValid(const colorImp<T>& c);
 }
 

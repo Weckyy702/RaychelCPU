@@ -43,7 +43,7 @@ namespace Raychel {
 
 	//snice literal operators cannot be templated, this must be changed according to
 	//the preferred floating point type
-    using number_t = double;
+    using number_t = float;
 
 	constexpr number_t operator "" _deg(long double x)
 	{

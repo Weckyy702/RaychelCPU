@@ -239,6 +239,11 @@ namespace Raychel {
 	{
 		return { min(a.r, b.r), min(a.g, b.g), min(a.b, b.b) };
 	}
+
+	template<typename T>
+	T brightness(const colorImp<T>& c) {
+		return (c.r + c.g + c.b) / T(3.0);
+	}
 }
 
 #endif /*RAYCHEL_COLOR_IMP*/

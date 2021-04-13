@@ -181,14 +181,14 @@ namespace Raychel {
 	*\return QuaternionImp<T> 
 	*/
 	template<typename T>
-	QuaternionImp<T> lerp(const QuaternionImp<T>& _a, const QuaternionImp<T>& _b, double x)
+	QuaternionImp<T> lerp(const QuaternionImp<T>& _a, const QuaternionImp<T>& _b, float x)
 	{
 		constexpr auto threshold = 0.995;
 
 		auto a = normalize(_a);
 		auto b = normalize(_b);
 
-		double d = dot(a.v(), b.v());
+		auto d = dot(a.v(), b.v());
 
 		if(d < 0.0) {
 			a *= -1;
@@ -200,13 +200,13 @@ namespace Raychel {
 			return normalize(a * x + b * (1.0 - x));
 		}
 
-		double theta0 = std::acos(d);
-		double theta = theta0 * x;
-		double sinTheta = std::sin(theta);
-		double sinTheta0 = std::sin(theta0);
+		auto theta0 = std::acos(d);
+		auto theta = theta0 * x;
+		auto sinTheta = std::sin(theta);
+		auto sinTheta0 = std::sin(theta0);
 
-		double s1 = sinTheta / sinTheta0;
-		double s0 = std::cos(theta) - (d * s1);
+		auto s1 = sinTheta / sinTheta0;
+		auto s0 = std::cos(theta) - (d * s1);
 
 		return (a * s0) + (b * s1);
 

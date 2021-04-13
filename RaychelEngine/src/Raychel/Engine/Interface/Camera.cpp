@@ -19,34 +19,34 @@ namespace Raychel {
 
 
 
-    void Camera::setRoll(double a) noexcept
+    void Camera::setRoll(float a) noexcept
     {
         transform_.rotation = Quaternion(forward(), a);
     }
 
-    void Camera::setPitch(double a) noexcept
+    void Camera::setPitch(float a) noexcept
     {
         transform_.rotation = Quaternion(right(), a);
     }
 
-    void Camera::setYaw(double a) noexcept
+    void Camera::setYaw(float a) noexcept
     {
         transform_.rotation = Quaternion(up(), a);
     }
 
-    Quaternion Camera::updateRoll(double da) noexcept
+    Quaternion Camera::updateRoll(float da) noexcept
     {
         transform_.rotation *= Quaternion(forward(), da);
         return transform_.rotation;
     }
 
-    Quaternion Camera::updatePitch(double da) noexcept
+    Quaternion Camera::updatePitch(float da) noexcept
     {
         transform_.rotation *= Quaternion(right(), da);
         return transform_.rotation;
     }
 
-    Quaternion Camera::updateYaw(double da) noexcept
+    Quaternion Camera::updateYaw(float da) noexcept
     {
         transform_.rotation *= Quaternion(up(), da);
         return transform_.rotation;

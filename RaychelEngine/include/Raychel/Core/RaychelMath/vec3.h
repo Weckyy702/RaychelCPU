@@ -197,7 +197,7 @@ namespace Raychel {
 	*\return vec3Imp<T> 
 	*/
 	template<typename T>
-	vec3Imp<T> rotateX(const vec3Imp<T>& v, T theta);
+	vec3Imp<T> rotateX(const vec3Imp<T>& v, long double theta);
 
 	/**
 	*\brief Rotate the vector theta radians around positive Y
@@ -208,7 +208,7 @@ namespace Raychel {
 	*\return vec3Imp<T> 
 	*/
 	template<typename T>
-	vec3Imp<T> rotateY(const vec3Imp<T>& v, T theta);
+	vec3Imp<T> rotateY(const vec3Imp<T>& v, long double theta);
 
 	/**
 	*\brief Rotate the vector theta radians around positive Z
@@ -219,7 +219,7 @@ namespace Raychel {
 	*\return vec3Imp<T> 
 	*/
 	template<typename T>
-	vec3Imp<T> rotateZ(const vec3Imp<T>& v, T theta);
+	vec3Imp<T> rotateZ(const vec3Imp<T>& v, long double theta);
 
 	/**
 	*\brief Linearly interpolate two vectors
@@ -231,7 +231,7 @@ namespace Raychel {
 	*\return constexpr vec2Imp<T> 
 	*/
 	template<typename T>
-	constexpr vec3Imp<T> lerp(const vec3Imp<T>& a, const vec3Imp<T>& b, double x)
+	constexpr vec3Imp<T> lerp(const vec3Imp<T>& a, const vec3Imp<T>& b, long double x)
 	{
 		return (x * b) + ((1.0-x) * a);
 	}

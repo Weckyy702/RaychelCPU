@@ -37,6 +37,7 @@
 #include <cstddef>
 #include <type_traits>
 #include <cmath>
+#include <cassert>
 
 //convenience headers
 #include <memory>
@@ -75,6 +76,12 @@ namespace Raychel {
 //terminate the application with the provided message
 #define RAYCHEL_TERMINATE(...) Logger::fatal( __PRETTY_FUNCTION__, "(", __FILE__, " : ", __LINE__, "): ", __VA_ARGS__, '\n');	\
 								std::exit(0x41);
+
+#if defined(RAYCHEL_DEBUG) || !defined(NDEBUG)
+	#define RAYCHEL_ASSERT(exp) assert(exp);
+#else
+	#define RAYCHEL_ASSERT
+#endif
 
 //#define RAYCHEL_LOGICALLY_EQUAL //<-- activates logical equivalency for vector-like types
 
@@ -125,7 +132,7 @@ namespace Raychel {
 	*\return _number
 	*/
 	template<typename _number, typename = std::enable_if_t<std::is_arithmetic_v<_number>>>
-	constexpr _number lerp(_number a, _number b, double x)
+	constexpr _number lerp(_number a, _number b, long double x)
 	{
 		return (x * b) + ((1.0-x) * a);
 	}
@@ -170,11 +177,11 @@ namespace Raychel {
 
 		constexpr _float epsilon = std::numeric_limits<_float>::epsilon() * 5;
 
-		const double min = std::min(a, b);
+		const auto min = std::min(a, b);
 
-		const double diff = std::abs(a-b);
+		const auto diff = std::abs(a-b);
 
-		double e = epsilon;
+		auto e = epsilon;
 		if(min != 0)
 			e = std::abs(min) * epsilon;
 

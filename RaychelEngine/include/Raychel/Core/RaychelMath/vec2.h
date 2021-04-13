@@ -202,7 +202,7 @@ namespace Raychel {
 	*\return constexpr vec2Imp<T> 
 	*/
 	template<typename T>
-	constexpr vec2Imp<T> lerp(const vec2Imp<T>& a, const vec2Imp<T>& b, double x)
+	constexpr vec2Imp<T> lerp(const vec2Imp<T>& a, const vec2Imp<T>& b, long double x)
 	{
 		return (x * b) + ((1.0-x) * a);
 	}

@@ -43,7 +43,7 @@ namespace Raychel {
 
         Camera()=default;
 
-        Camera(const Transform& _t, double _zoom)
+        Camera(const Transform& _t, float _zoom)
             :transform_(_t), zoom_(_zoom)
         {}
 
@@ -53,32 +53,32 @@ namespace Raychel {
 
         vec3 up() const noexcept;
 
-        inline double zoom() const noexcept
+        inline float zoom() const noexcept
         {
             return zoom_;
         }
 
 
-        void setRoll(double angle) noexcept;
+        void setRoll(float angle) noexcept;
 
-        void setPitch(double angle) noexcept;
+        void setPitch(float angle) noexcept;
 
-        void setYaw(double angle) noexcept;
+        void setYaw(float angle) noexcept;
 
-        Quaternion updateRoll(double da) noexcept;
+        Quaternion updateRoll(float da) noexcept;
 
-        Quaternion updatePitch(double da) noexcept;
+        Quaternion updatePitch(float da) noexcept;
 
-        Quaternion updateYaw(double da) noexcept;
+        Quaternion updateYaw(float da) noexcept;
         
         friend class RaymarchRenderer;
 
     private:
 
             Transform transform_;
-            double zoom_=1.0;
+            float zoom_=1.0;
 
-            //double exposure;
+            //float exposure;
 
             //colors that each channel reacts to. Essential for color bleed etc.
             std::array<color, 3> color_channels_ = {

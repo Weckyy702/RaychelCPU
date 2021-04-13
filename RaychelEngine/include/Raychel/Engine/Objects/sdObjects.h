@@ -9,7 +9,7 @@ namespace Raychel {
     struct SdSphere : public SdObject
     {
 
-        SdSphere(const ObjectData& _d, double _r)
+        SdSphere(const ObjectData& _d, float _r)
             :SdObject{_d}, radius{_r}
         {}
 
@@ -17,10 +17,10 @@ namespace Raychel {
             :SdObject{makeObjectData(std::move(rhs))}, radius{rhs.radius}
         {}
 
-        double eval(const vec3&) const override;
+        float eval(const vec3&) const override;
 
         private:
-            double radius=0;
+            float radius=0;
     };
 
 }

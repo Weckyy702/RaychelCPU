@@ -52,8 +52,8 @@ namespace Raychel {
     {
 
         color c;
-        double b;
-        double sz;
+        float b;
+        float sz;
 
     };
 
@@ -68,9 +68,11 @@ namespace Raychel {
      *       should be left on default
      */
     struct RaymarchOptions {
-        double _epsilon = 1e-6;
-        double _normalBias = _epsilon*0.1;
-        double _surfaceBias = _epsilon * 5;
+        //maximum distance a ray can travel in the scene [m]
+        float max_ray_distance = 50.0;
+
+        //maximum distance a point can be away form a surface while still being cosidered *on* the surface [m]
+        float epsilon = 1e-6;
     };
 
     /**
@@ -78,8 +80,8 @@ namespace Raychel {
     *
     */
     struct PostprocessingOptions {
-        bool doPostprocessing = false;
-        bool doDenoising = false;
+        bool do_postprocessing = false;
+        bool do_denoising = false;
     };
 
     /**
@@ -90,6 +92,8 @@ namespace Raychel {
     {
         bool doAA = false;
     };
+
+
 
     /**
     *\brief Precomputed data to accelerate raymarching
@@ -109,13 +113,13 @@ namespace Raychel {
 
         vec3 hit_point, hit_normal;
         size_t num_ray_steps;
-        double ray_depth;
+        float ray_depth;
 
     };
 
     /**
     *\brief Data that leaves the rendering step. Can be used in Postprocessing
-    *
+    *\todo add ray histograms for denoising via RHF
     */
     struct RenderResult
     {
