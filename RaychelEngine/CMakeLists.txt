@@ -8,10 +8,12 @@ set(SOURCES
     ${RAYCHEL_SOURCE_DIR}/Engine/Objects/Interface.cpp
     ${RAYCHEL_SOURCE_DIR}/Engine/Objects/sdObjects.cpp
     ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/Pipeline/Shading.cpp
+    ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/Pipeline/RaymarchMath.cpp
     ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/Renderer.cpp
     ${RAYCHEL_SOURCE_DIR}/Engine/Interface/Camera.cpp
     ${RAYCHEL_SOURCE_DIR}/Types.cpp
     ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/RenderTarget/ImageTarget.cpp
+    ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/RenderTarget/AsciiTarget.cpp
 )
 
 add_executable(RaychelCPU_test 
@@ -31,6 +33,7 @@ target_link_libraries(RaychelCPU_test PRIVATE
     RaychelLogger
     tbb
     png
+    ncurses
 )
 
 if(${USE_ASAN})
