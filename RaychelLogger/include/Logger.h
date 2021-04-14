@@ -101,7 +101,7 @@ namespace Logger {
 			//check if obj can be represented as a string
 			if constexpr (details::is_to_stream_writable_v<std::ostringstream, T>)
 				representation = getRepStreamable(std::forward<T>(obj));
-			 else
+			else
 				representation = getRepNonStreamable(std::forward<T>(obj));
 
 			if (depth == 0)
