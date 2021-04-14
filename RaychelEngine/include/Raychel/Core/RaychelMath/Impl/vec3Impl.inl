@@ -364,6 +364,18 @@ namespace Raychel {
 		};
 	}
 
+	template<typename T>
+	constexpr vec3Imp<T> lerp(const vec3Imp<T>& a, const vec3Imp<T>& b, long double x)
+	{
+		return (x * b) + ((1.0-x) * a);
+	}
+
+	template<typename T>
+	vec3Imp<T> reflect(const vec3Imp<T>& dir, const vec3Imp<T>& normal)
+	{
+		return dir - (normal * T(dot(dir, normal) * 2.0));
+	}
+
 }
 
 #endif /*!RAYCHEL_VEC3_IMP*/

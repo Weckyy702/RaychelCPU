@@ -241,7 +241,8 @@ namespace Raychel {
 	}
 
 	template<typename T>
-	T brightness(const colorImp<T>& c) {
+	T brightness(const colorImp<T>& _c) {
+		auto c = _ensureValid(_c);
 		return (c.r + c.g + c.b) / T(3.0);
 	}
 }

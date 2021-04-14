@@ -231,10 +231,18 @@ namespace Raychel {
 	*\return constexpr vec2Imp<T> 
 	*/
 	template<typename T>
-	constexpr vec3Imp<T> lerp(const vec3Imp<T>& a, const vec3Imp<T>& b, long double x)
-	{
-		return (x * b) + ((1.0-x) * a);
-	}
+	constexpr vec3Imp<T> lerp(const vec3Imp<T>& a, const vec3Imp<T>& b, long double x);
+
+	/**
+	*\brief Reflect dir along normal
+	*
+	*\tparam T Type of the ve
+	*\param dir direction to be reflected
+	*\param normal normal to reflect around
+	*\return vec3 the reflected vector
+	*/
+	template<typename T>
+	vec3Imp<T> reflect(const vec3Imp<T>& dir, const vec3Imp<T>& normal);
 }
 
 #endif /*!RAYCHEL_VEC3_H*/
