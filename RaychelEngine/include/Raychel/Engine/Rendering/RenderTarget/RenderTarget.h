@@ -53,11 +53,25 @@ namespace Raychel {
         }
 
         /**
+        *\brief Prepare the target for writing an individual framebuffer. Called right before writeFramebuffer()
+        *
+        *\note Implementation is optional
+        */
+        virtual void prepareFramebufferWrite(){}
+
+        /**
         *\brief Write the provided framebuffer into the target
         *
         *\param framebuffer Framebuffer to write
         */
         virtual void writeFramebuffer(const Texture<RenderResult>& framebuffer)=0;
+
+        /**
+        *\brief Finish up writing the framebuffer. Called right after writeFramebuffer()
+        *
+        *\note Implementation is optional
+        */
+        virtual void finishFramebufferWrite(){}
 
         virtual ~RenderTarget()=default;
     

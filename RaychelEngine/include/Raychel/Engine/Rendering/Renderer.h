@@ -19,9 +19,9 @@ namespace Raychel
             void setCurrentScene(const not_null<Scene*> newScene);
 
             //may become private later
-            Texture<RenderResult> getImageRendered();
+            std::optional<Texture<RenderResult>> getImageRendered();
 
-            Texture<color> getImagePostprocessed() const;
+            std::optional<Texture<color>> getImagePostprocessed() const;
 
             void renderImage();
 

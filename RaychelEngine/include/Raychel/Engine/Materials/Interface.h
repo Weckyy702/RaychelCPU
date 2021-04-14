@@ -48,7 +48,9 @@ namespace Raychel {
 
     public:
         
-        virtual color getSurfaceColor(const ShadingData& data)const =0;
+        virtual color getSurfaceColor(const ShadingData& data, size_t recursion_depth)const =0;
+
+        virtual void setParentRenderer(not_null<RaymarchRenderer*> new_renderer)=0;
 
         virtual ~IMaterial()=default;
     };
@@ -58,12 +60,16 @@ namespace Raychel {
     *
     */
     class Material : public IMaterial {
+
+    public: 
+
+    void setParentRenderer(not_null<RaymarchRenderer*> new_renderer) override
+    {
+            parent_renderer_ = new_renderer;
+    }
     
     protected:
         Material()=default;
-
-    public:
-        void setParentRenderer(const not_null<RaymarchRenderer*> new_renderer) noexcept;
 
     protected:
         //Reference to renderer that renders this materials scene

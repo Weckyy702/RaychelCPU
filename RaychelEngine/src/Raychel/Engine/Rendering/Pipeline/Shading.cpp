@@ -65,18 +65,21 @@ namespace Raychel {
 
 #pragma region Render functions
 
-    Texture<RenderResult> RaymarchRenderer::renderImage(const Camera& cam)
+    std::optional<Texture<RenderResult>> RaymarchRenderer::renderImage(const Camera& cam)
     {
         _setupCamData(cam);
 
         Texture<RenderResult> output{/*output_size_*/requests_.size()};
 
-        _renderToTexture(output);
+        if(!_renderToTexture(output)){
+            Logger::error("Image rendering failed with error: ", current_exception_.what,"!\n");
+            return std::nullopt;
+        }
 
         return output;
     }
 
-    void RaymarchRenderer::_renderToTexture(Texture<RenderResult>& output_texture) const
+    bool RaymarchRenderer::_renderToTexture(Texture<RenderResult>& output_texture) const
     {
 
         using namespace std::placeholders;
@@ -90,6 +93,7 @@ namespace Raychel {
         std::transform(std::execution::par, requests_.cbegin(), requests_.cend(), output_texture.begin(), f);
 
         RAYCHEL_LOG("Finished render!");
+        return !failed_;
     }
 
     void RaymarchRenderer::_setupCamData(const Camera& cam) noexcept

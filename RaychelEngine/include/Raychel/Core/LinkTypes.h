@@ -72,7 +72,7 @@ namespace Raychel {
         float max_ray_distance = 50.0;
 
         //maximum distance a point can be away form a surface while still being cosidered *on* the surface [m]
-        float epsilon = 1e-6;
+        float epsilon = 1e-5;
     };
 
     /**
@@ -110,12 +110,22 @@ namespace Raychel {
     */
     struct ShadingData
     {
-
-        vec3 hit_point, hit_normal;
+        vec3 surface_point, hit_normal;
+        vec3 in_direction;
         size_t num_ray_steps;
         float ray_depth;
-
     };
+
+    /**
+    *\brief Info struct for objects that were hit while raymarching
+    *
+    */
+    struct RaymarchHitInfo
+    {
+        ShadingData shading_data;
+        const IRaymarchable* hit_object;
+    };
+    
 
     /**
     *\brief Data that leaves the rendering step. Can be used in Postprocessing

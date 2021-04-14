@@ -43,6 +43,7 @@
 #include <memory>
 #include <utility>
 #include <vector>
+#include <optional>
 
 #include "Logger.h"
 #include "RaychelMath/constants.h"
@@ -80,14 +81,14 @@ namespace Raychel {
 #if defined(RAYCHEL_DEBUG) || !defined(NDEBUG)
 	#define RAYCHEL_ASSERT(exp) assert(exp);
 #else
-	#define RAYCHEL_ASSERT
+	#define RAYCHEL_ASSERT(exp)
 #endif
 
 //#define RAYCHEL_LOGICALLY_EQUAL //<-- activates logical equivalency for vector-like types
 
 #define RAYCHEL_THROW_EXCEPTION(exception_type, msg, fatal) { \
 				static_assert(std::is_base_of_v<::Raychel::exception_context, exception_type>, "Raychel exceptions must be derived from Raychel::exception_context!"); \
-				throw ::exception_type{msg, __PRETTY_FUNCTION__, fatal}; \
+				throw ::Raychel::exception_type{msg, __PRETTY_FUNCTION__, fatal}; \
 			}
 
 namespace Raychel {
@@ -109,6 +110,10 @@ namespace Raychel {
 	struct exception_context {
 		exception_context(const char* _msg, const char* _originFunc, bool _fatal)
 			:what(_msg), originFunction(_originFunc), fatal(_fatal)
+		{}
+
+		exception_context(const exception_context& rhs)
+			:what{rhs.what}, originFunction{rhs.originFunction}, fatal{rhs.fatal}
 		{}
 
 		const gsl::czstring<> what;

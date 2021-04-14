@@ -16,15 +16,15 @@ namespace Raychel {
         void setSceneData(  const not_null<std::vector<IRaymarchable_p>*> objects/*,
                             const not_null<TextureProvider<color>*> background_texture*/);
 
-        Texture<RenderResult> renderImage(const Camera& cam);
+        std::optional<Texture<RenderResult>> renderImage(const Camera& cam);
 
-    private:
+    //private:
 
         void _refillRequestBuffer();
 
         RaymarchData _getRootRequest(size_t x, size_t y) const;
 
-        void _renderToTexture(Texture<RenderResult>& output) const;
+        bool _renderToTexture(Texture<RenderResult>& output) const;
 
         void _setupCamData(const Camera& cam) noexcept;
 
@@ -33,11 +33,23 @@ namespace Raychel {
 
         vec3 _getRayDirectionFromUV(const vec2&) const noexcept;
 
-        RenderResult _raymarchFunction(const RaymarchData& req) const;
+        RenderResult _raymarchFunction(const RaymarchData& req) const noexcept;
+
+        color getShadedColor(const vec3& origin, const vec3& direction, size_t recursion_depth) const;
+
+
+
+        RaymarchHitInfo getHitInfo(const vec3& origin, const vec3& direction, float depth) const noexcept;
+
+        vec3 getNormal(const vec3& p) const noexcept;
+
+        IRaymarchable* getHitObject(const vec3& p) const noexcept;
+
+
 
         float sdScene(const vec3& p) const;
 
-        bool raymarch(const vec3& origin, const vec3& direction, float max_depth, float* out_depth) const noexcept;
+        bool raymarch(const vec3& origin, const vec3& direction, float max_depth, float* out_depth, size_t* out_num_raymarch_steps) const noexcept;
 
         #pragma endregion
 
@@ -48,8 +60,8 @@ namespace Raychel {
         float aspect_ratio;
 
         //Non-owning references to scene specific data
-        std::vector<IRaymarchable_p> const* objects_;
-        TextureProvider<color> const* background_;
+        const std::vector<IRaymarchable_p>* objects_;
+        const TextureProvider<color>* background_;
 
         //Buffer of all UVs for which to raymarch
         std::vector<RaymarchData> requests_;
@@ -62,10 +74,17 @@ namespace Raychel {
 
         //these values are dependent on RaymarchOptions::_epsilon
         struct {
-            float _normalBias = 1e-7;
-            float _surfaceBias = 5e-6;
+            size_t max_recursion_depth=5;
+
+            float max_ray_depth=100.0f;
+
+            float distance_bias = 1e-4;
+            float normal_bias = 1e-5;
+            float surface_bias = 5e-4;
         } raymarch_data_;
 
+        mutable bool failed_ = false;
+        mutable exception_context current_exception_{"", "", false};
     };
 
 }

@@ -27,7 +27,9 @@ namespace Raychel {
 
         virtual vec3 getDirection(const vec3&) const=0;
 
-        virtual color getSurfaceColor(const ShadingData&) const=0;
+        virtual color getSurfaceColor(const ShadingData&, size_t recursion_depth) const=0;
+
+        virtual void onRendererAttached(const not_null<RaymarchRenderer*>)=0;
 
         virtual ~IRaymarchable()=default;
     };
@@ -46,7 +48,9 @@ namespace Raychel {
 
     vec3 getDirection(const vec3& p) const override;
 
-    color getSurfaceColor(const ShadingData& data) const override;
+    color getSurfaceColor(const ShadingData& data, size_t recursion_depth) const override;
+
+    void onRendererAttached(const not_null<RaymarchRenderer*>) override;
 
     virtual ~SdObject()=default;
 
@@ -79,6 +83,12 @@ namespace Raychel {
         return {rhs.transform_, mat};
     }
 
+    template<typename T, typename Mat, typename... Args>
+    T make_object(const Transform& transform, Mat&& mat, Args&&... args) {
+        static_assert(std::is_base_of_v<SdObject, T>, "Raychel::make_object<T> requires T to be derived from Raychel::SdObject!");
+        static_assert(std::is_base_of_v<Material, Mat>, "Raychel::make_object<Mat> requires Mat to be derived from Raychel::Material!");
+        return T(ObjectData{transform, new Mat{std::move(mat)}}, std::forward<Args>(args)...);
+    }
 
 }
 

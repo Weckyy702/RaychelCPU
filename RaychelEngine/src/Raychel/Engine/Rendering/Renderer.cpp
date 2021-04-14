@@ -18,10 +18,15 @@ namespace Raychel {
     {
         current_scene_ = new_scene;
         renderer_.setSceneData(&current_scene_->objects_/*, &current_scene->background_texture_*/);
+
+        //register the renderer for callbacks
+        for(auto& obj : current_scene_->objects_) {
+            obj->onRendererAttached(&renderer_);
+        }
     }
 
 
-    Texture<RenderResult> RenderController::getImageRendered()
+    std::optional<Texture<RenderResult>> RenderController::getImageRendered()
     {
         //TODO implement postprocessing
         return renderer_.renderImage(current_scene_->cam);
