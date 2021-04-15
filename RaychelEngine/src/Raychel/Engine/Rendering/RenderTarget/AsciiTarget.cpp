@@ -13,14 +13,16 @@
 
 namespace Raychel {
 
-    AsciiTarget::AsciiTarget(const vec2i& size)
-        :RenderTarget(size)
+    int getColorPaletteIndex(const color&);
+
+    AsciiTarget::AsciiTarget(const vec2i& size, bool use_color)
+        :RenderTarget(size), use_color_{use_color}
     {
         _init_ncurses();
     }
 
-    AsciiTarget::AsciiTarget(const vec2i& size, const std::vector<char>& char_set)
-        :RenderTarget(size), character_set_{char_set}
+    AsciiTarget::AsciiTarget(const vec2i& size, bool use_color, const std::vector<char>& char_set)
+        :RenderTarget(size), character_set_{char_set}, use_color_{use_color}
     {
         _init_ncurses();
     } 
@@ -37,7 +39,16 @@ namespace Raychel {
 
         #ifndef RAYCHEL_USE_NCURSES_FALLBACK
                 char c = character_set_.at(character_index);
-                mvaddch(i, j, c);
+                
+                if(use_color_ && has_colors()) {
+                    auto color_index = getColorPaletteIndex(col);
+                    attron(COLOR_PAIR(color_index));
+                    mvaddch(i, j, c);
+                    attroff(COLOR_PAIR(color_index));
+                } else {
+                    mvaddch(i, j, c);
+                }
+
                 
             }
         }
@@ -71,7 +82,35 @@ namespace Raychel {
             initscr();
             cbreak();
             noecho();
+
+            if(use_color_ && has_colors()) {
+                start_color();
+                init_pair(1, COLOR_RED, COLOR_BLACK);
+                init_pair(2, COLOR_GREEN, COLOR_BLACK);
+                init_pair(3, COLOR_BLUE, COLOR_BLACK);
+            }
+
+            clear();
         #endif
+    }
+
+
+
+    int getColorPaletteIndex(const color& col) {
+        if(col.r > col.g) {
+            if(col.b > col.r) {
+                return 3;
+            } else {
+                return 1;
+            }
+        } else {
+            if(col.b > col.g) {
+                return 3;
+            } else if(col.b != 0) {
+                return 2;
+            }
+        }
+        return 0;
     }
 
 }

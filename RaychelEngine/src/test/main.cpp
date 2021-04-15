@@ -21,12 +21,8 @@ struct DebugMat : public Material {
 
     void initializeTextureProviders(const vec3&, const vec3&){}
 
-    color getSurfaceColor(const ShadingData& data, size_t recursion_depth) const override {
-        const vec3 out_direction = reflect(data.in_direction, data.hit_normal);
-        if(recursion_depth == 3) {
-            return color{1};
-        }
-        return parent_renderer_->getShadedColor(data.surface_point, out_direction, recursion_depth)*0.95f;//return col_ * std::max(0.0f, dot(data.hit_normal, vec3{0, -1, 0}));
+    color getSurfaceColor(const ShadingData& data, size_t) const override {
+        return col_ * std::max(0.0f, dot(data.hit_normal, vec3{0, -1, 0}));
     }
 
     const color col_;
@@ -34,7 +30,7 @@ struct DebugMat : public Material {
 
 int main(int, char**)
 {
-    Logger::setMinimumLogLevel(Logger::LogLevel::error);
+    Logger::setMinimumLogLevel(Logger::LogLevel::debug);
 
     Logger::log("Welcome to Raychel Version ", RAYCHEL_VERSION_TAG, '\n');
 
@@ -42,7 +38,7 @@ int main(int, char**)
 
     Quaternion start_rotation = Quaternion{};
 
-    scene.cam = Camera{Transform{vec3(0, 0, 0), start_rotation}, 0.5};
+    scene.cam = Camera{Transform{vec3(0, 0, 0), start_rotation}, 1.0};
 
     scene.addObject( make_object<SdSphere>(Transform{vec3{0, 0, 2.5}}, DebugMat{color{1, 0, 0}}, 1.0) );
     scene.addObject( make_object<SdSphere>(Transform{vec3{0, -2.5, 0}}, DebugMat{color{0, 1, 0}}, 1.0) );
@@ -56,7 +52,7 @@ int main(int, char**)
     renderer.setCurrentScene(&scene);
     renderer.setOutputSize(size);
 
-    RenderTarget* target = new AsciiTarget{size};//ImageTargetPng{size, "../../res", 4};
+    RenderTarget* target = new AsciiTarget{size, false};//ImageTargetPng{size, "../../res", 4};
 
     auto label = Logger::startTimer("Total time");
 

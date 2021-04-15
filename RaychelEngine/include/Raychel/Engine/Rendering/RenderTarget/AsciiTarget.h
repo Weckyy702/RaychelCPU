@@ -36,8 +36,8 @@ namespace Raychel {
     class AsciiTarget : public RenderTarget {
 
         public:
-            AsciiTarget(const vec2i& size);
-            AsciiTarget(const vec2i& size, const std::vector<char>& char_set);
+            AsciiTarget(const vec2i& size, bool use_color);
+            AsciiTarget(const vec2i& size, bool use_color, const std::vector<char>& char_set);
 
             void writeFramebuffer(const Texture<RenderResult>& framebuffer) override;
 
@@ -50,6 +50,7 @@ namespace Raychel {
             void _init_ncurses() const;
 
             const std::vector<char> character_set_ = {'.', ':', ';', '~', '=', '#', '0', 'B', '8', '%', '&'};
+            bool use_color_=false;
     };
 
 }
