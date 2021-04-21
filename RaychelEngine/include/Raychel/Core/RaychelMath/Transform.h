@@ -28,8 +28,6 @@
 #ifndef RAYCHEL_TRANSFORM_H
 #define RAYCHEL_TRANSFORM_H
 
-#pragma once
-
 #include "../utils.h"
 #include "vec3.h"
 #include "Quaternion.h"

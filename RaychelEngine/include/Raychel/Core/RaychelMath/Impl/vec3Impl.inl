@@ -27,7 +27,7 @@
 */
 #ifndef RAYCHEL_VEC3_IMP
 #define RAYCHEL_VEC3_IMP
-#pragma once
+
 #include "../vec3.h"
 #include "../vec2.h"
 #include "../color.h"

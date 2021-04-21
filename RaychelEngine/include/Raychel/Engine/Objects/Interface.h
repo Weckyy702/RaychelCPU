@@ -1,6 +1,5 @@
 #ifndef SD_OBJECT_INTERFACE_H
 #define SD_OBJECT_INTERFACE_H
-#pragma once
 
 #include "Raychel/Core/Types.h"
 #include "Raychel/Core/LinkTypes.h"
@@ -27,7 +26,7 @@ namespace Raychel {
 
         virtual vec3 getDirection(const vec3&) const=0;
 
-        virtual color getSurfaceColor(const ShadingData&, size_t recursion_depth) const=0;
+        virtual color getSurfaceColor(const ShadingData&) const=0;
 
         virtual void onRendererAttached(const not_null<RaymarchRenderer*>)=0;
 
@@ -48,7 +47,7 @@ namespace Raychel {
 
     vec3 getDirection(const vec3& p) const override;
 
-    color getSurfaceColor(const ShadingData& data, size_t recursion_depth) const override;
+    color getSurfaceColor(const ShadingData& data) const override;
 
     void onRendererAttached(const not_null<RaymarchRenderer*>) override;
 

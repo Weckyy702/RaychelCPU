@@ -27,7 +27,6 @@
 */
 #ifndef RAYCHEL_CONSTANTS_H
 #define RAYCHEL_CONSTANTS_H
-#pragma once
 
 namespace Raychel {
 	template<typename _float = float>

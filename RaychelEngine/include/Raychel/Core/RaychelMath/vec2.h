@@ -27,7 +27,6 @@
 */
 #ifndef RAYCHEL_VEC2_H
 #define RAYCHEL_VEC2_H
-#pragma once
 
 #include "../utils.h"
 

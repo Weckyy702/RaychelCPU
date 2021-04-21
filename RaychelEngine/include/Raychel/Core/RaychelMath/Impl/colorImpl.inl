@@ -27,7 +27,6 @@
 */
 #ifndef RAYCHEL_COLOR_IMP
 #define RAYCHEL_COLOR_IMP
-#pragma once
 
 #include <limits>
 

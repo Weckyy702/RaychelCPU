@@ -27,7 +27,6 @@
 */
 #ifndef RAYCHEL_CORE_H
 #define RAYCHEL_CORE_H
-#pragma once
 
 #if !defined(__cplusplus) || __cplusplus < 201703L
     #error "C++(17) compilation is required!"
@@ -45,6 +44,7 @@
 #include <vector>
 #include <optional>
 
+#include "CMakeSettings.h"
 #include "Logger.h"
 #include "RaychelMath/constants.h"
 
@@ -64,10 +64,6 @@ namespace Raychel {
 
 #endif
 
-#ifndef NDEBUG
-	#define RAYCHEL_DEBUG
-#endif
-
 #ifdef RAYCHEL_DEBUG
 	#define RAYCHEL_LOG(...) Logger::debug( __PRETTY_FUNCTION__, ": ", __VA_ARGS__, '\n');
 #else
@@ -84,12 +80,15 @@ namespace Raychel {
 	#define RAYCHEL_ASSERT(exp)
 #endif
 
+#define RAYCHEL_ASSERT_NOT_REACHED RAYCHEL_TERMINATE("Assertion failed! Expected to not execute ", __LINE__)
+
 //#define RAYCHEL_LOGICALLY_EQUAL //<-- activates logical equivalency for vector-like types
 
-#define RAYCHEL_THROW_EXCEPTION(exception_type, msg, fatal) { \
-				static_assert(std::is_base_of_v<::Raychel::exception_context, exception_type>, "Raychel exceptions must be derived from Raychel::exception_context!"); \
-				throw ::Raychel::exception_type{msg, __PRETTY_FUNCTION__, fatal}; \
+#define RAYCHEL_THROW_EXCEPTION(msg, fatal) { \
+				throw ::Raychel::exception_context{msg, __PRETTY_FUNCTION__, fatal}; \
 			}
+
+#define RAYCHEL_ASSERT_NORMALIZED(vec) RAYCHEL_ASSERT(equivalent(magSq(vec), 1.0f));
 
 namespace Raychel {
 
@@ -102,24 +101,14 @@ namespace Raychel {
 	struct vec3Imp;
 	template<RAYCHEL_NUMBER _num>
 	struct colorImp;
+	/*TODO: implement
 	template<RAYCHEL_NUMBER _num>
-	struct QuaternionImp;
+	class colorAlphaImp;
+	*/
+	template<RAYCHEL_NUMBER _num>
+	class QuaternionImp;
 	template<RAYCHEL_NUMBER _num>
 	struct TransformImp;
-
-	struct exception_context {
-		exception_context(const char* _msg, const char* _originFunc, bool _fatal)
-			:what(_msg), originFunction(_originFunc), fatal(_fatal)
-		{}
-
-		exception_context(const exception_context& rhs)
-			:what{rhs.what}, originFunction{rhs.originFunction}, fatal{rhs.fatal}
-		{}
-
-		const gsl::czstring<> what;
-		const gsl::czstring<> originFunction;
-		const bool fatal;
-	};
 
 	template<RAYCHEL_NUMBER _number>
 	constexpr _number sq(_number x) {
@@ -156,22 +145,14 @@ namespace Raychel {
 	*/
 	constexpr int numDigits(unsigned long long num, unsigned int base = 10)
 	{
-    	int digits = 0;
+		int digits = 0;
 
-    	do {
-        	digits++;
-        	num /= base;
-    	}while(num != 0);
+		do {
+			digits++;
+			num /= base;
+		}while(num != 0);
 
 		return digits;
-	}
-
-#if 0
-	constexpr double abs(double x)
-	{
-		uint64_t rep = *reinterpret_cast<uint64_t*>(&x);
-		rep &= 0x7fffffffffffffff;
-		return *reinterpret_cast<double*>(&rep);
 	}
 
 	///\brief Return wether two floating point numbers are logically equivalent
@@ -195,7 +176,6 @@ namespace Raychel {
 
 		return  is_equal || is_equivalent;
 	}
-#endif
 
 }
 

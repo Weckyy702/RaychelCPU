@@ -1,6 +1,5 @@
 #ifndef RAYCHEL_SDOBJECT_H
 #define RAYCHEL_SDOBJECT_H
-#pragma once
 
 #include "Interface.h"
 

@@ -27,7 +27,6 @@
 */
 #ifndef RAYCHEL_TYPES_H
 #define RAYCHEL_TYPES_H
-#pragma once
 
 #include <memory>
 
@@ -37,6 +36,7 @@
 #include "RaychelMath/color.h"
 #include "RaychelMath/Quaternion.h"
 #include "RaychelMath/Transform.h"
+#include "Raychel/Misc/Exceptions/Exception_context.h"
 #include "Forward.h"
 
 namespace Raychel {

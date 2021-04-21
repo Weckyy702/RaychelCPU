@@ -27,7 +27,6 @@
 */
 #ifndef RAYCHEL_IMAGE_TARGET_H
 #define RAYCHEL_IMAGE_TARGET_H
-#pragma once
 
 #include <string>
 

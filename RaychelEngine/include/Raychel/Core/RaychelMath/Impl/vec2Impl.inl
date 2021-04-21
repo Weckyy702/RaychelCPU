@@ -27,7 +27,6 @@
 */
 #ifndef RAYCHEL_VEC2_IMP
 #define RAYCHEL_VEC2_IMP
-#pragma once
 
 #include "../../utils.h"
 #include "../vec2.h"

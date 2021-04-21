@@ -27,7 +27,6 @@
 */
 #ifndef RAYCHEL_QUATERNION_H
 #define RAYCHEL_QUATERNION_H
-#pragma once
 
 #include "../utils.h"
 

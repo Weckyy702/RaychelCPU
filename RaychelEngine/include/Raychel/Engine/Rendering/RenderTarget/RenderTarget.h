@@ -27,10 +27,10 @@
 */
 #ifndef RAYCHEL_RENDER_TARGET_H
 #define RAYCHEL_RENDER_TARGET_H
-#pragma once
 
 #include "Raychel/Core/Types.h"
 #include "Raychel/Core/LinkTypes.h"
+#include "Raychel/Misc/Texture/Texture.h"
 
 namespace Raychel {
 

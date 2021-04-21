@@ -27,7 +27,6 @@
 */
 #ifndef RAYCHEL_QUATERNION_IMP
 #define RAYCHEL_QUATERNION_IMP
-#pragma once
 
 #include "../Quaternion.h"
 #include "../vec3.h"

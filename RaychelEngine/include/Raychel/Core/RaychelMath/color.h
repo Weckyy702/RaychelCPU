@@ -27,7 +27,6 @@
 */
 #ifndef RAYCHEL_COLOR_H
 #define RAYCHEL_COLOR_H
-#pragma once
 
 #include "../utils.h"
 

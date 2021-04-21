@@ -27,7 +27,6 @@
 */
 #ifndef RAYCHEL_IMATERIAL_H
 #define RAYCHEL_IMATERIAL_H
-#pragma once
 
 #include "Raychel/Core/LinkTypes.h"
 #include "Raychel/Core/Types.h"
@@ -48,7 +47,7 @@ namespace Raychel {
 
     public:
         
-        virtual color getSurfaceColor(const ShadingData& data, size_t recursion_depth)const =0;
+        virtual color getSurfaceColor(const ShadingData& data)const =0;
 
         virtual void setParentRenderer(not_null<RaymarchRenderer*> new_renderer)=0;
 
@@ -63,10 +62,7 @@ namespace Raychel {
 
     public: 
 
-    void setParentRenderer(not_null<RaymarchRenderer*> new_renderer) override
-    {
-            parent_renderer_ = new_renderer;
-    }
+    void setParentRenderer(not_null<RaymarchRenderer*> new_renderer) override;
     
     protected:
         Material()=default;
