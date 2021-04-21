@@ -4,6 +4,7 @@
 #include "Raychel/Core/Types.h"
 #include "Raychel/Core/LinkTypes.h"
 #include "Raychel/Engine/Rendering/Pipeline/Shading.h"
+#include "Raychel/Misc/Texture/Texture.h"
 
 namespace Raychel
 {

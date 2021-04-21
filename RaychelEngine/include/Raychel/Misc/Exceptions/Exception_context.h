@@ -1,8 +1,8 @@
 /**
-*\file Forward.h
+*\file Exception_context.h
 *\author weckyy702 (weckyy702@gmail.com)
-*\brief Header for forward declarations
-*\date 2021-03-24
+*\brief Header file for the exeption context struct
+*\date 2021-04-21
 *
 *MIT License
 *Copyright (c) [2021] [Weckyy702 (weckyy702@gmail.com | https://github.com/Weckyy702)]
@@ -25,33 +25,44 @@
 *SOFTWARE.
 *
 */
-#ifndef RAYCHEL_FORWARD_H
-#define RAYCHEL_FORWARD_H
+#ifndef RAYCHEL_EXCEPTION_CONTEXT_H
+#define RAYCHEL_EXCEPTION_CONTEXT_H
 
+#include <exception>
+
+#include "Raychel/Core/utils.h"
+    
 namespace Raychel {
 
-    //Image Texture
-    template<typename T>
-    class Texture;
+    /**
+    *\brief Base class for all Exceptions in Raychel. Contains additional information compared to std::exception
+    */
+    class exception_context : public std::exception {
+    
+    public:
+        exception_context(gsl::czstring<> what, gsl::czstring<> origin, bool fatal)
+            :what_{what}, origin_{origin}, fatal_{fatal}
+        {}
 
-    //Wrapper for either an Image or procedural Texture
-    template<typename T>
-    class TextureProvider;
+        const char* what() const noexcept override {
+            return what_;
+        }
 
-    //Wrapper for either a Cube Map or a procedural Texture
-    template<typename T>
-    class CubeTexture;
+        const char* origin() const noexcept {
+            return origin_;
+        }
 
-    class Scene;
+        bool fatal() const noexcept {
+            return fatal_;
+        }
 
-    class Camera;
+    private:
+        gsl::czstring<> what_;
+        gsl::czstring<> origin_;
+        const bool fatal_;
+    };
 
-    struct IRaymarchable;
-    struct IMaterial;
-
-    class Material;
-
-    class RaymarchRenderer;
 }
 
-#endif //RAYCHEL_FORWARD_H
+
+#endif //!RAYCHEL_EXCEPTION_CONTEXT_H

@@ -31,6 +31,7 @@
 #include "Raychel/Core/utils.h"
 #include "Raychel/Engine/Objects/Interface.h"
 #include "Raychel/Engine/Interface/Camera.h"
+#include "Raychel/Misc/Texture/CubeTexture.h"
 
 namespace Raychel {
 
@@ -66,11 +67,10 @@ namespace Raychel {
 
         Camera cam;
 
-        private:
+        //private:
             std::vector<IRaymarchable_p> objects_;
-
+            CubeTexture<color> background_texture_;
             //TODO: implement
-            //TextureProvider<color> background_texture_;
             //std::vector<Camera> cams_;
     };
 

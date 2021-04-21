@@ -1,8 +1,8 @@
 /**
-*\file Forward.h
+*\file TextureType.h
 *\author weckyy702 (weckyy702@gmail.com)
-*\brief Header for forward declarations
-*\date 2021-03-24
+*\brief Header file for TextureType enum class
+*\date 2021-04-21
 *
 *MIT License
 *Copyright (c) [2021] [Weckyy702 (weckyy702@gmail.com | https://github.com/Weckyy702)]
@@ -25,33 +25,18 @@
 *SOFTWARE.
 *
 */
-#ifndef RAYCHEL_FORWARD_H
-#define RAYCHEL_FORWARD_H
+#ifndef RAYCHEL_TEXTURE_TYPE_H
+#define RAYCHEL_TEXTURE_TYPE_H
 
-namespace Raychel {
-
-    //Image Texture
-    template<typename T>
-    class Texture;
-
-    //Wrapper for either an Image or procedural Texture
-    template<typename T>
-    class TextureProvider;
-
-    //Wrapper for either a Cube Map or a procedural Texture
-    template<typename T>
-    class CubeTexture;
-
-    class Scene;
-
-    class Camera;
-
-    struct IRaymarchable;
-    struct IMaterial;
-
-    class Material;
-
-    class RaymarchRenderer;
+namespace Raychel
+{
+    enum class TextureType {
+        function,
+        image,
+        constant
+        //TODO: implement more types
+    };
 }
 
-#endif //RAYCHEL_FORWARD_H
+
+#endif //!RAYCHEL_TEXTURE_TYPE_H

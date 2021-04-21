@@ -1,8 +1,9 @@
 #ifndef RAYCHEL_SHADING_H
 #define RAYCHEL_SHADING_H
 
-#include "Raychel/Core/LinkTypes.h"
+#include <atomic>
 
+#include "Raychel/Core/LinkTypes.h"
 namespace Raychel {
 
     class RaymarchRenderer {
@@ -13,12 +14,14 @@ namespace Raychel {
 
         void setRenderSize(const vec2i& new_size);
 
-        void setSceneData(  const not_null<std::vector<IRaymarchable_p>*> objects/*,
-                            const not_null<TextureProvider<color>*> background_texture*/);
+        void setSceneData(  const not_null<std::vector<IRaymarchable_p>*> objects,
+                            const not_null<CubeTexture<color>*> background_texture);
 
         std::optional<Texture<RenderResult>> renderImage(const Camera& cam);
 
-    //private:
+    private:
+
+        void set_scene_callback_renderer();
 
         void _refillRequestBuffer();
 
@@ -39,7 +42,7 @@ namespace Raychel {
 
 
 
-        RaymarchHitInfo getHitInfo(const vec3& origin, const vec3& direction, float depth) const noexcept;
+        RaymarchHitInfo getHitInfo(const vec3& origin, const vec3& direction, float depth, size_t num_ray_steps, size_t recusion_depth) const noexcept;
 
         vec3 getNormal(const vec3& p) const noexcept;
 
@@ -61,17 +64,19 @@ namespace Raychel {
 
         //Non-owning references to scene specific data
         const std::vector<IRaymarchable_p>* objects_;
-        const TextureProvider<color>* background_;
+        const CubeTexture<color>* background_texture_;
 
         //Buffer of all UVs for which to raymarch
         std::vector<RaymarchData> requests_;
 
+        //size of this struct should be less than a cache line
         //buffer forward, right and up vectors here
         struct {
             vec3 position, forward, right, up;
             float zoom;
         } cam_data_;
 
+        //size of this struct should be less than a cache line
         //these values are dependent on RaymarchOptions::_epsilon
         struct {
             size_t max_recursion_depth=5;
@@ -83,7 +88,7 @@ namespace Raychel {
             float surface_bias = 5e-4;
         } raymarch_data_;
 
-        mutable bool failed_ = false;
+        mutable std::atomic_bool failed_ = false;
         mutable exception_context current_exception_{"", "", false};
     };
 

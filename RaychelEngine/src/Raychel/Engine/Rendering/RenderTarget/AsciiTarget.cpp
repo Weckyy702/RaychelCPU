@@ -29,11 +29,10 @@ namespace Raychel {
 
     void AsciiTarget::writeFramebuffer(const Texture<RenderResult>& framebuffer)
     {
-        for(size_t  i = 0; i < size().y; i++) {
-            for(size_t j = 0; j < size().x; j++) {
-                auto index_1D = (i * size().x) + j;
-
-                auto col = framebuffer.at(index_1D).output;
+        for(size_t i = 0u; i < size().x; i++) {
+            for(size_t j = 0u; j < size().y; j++) {
+                auto col = framebuffer.at(vec2i{i, j}).output;
+                
                 auto col_brightness = brightness(col);
                 size_t character_index = static_cast<size_t>(col_brightness * (character_set_.size()-1));
 
@@ -43,10 +42,10 @@ namespace Raychel {
                 if(use_color_ && has_colors()) {
                     auto color_index = getColorPaletteIndex(col);
                     attron(COLOR_PAIR(color_index));
-                    mvaddch(i, j, c);
+                    mvaddch(size().y-j, size().x-i, c);
                     attroff(COLOR_PAIR(color_index));
                 } else {
-                    mvaddch(i, j, c);
+                    mvaddch(size().y-j, size().x-i, c);
                 }
 
                 
