@@ -112,8 +112,11 @@ namespace Raychel {
     {
         vec3 surface_point, hit_normal;
         vec3 in_direction;
+
         size_t num_ray_steps;
         float ray_depth;
+
+        size_t recursion_depth;
     };
 
     /**

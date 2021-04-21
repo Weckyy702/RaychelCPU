@@ -9,24 +9,10 @@
 #include "Raychel/Engine/Rendering/RenderTarget/ImageTarget.h"
 #include "Raychel/Engine/Rendering/RenderTarget/AsciiTarget.h"
 
+#include "Raychel/Engine/Materials/Materials.h"
+#include "Raychel/Misc/Texture/CubeTexture.h"
+
 using namespace Raychel;
-
-struct DebugMat : public Material {
-
-    DebugMat()=default;
-
-    DebugMat(const color& col)
-        :col_{col}
-    {}
-
-    void initializeTextureProviders(const vec3&, const vec3&){}
-
-    color getSurfaceColor(const ShadingData& data, size_t) const override {
-        return col_ * std::max(0.0f, dot(data.hit_normal, vec3{0, -1, 0}));
-    }
-
-    const color col_;
-};
 
 int main(int, char**)
 {
@@ -36,42 +22,49 @@ int main(int, char**)
 
     Scene scene;
 
+    scene.background_texture_ = CubeTexture<color>{[](const vec3& dir){
+        return color{dir};
+    }};
+
     Quaternion start_rotation = Quaternion{};
 
     scene.cam = Camera{Transform{vec3(0, 0, 0), start_rotation}, 1.0};
 
-    scene.addObject( make_object<SdSphere>(Transform{vec3{0, 0, 2.5}}, DebugMat{color{1, 0, 0}}, 1.0) );
-    scene.addObject( make_object<SdSphere>(Transform{vec3{0, -2.5, 0}}, DebugMat{color{0, 1, 0}}, 1.0) );
-    scene.addObject( make_object<SdSphere>(Transform{vec3{0, 0, -2.5}}, DebugMat{color{0, 0, 1}}, 1.0) );
-    scene.addObject( make_object<SdSphere>(Transform{vec3{0, 2.5, 0}}, DebugMat{color{1, 1, 0}}, 1.0) );
+    scene.addObject( make_object<SdSphere>(Transform{vec3{0, 0, 2.5}}, DiffuseMaterial{color{1, 0, 0}}, 1.0) );
+    scene.addObject( make_object<SdSphere>(Transform{vec3{2.5, 0, 0}}, DiffuseMaterial{color{0, 1, 0}}, 1.0) );
+    scene.addObject( make_object<SdSphere>(Transform{vec3{0, 0, -2.5}}, DiffuseMaterial{color{0, 0, 1}}, 1.0) );
+    scene.addObject( make_object<SdSphere>(Transform{vec3{-2.5, 0, 0}}, DiffuseMaterial{color{1, 1, 1}}, 1.0) );
 
-    const vec2i size = {100, 50};
+    const vec2i size = {853, 480};
 
     RenderController renderer;
 
     renderer.setCurrentScene(&scene);
     renderer.setOutputSize(size);
 
-    RenderTarget* target = new AsciiTarget{size, false};//ImageTargetPng{size, "../../res", 4};
+    RenderTarget* target = new ImageTargetPng{size, "../../res", 4};
 
     auto label = Logger::startTimer("Total time");
 
-    for(size_t i = 0;; i++) {
-        //auto render_label = Logger::startTimer("Render time");
+    for(size_t i = 0;i<180; i++) {
+
+        auto render_label = Logger::startTimer("Render time");
         auto results = renderer.getImageRendered();
-        //Logger::logDuration(render_label);
+        Logger::logDuration(render_label);
 
         if(!results) {
             break;
         }
         
-        target->prepareFramebufferWrite();
-        //auto file_label = Logger::startTimer("Write time");
-        target->writeFramebuffer(results.value());
-        //Logger::logDuration(file_label);
-        target->finishFramebufferWrite();
+        auto file_label = Logger::startTimer("Write time");
+            target->prepareFramebufferWrite();
+            target->writeFramebuffer(results.value());
+            target->finishFramebufferWrite();
+        Logger::logDuration(file_label);
 
-        scene.cam.updateYaw(1_deg);
+        scene.cam.updateYaw(2_deg);
+
+        using namespace std::chrono_literals;
     }
 
     Logger::logDuration(label);

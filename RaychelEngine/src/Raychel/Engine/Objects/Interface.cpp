@@ -8,9 +8,9 @@ namespace Raychel {
         return transform_.position-p;
     }
 
-    color SdObject::getSurfaceColor(const ShadingData& data, size_t recursion_depth) const
+    color SdObject::getSurfaceColor(const ShadingData& data) const
     {
-        return material_->getSurfaceColor(data, recursion_depth);
+        return material_->getSurfaceColor(data);
     }
 
     void SdObject::onRendererAttached(const not_null<RaymarchRenderer*> new_renderer){

@@ -28,6 +28,7 @@
 
 #include "Raychel/Engine/Rendering/Pipeline/Shading.h"
 #include "Raychel/Engine/Objects/Interface.h"
+#include "Raychel/Misc/Texture/CubeTexture.h"
 
 namespace Raychel {
 
@@ -38,14 +39,12 @@ namespace Raychel {
                             (cam_data_.up * uv.y) );
     }
 
-    
-
     RenderResult RaymarchRenderer::_raymarchFunction(const RaymarchData& req) const noexcept
     {
         const vec2 screenspace_uv = _getScreenspaceUV(req.uv);
         const vec3 origin = cam_data_.position;
         const vec3 direction = _getRayDirectionFromUV(req.uv);
-    
+
         if(!failed_) {
             try {
                 color res = getShadedColor(origin, direction, 0);
@@ -59,24 +58,26 @@ namespace Raychel {
             }
         }
 
-        return {};
+        return {screenspace_uv, color{0}};
     }
 
     color RaymarchRenderer::getShadedColor(const vec3& origin, const vec3& direction, size_t recursion_depth) const
     {
-        if(recursion_depth < raymarch_data_.max_recursion_depth){
+        if(recursion_depth <= raymarch_data_.max_recursion_depth) {
             float depth = 0;
-            if(raymarch(origin, direction, raymarch_data_.max_ray_depth, &depth, nullptr)){
-                const RaymarchHitInfo hit_info = getHitInfo(origin, direction, depth);
-                return hit_info.hit_object->getSurfaceColor(hit_info.shading_data, recursion_depth+1);
+            size_t num_ray_steps = 0;
+            if(raymarch(origin, direction, raymarch_data_.max_ray_depth, &depth, &num_ray_steps)){
+                const RaymarchHitInfo hit_info = getHitInfo(origin, direction, depth, num_ray_steps, recursion_depth);
+
+                return hit_info.hit_object->getSurfaceColor(hit_info.shading_data);
             }
         }
-        return color{direction};
+        return (*background_texture_)(direction);
     }
 
 
 
-    RaymarchHitInfo RaymarchRenderer::getHitInfo(const vec3& origin, const vec3& direction, float depth) const noexcept
+    RaymarchHitInfo RaymarchRenderer::getHitInfo(const vec3& origin, const vec3& direction, float depth, size_t num_ray_steps, size_t recursion_depth) const noexcept
     {
         const vec3 hit_point = origin + (direction * depth);
 
@@ -86,7 +87,7 @@ namespace Raychel {
         const IRaymarchable* hit_obj = getHitObject(hit_point);
         RAYCHEL_ASSERT(hit_obj);
 
-        return {{surface_point, normal, direction, 0, depth}, hit_obj};
+        return {{surface_point, normal, direction, num_ray_steps, depth, recursion_depth+1}, hit_obj};
     }
 
     vec3 RaymarchRenderer::getNormal(const vec3& p) const noexcept

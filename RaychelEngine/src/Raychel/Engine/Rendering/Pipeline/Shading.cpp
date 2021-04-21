@@ -5,6 +5,7 @@
 #include "Raychel/Engine/Objects/Interface.h"
 #include "Raychel/Engine/Rendering/Pipeline/Shading.h"
 #include "Raychel/Engine/Interface/Camera.h"
+#include "Raychel/Misc/Texture/CubeTexture.h"
 
 namespace Raychel {
 
@@ -17,11 +18,19 @@ namespace Raychel {
         _refillRequestBuffer();
     }
 
-    void RaymarchRenderer::setSceneData(const not_null<std::vector<IRaymarchable_p>*> objects/*,
-                                        const not_null<TextureProvider<color>*> background_texture*/)
+    void RaymarchRenderer::setSceneData(const not_null<std::vector<IRaymarchable_p>*> objects,
+                                        const not_null<CubeTexture<color>*> background_texture)
     {
         objects_ = objects;
-        // background_ = background_texture;
+        background_texture_ = background_texture;
+
+        set_scene_callback_renderer();
+    }
+
+    void RaymarchRenderer::set_scene_callback_renderer() {
+        for(auto& obj : *objects_) {
+            obj->onRendererAttached(this);
+        }
     }
 
     void RaymarchRenderer::_refillRequestBuffer()
@@ -69,10 +78,11 @@ namespace Raychel {
     {
         _setupCamData(cam);
 
-        Texture<RenderResult> output{/*output_size_*/requests_.size()};
+        Texture<RenderResult> output{output_size_};
 
         if(!_renderToTexture(output)){
-            Logger::error("Image rendering failed with error: ", current_exception_.what,"!\n");
+            Logger::error("Image rendering failed with error: ", current_exception_.what() , "at (", current_exception_.origin(), ")!\n");
+            //TODO: customizable error handling
             return std::nullopt;
         }
 

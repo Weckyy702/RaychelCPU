@@ -14,6 +14,8 @@ set(SOURCES
     ${RAYCHEL_SOURCE_DIR}/Types.cpp
     ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/RenderTarget/ImageTarget.cpp
     ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/RenderTarget/AsciiTarget.cpp
+    ${RAYCHEL_SOURCE_DIR}/Engine/Materials/Interface.cpp
+    ${RAYCHEL_SOURCE_DIR}/Engine/Materials/Materials.cpp
 )
 
 add_executable(RaychelCPU_test 
@@ -37,31 +39,17 @@ target_link_libraries(RaychelCPU_test PRIVATE
 )
 
 if(${USE_ASAN})
-    if(MSVC)
-        target_compile_options(RaychelCPU_test PUBLIC /fsanitize=address /fno-omit-frame-pointer)
-        target_link_options(RaychelCPU_test PUBLIC /fsanitize=address)
-    else()
-        target_compile_options(RaychelCPU_test PUBLIC -fsanitize=address -fno-omit-frame-pointer)
-        target_link_options(RaychelCPU_test PUBLIC -fsanitize=address)
-    endif()
+    message(STATUS "Enabled ASAN support")
+    target_compile_options(RaychelCPU_test PUBLIC -fsanitize=address -fno-omit-frame-pointer)
+    target_link_options(RaychelCPU_test PUBLIC -fsanitize=address)
 endif()
 
 if(${USE_UBSAN})
-
-    if(MSVC)
-        target_compile_options(RaychelCPU_test PUBLIC /fsanitize=undefined /fno-omit-frame-pointer)
-        target_link_options(RaychelCPU_test PUBLIC /fsanitize=undefined)
-    else()
-        target_compile_options(RaychelCPU_test PUBLIC -fsanitize=undefined -fno-sanitize-recover -fno-omit-frame-pointer)
-        target_link_options(RaychelCPU_test PUBLIC -fsanitize=undefined)
-    endif()
-
+    message(STATUS "EnabledUbSAN support")
+    target_compile_options(RaychelCPU_test PUBLIC -fsanitize=undefined -fno-sanitize-recover -fno-omit-frame-pointer)
+    target_link_options(RaychelCPU_test PUBLIC -fsanitize=undefined)
 endif()
 
-if(MSVC)
-    target_compile_options(RaychelCPU_test PUBLIC /Wall /Wextra /pedantic /Wno-unknown-pragmas)
-else()
-    target_compile_options(RaychelCPU_test PUBLIC -Wall -Wextra -pedantic -Wno-unknown-pragmas)
-endif()
+target_compile_options(RaychelCPU_test PUBLIC -Wall -Wextra -pedantic -Wno-unknown-pragmas)
 
 target_compile_features(RaychelCPU_test PUBLIC cxx_std_17)

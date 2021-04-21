@@ -17,12 +17,7 @@ namespace Raychel {
     void RenderController::setCurrentScene(const not_null<Scene*> new_scene) 
     {
         current_scene_ = new_scene;
-        renderer_.setSceneData(&current_scene_->objects_/*, &current_scene->background_texture_*/);
-
-        //register the renderer for callbacks
-        for(auto& obj : current_scene_->objects_) {
-            obj->onRendererAttached(&renderer_);
-        }
+        renderer_.setSceneData(&current_scene_->objects_, &current_scene_->background_texture_);
     }
 
 
