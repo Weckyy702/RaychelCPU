@@ -76,6 +76,10 @@ namespace Raychel {
 	using Quaternion = QuaternionImp<number_t>;
 	using Transform = TransformImp<number_t>;
 
+	//these type are just for readability
+	using normalized2 = vec2;
+	using normalized3 = vec3;
+
 	using IRaymarchable_p = not_null<IRaymarchable*>;
 	using IMaterial_p = std::unique_ptr<IMaterial>;
 

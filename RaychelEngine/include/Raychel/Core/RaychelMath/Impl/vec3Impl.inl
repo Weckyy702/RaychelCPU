@@ -371,9 +371,10 @@ namespace Raychel {
 	}
 
 	template<typename T>
-	vec3Imp<T> reflect(const vec3Imp<T>& dir, const vec3Imp<T>& normal)
+	vec3Imp<T> reflect(const vec3Imp<T>& direction, const vec3Imp<T>& normal)
 	{
-		return dir - (normal * T(dot(dir, normal) * 2.0));
+		RAYCHEL_ASSERT_NORMALIZED(direction);
+		return direction - (normal * T(dot(direction, normal) * 2.0));
 	}
 
 }

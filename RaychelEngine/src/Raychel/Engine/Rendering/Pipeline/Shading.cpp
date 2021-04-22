@@ -35,8 +35,7 @@ namespace Raychel {
 
     void RaymarchRenderer::_refillRequestBuffer()
     {
-        
-        RAYCHEL_LOG("Refilling request buffer...");
+        RAYCHEL_LOG("Refilling request buffer to ", output_size_.x * output_size_.y, " pixels");
 
         requests_.clear();
         size_t request_count = output_size_.x * output_size_.y;
@@ -108,7 +107,6 @@ namespace Raychel {
 
     void RaymarchRenderer::_setupCamData(const Camera& cam) noexcept
     {
-        RAYCHEL_LOG("Cam data size: ", sizeof(cam_data_))
         cam_data_.position = cam.transform_.position;
         cam_data_.forward = cam.forward();
         cam_data_.right = cam.right();

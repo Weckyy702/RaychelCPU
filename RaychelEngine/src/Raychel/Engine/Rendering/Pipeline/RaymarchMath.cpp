@@ -61,8 +61,10 @@ namespace Raychel {
         return {screenspace_uv, color{0}};
     }
 
-    color RaymarchRenderer::getShadedColor(const vec3& origin, const vec3& direction, size_t recursion_depth) const
+    color RaymarchRenderer::getShadedColor(const vec3& origin, const normalized3& direction, size_t recursion_depth) const
     {
+        RAYCHEL_ASSERT_NORMALIZED(direction);
+
         if(recursion_depth <= raymarch_data_.max_recursion_depth) {
             float depth = 0;
             size_t num_ray_steps = 0;
@@ -77,8 +79,10 @@ namespace Raychel {
 
 
 
-    RaymarchHitInfo RaymarchRenderer::getHitInfo(const vec3& origin, const vec3& direction, float depth, size_t num_ray_steps, size_t recursion_depth) const noexcept
+    RaymarchHitInfo RaymarchRenderer::getHitInfo(const vec3& origin, const normalized3& direction, float depth, size_t num_ray_steps, size_t recursion_depth) const noexcept
     {
+        RAYCHEL_ASSERT_NORMALIZED(direction);
+
         const vec3 hit_point = origin + (direction * depth);
 
         const vec3 normal = getNormal(hit_point);
@@ -129,8 +133,10 @@ namespace Raychel {
 
     
 
-    bool RaymarchRenderer::raymarch(const vec3& origin, const vec3& direction, float max_depth, float* out_depth, size_t* out_num_ray_steps) const noexcept
+    bool RaymarchRenderer::raymarch(const vec3& origin, const normalized3& direction, float max_depth, float* out_depth, size_t* out_num_ray_steps) const noexcept
     {
+        RAYCHEL_ASSERT_NORMALIZED(direction);
+
         size_t i = 0;
         float depth = 0;
         while(depth < max_depth) {

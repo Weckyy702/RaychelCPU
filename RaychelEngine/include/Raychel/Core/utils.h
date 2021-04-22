@@ -71,11 +71,13 @@ namespace Raychel {
 #endif
 
 //terminate the application with the provided message
-#define RAYCHEL_TERMINATE(...) Logger::fatal( __PRETTY_FUNCTION__, "(", __FILE__, " : ", __LINE__, "): ", __VA_ARGS__, '\n');	\
+#define RAYCHEL_TERMINATE(...) Logger::fatal( __PRETTY_FUNCTION__, " at ", __FILE__, ":", __LINE__, ": ", __VA_ARGS__, '\n');	\
 								std::exit(0x41);
 
 #if defined(RAYCHEL_DEBUG) || !defined(NDEBUG)
-	#define RAYCHEL_ASSERT(exp) assert(exp);
+	#define RAYCHEL_ASSERT(exp) if(!exp) { \
+		RAYCHEL_TERMINATE("Assertion '", GSL_STRINGIFY(exp), "' failed!");\
+	}
 #else
 	#define RAYCHEL_ASSERT(exp)
 #endif
