@@ -8,7 +8,7 @@ option(USE_RAYCHEL_DEBUG "If specific debug only features of the engine should b
 
 if(${USE_RAYCHEL_DEBUG})
 
-    add_compile_definitions(-DRAYCHEL_DEBUG=1)
+    add_compile_definitions(RAYCHEL_DEBUG)
 
 endif()
 

@@ -50,6 +50,6 @@ if(${USE_UBSAN})
     target_link_options(RaychelCPU_test PUBLIC -fsanitize=undefined)
 endif()
 
-target_compile_options(RaychelCPU_test PUBLIC -Wall -Wextra -pedantic -Wno-unknown-pragmas)
+target_compile_options(RaychelCPU_test PUBLIC -Wpedantic -Wall -Wextra -Wshadow -Wno-unknown-pragmas)
 
 target_compile_features(RaychelCPU_test PUBLIC cxx_std_17)
