@@ -50,20 +50,98 @@ namespace Raychel {
         using value_type = value_type_;
 
         CubeTexture()
-            :type_{TextureType::constant}, constant_{}
+            :type_{TextureType::constant}, values_{}
         {}
 
         CubeTexture(const sample_func& func)
-            :type_{TextureType::function}, func_{func}
+            :type_{TextureType::function}, values_{func}
         {}
 
         CubeTexture(const provider_list& providers)
-            :type_{TextureType::image}, providers_{providers}
+            :type_{TextureType::image}, values_{providers}
         {}
 
         CubeTexture(const value_type& constant)
-            :type_{TextureType::constant}, constant_{constant}
+            :type_{TextureType::constant}, values_{constant}
         {}
+
+        CubeTexture(const CubeTexture& rhs)
+            :type_{rhs.type_}
+        {
+            switch (type_)
+            {
+            case TextureType::function:
+                values_.func = rhs.values_.func;
+                break;
+            case TextureType::image:
+                values_.providers = rhs.values_.providers;
+                break;
+            case TextureType::constant:
+                values_.constant = rhs.values_.constant;
+                break;
+            default:
+                RAYCHEL_ASSERT_NOT_REACHED;
+            }
+        }
+
+        CubeTexture(CubeTexture&& rhs)
+            :type_{rhs.type_}
+        {
+            switch (type_)
+            {
+            case TextureType::function:
+                values_.func = std::move(rhs.values_.func);
+                break;
+            case TextureType::image:
+                values_.providers = std::move(rhs.values_.providers);
+                break;
+            case TextureType::constant:
+                values_.constant = std::move(rhs.values_.constant);
+                break;
+            default:
+                RAYCHEL_ASSERT_NOT_REACHED;
+            }
+        }
+
+        CubeTexture& operator=(const CubeTexture& rhs) noexcept
+        {
+            type_ = rhs.type_;
+            switch (type_)
+            {
+            case TextureType::function:
+                values_.func = rhs.values_.func;
+                break;
+            case TextureType::image:
+                values_.providers = rhs.values_.providers;
+                break;
+            case TextureType::constant:
+                values_.constant = rhs.values_.constant;
+                break;
+            default:
+                RAYCHEL_ASSERT_NOT_REACHED;
+            }
+            return *this;
+        }
+
+        CubeTexture& operator=(CubeTexture&& rhs) noexcept
+        {
+            type_ = rhs.type_;
+            switch (type_)
+            {
+            case TextureType::function:
+                values_.func = std::move(rhs.values_.func);
+                break;
+            case TextureType::image:
+                values_.providers = std::move(rhs.values_.providers);
+                break;
+            case TextureType::constant:
+                values_.constant = std::move(rhs.values_.constant);
+                break;
+            default:
+                RAYCHEL_ASSERT_NOT_REACHED;
+            }
+            return *this;
+        }
 
         /**
         *\brief Evaluate the Cube Map for the given direction
@@ -71,33 +149,61 @@ namespace Raychel {
         *\param dir direction to evaluate. Must be normalized
         *\return value_type 
         */
-        value_type operator()(const vec3& dir) const
+        value_type operator()(const normalized3& dir) const
         {
             RAYCHEL_ASSERT_NORMALIZED(dir);
+
             switch(type_) {
                 case TextureType::function:
-                    return func_(dir);
+                    return values_.func(dir);
                 case TextureType::image:
                     return _evaluate_cube_map(dir);
                 case TextureType::constant:
-                    return constant_;
+                    return values_.constant;
             }
             RAYCHEL_ASSERT_NOT_REACHED;
         }
 
     private:
 
-        value_type_ _evaluate_cube_map(const vec3&) const
+        value_type_ _evaluate_cube_map(const normalized3& dir) const
         {
+            RAYCHEL_ASSERT_NORMALIZED(dir);
             //TODO: implement
             return value_type_{};
         }
 
-        TextureType type_;
+        /**
+        *\brief Space-saving wrapper for CubeTexture members
+        *
+        */
+        union CubeTextureValues {
 
-        sample_func func_;
-        provider_list providers_;
-        value_type constant_;
+            CubeTextureValues()
+                :constant{}
+            {}
+
+            CubeTextureValues(const sample_func& _func)
+                :func{_func}
+            {}
+
+            CubeTextureValues(const provider_list& _providers)
+                :providers{_providers}
+            {}
+
+            CubeTextureValues(const value_type& _constant)
+                :constant{_constant}
+            {}
+
+            ~CubeTextureValues(){}
+
+            sample_func func;
+            provider_list providers;
+            value_type constant;
+        };
+
+        TextureType type_;
+        CubeTextureValues values_;
     };
     
 

@@ -56,6 +56,10 @@ namespace Raychel
             :size_(size), pixel_buffer_{size_.x*size_.y}
         {}
 
+        Texture(size_t x, size_t y)
+            :Texture(vec2i{x, y})
+        {}
+
         /**
         *\brief sample the texture at the specified uv coordinate
         *

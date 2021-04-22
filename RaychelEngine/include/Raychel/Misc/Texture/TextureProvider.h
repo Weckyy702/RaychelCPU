@@ -23,30 +23,115 @@ namespace Raychel {
             using value_type = value_type_;
 
             TextureProvider()
-                :type_(TextureType::constant), constant_{}
+                :type_(TextureType::constant), values_{}
             {}
 
             /*implicit*/TextureProvider(const sample_func& sample_function)
-                :type_(TextureType::function), func_{sample_function}
+                :type_(TextureType::function), values_{sample_function}
             {}
 
             /*implicit*/TextureProvider(const texture_t& texture)
-                :type_(TextureType::image), texture_{texture}
+                :type_(TextureType::image), values_{texture}
             {}
 
             /*implicit*/TextureProvider(const value_type& constant)
-                :type_(TextureType::constant), constant_{constant}
+                :type_(TextureType::constant), values_{constant}
             {}
 
+            TextureProvider(const TextureProvider& rhs)
+                :type_{rhs.type_}
+            {
+                switch (type_)
+                {
+                case TextureType::function:
+                    values_.func = rhs.values_.func;
+                    break;
+                case TextureType::image:
+                    values_.texture = rhs.values_.texture;
+                    break;
+                case TextureType::constant:
+                    values_.constant = rhs.values_.constant;
+                    break;
+                default:
+                    RAYCHEL_ASSERT_NOT_REACHED;
+                }
+            }
+
+            TextureProvider(TextureProvider&& rhs)
+                :type_{rhs.type_}
+            {
+                switch (type_)
+                {
+                case TextureType::function:
+                    values_.func = std::move(rhs.values_.func);
+                    break;
+                case TextureType::image:
+                    values_.texture = std::move(rhs.values_.texture);
+                    break;
+                case TextureType::constant:
+                    values_.constant = std::move(rhs.values_.constant);
+                    break;
+                default:
+                    RAYCHEL_ASSERT_NOT_REACHED;
+                }
+            }
+
+            TextureProvider& operator=(const TextureProvider& rhs) noexcept
+            {
+                type_ = rhs.type_;
+                switch (type_)
+                {
+                case TextureType::function:
+                    values_.func = rhs.values_.func;
+                    break;
+                case TextureType::image:
+                    values_.texture = rhs.values_.texture;
+                    break;
+                case TextureType::constant:
+                    values_.constant = rhs.values_.constant;
+                    break;
+                default:
+                    RAYCHEL_ASSERT_NOT_REACHED;
+                }
+                return *this;
+            }
+
+            TextureProvider& operator=(TextureProvider&& rhs) noexcept
+            {
+                type_ = rhs.type_;
+                switch (type_)
+                {
+                case TextureType::function:
+                    values_.func = std::move(rhs.values_.func);
+                    break;
+                case TextureType::image:
+                    values_.texture = std::move(rhs.values_.texture);
+                    break;
+                case TextureType::constant:
+                    values_.constant = std::move(rhs.values_.constant);
+                    break;
+                default:
+                    RAYCHEL_ASSERT_NOT_REACHED;
+                }
+                return *this;
+            }
+
+            /**
+            *\brief Evaluate the Texture at the given position with the given normal
+            *
+            *\param pos position in the texture space
+            *\param normal normal used for uv calculation
+            *\return value_type 
+            */
             value_type operator()(const vec3& pos, const vec3& normal) const
             {
                 switch(type_) {
                     case TextureType::function:
-                        return func_(pos, normal);
+                        return values_.func(pos, normal);
                     case TextureType::image:
                         return _get_value_from_texture(pos, normal);
                     case TextureType::constant:
-                        return constant_;
+                        return values_.constant;
                 }
                 RAYCHEL_ASSERT_NOT_REACHED;
             }
@@ -59,10 +144,38 @@ namespace Raychel {
                 return T();
             }
 
+            /**
+            *\brief Space saving wrapper for TextureProvider members
+            *
+            */
+            union TextureValues
+            {
+                TextureValues()
+                    :constant{}
+                {}
+
+                TextureValues(const sample_func& _func)
+                    :func{_func}
+                {}
+
+                TextureValues(const texture_t& _texture)
+                    :texture{_texture}
+                {}
+
+                TextureValues(const value_type& _constant)
+                    :constant{_constant}
+                {}
+
+                ~TextureValues(){}
+
+                sample_func func;
+                texture_t texture;
+                value_type constant;
+            };
+            
+
             TextureType type_;
-            sample_func func_;
-            texture_t texture_;
-            value_type constant_{};
+            TextureValues values_;
     };
 
 }
