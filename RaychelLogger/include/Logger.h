@@ -77,7 +77,7 @@ namespace Logger {
 			return interpreter.str();
 		}
 
-		template<typename T, class = std::enable_if_t<!std::is_same_v<T, const char*>>>
+		template<typename T, typename = std::enable_if_t<!std::is_same_v<T, const char*>>>
 		std::string getRepStreamable(T* obj) {
 			std::ostringstream interpreter;
 
@@ -87,44 +87,45 @@ namespace Logger {
 		}
 
 		//overload getRepStreamable so C-style strings don't get logged as pointers
-		template<class = void>
+		template<typename = void>
 		std::string getRepStreamable(const char* obj)
 		{
 			return std::string(obj);
 		}
 
 		//internal function. Not to be used directly
-		template<typename T>
-		void logObj(size_t depth, T&& obj) {
-			std::string representation;
+		template<typename T, std::enable_if_t<details::is_to_stream_writable_v<std::ostringstream, T>, bool> = true>
+		void logObj(bool log_with_label, T&& obj) {
+				std::string representation = getRepStreamable(std::forward<T>(obj));
 
-			//check if obj can be represented as a string
-			if constexpr (details::is_to_stream_writable_v<std::ostringstream, T>)
-				representation = getRepStreamable(std::forward<T>(obj));
-			else
-				representation = getRepNonStreamable(std::forward<T>(obj));
-
-			if (depth == 0)
+			if (log_with_label)
 				print(representation);
 			else
 				printWithoutLabel(representation);
 		}
 
 		//internal function. Not to be used directly
-		template<typename T, typename... Args>
-		void logObj(size_t depth, T&& obj, Args&&... args) {
-			logObj(depth, std::forward<T>(obj));
-			logObj(depth + 1, std::forward<Args>(args)...);
+		template<typename T, std::enable_if_t<!details::is_to_stream_writable_v<std::ostringstream, T>, bool> = false>
+		void logObj(bool log_with_label, T&& obj) {
+			std::string representation = getRepNonStreamable(std::forward<T>(obj));
+
+			if (log_with_label)
+				print(representation);
+			else
+				printWithoutLabel(representation);
 		}
 
-		template<typename... Args>
-		void logConcurrent(LogLevel lv, size_t depth, Args&&... args)
+		template<typename T, typename... Args>
+		void logConcurrent(LogLevel lv, bool log_with_label, T&& obj, Args&&... args)
 		{
 			lockStream();
 			auto _ = gsl::finally([](){ unlockStream(); });
+
 			if(lv < _::requiredLevel()) return;
 			setLogLevel(lv);
-			logObj(depth, std::forward<Args>(args)...);
+
+			logObj(log_with_label, std::forward<T>(obj));
+			(logObj(false, std::forward<Args>(args)), ...);
 		}
 
 		template<typename... Args>
