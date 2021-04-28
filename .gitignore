@@ -12,6 +12,7 @@ Makefile
 
 #editor dir
 **/.vscode
+**/.vs
 
 #log files
 *.log
