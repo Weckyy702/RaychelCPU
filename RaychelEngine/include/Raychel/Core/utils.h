@@ -28,7 +28,7 @@
 #ifndef RAYCHEL_CORE_H
 #define RAYCHEL_CORE_H
 
-#if !defined(__cplusplus) || __cplusplus < 201703L
+#if !((defined(__cplusplus) && __cplusplus >= 201703L) || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L))
     #error "C++(17) compilation is required!"
 #endif
 
