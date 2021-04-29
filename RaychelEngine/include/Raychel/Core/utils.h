@@ -64,14 +64,22 @@ namespace Raychel {
 
 #endif
 
+#if defined(__clang__) || defined(__GNUC__)
+	#define RAYCHEL_FUNC_NAME __PRETTY_FUNCTION__
+#elif defined(_MSC_VER)
+	#define RAYCHEL_FUNC_NAME __FUNCSIG__
+#else
+	#error "What Compiler are you using bro?!?"
+#endif
+
 #ifdef RAYCHEL_DEBUG
-	#define RAYCHEL_LOG(...) Logger::debug( __PRETTY_FUNCTION__, ": ", __VA_ARGS__, '\n');
+	#define RAYCHEL_LOG(...) Logger::debug( RAYCHEL_FUNC_NAME, ": ", __VA_ARGS__, '\n');
 #else
 	#define RAYCHEL_LOG(...)
 #endif
 
 //terminate the application with the provided message
-#define RAYCHEL_TERMINATE(...) Logger::fatal( __PRETTY_FUNCTION__, " at ", __FILE__, ":", __LINE__, ": ", __VA_ARGS__, '\n');	\
+#define RAYCHEL_TERMINATE(...) Logger::fatal( RAYCHEL_FUNC_NAME, " at ", __FILE__, ":", __LINE__, ": ", __VA_ARGS__, '\n');	\
 								std::exit(0x41);
 
 #if defined(RAYCHEL_DEBUG) || !defined(NDEBUG)
@@ -87,7 +95,7 @@ namespace Raychel {
 //#define RAYCHEL_LOGICALLY_EQUAL //<-- activates logical equivalency for vector-like types
 
 #define RAYCHEL_THROW_EXCEPTION(msg, fatal) { \
-				throw ::Raychel::exception_context{msg, __PRETTY_FUNCTION__, fatal}; \
+				throw ::Raychel::exception_context{msg, RAYCHEL_FUNC_NAME, fatal}; \
 			}
 
 #define RAYCHEL_ASSERT_NORMALIZED(vec) RAYCHEL_ASSERT(equivalent(magSq(vec), 1.0f));
