@@ -50,19 +50,19 @@ namespace Raychel {
         using value_type = value_type_;
 
         CubeTexture()
-            :type_{TextureType::constant}, values_{}
+            :type_{TextureType::constant}, constant_{}
         {}
 
         CubeTexture(const sample_func& func)
-            :type_{TextureType::function}, values_{func}
+            :type_{TextureType::function}, func_{func}
         {}
 
         CubeTexture(const provider_list& providers)
-            :type_{TextureType::image}, values_{providers}
+            :type_{TextureType::image}, providers_{providers}
         {}
 
         CubeTexture(const value_type& constant)
-            :type_{TextureType::constant}, values_{constant}
+            :type_{TextureType::constant}, constant_{constant}
         {}
 
         CubeTexture(const CubeTexture& rhs)
@@ -71,13 +71,13 @@ namespace Raychel {
             switch (type_)
             {
             case TextureType::function:
-                values_.func = rhs.values_.func;
+                new(&func_) sample_func{rhs.func_};
                 break;
             case TextureType::image:
-                values_.providers = rhs.values_.providers;
+                new(&providers_) provider_list{rhs.providers_};
                 break;
             case TextureType::constant:
-                values_.constant = rhs.values_.constant;
+                new(&constant_) value_type{rhs.constant_};
                 break;
             default:
                 RAYCHEL_ASSERT_NOT_REACHED;
@@ -90,13 +90,13 @@ namespace Raychel {
             switch (type_)
             {
             case TextureType::function:
-                values_.func = std::move(rhs.values_.func);
+                new(&func_) sample_func{std::move(rhs.func_)};
                 break;
             case TextureType::image:
-                values_.providers = std::move(rhs.values_.providers);
+                new(&providers_) provider_list{std::move(rhs.providers_)};
                 break;
             case TextureType::constant:
-                values_.constant = std::move(rhs.values_.constant);
+                new(&constant_) value_type{std::move(rhs.constant_)};
                 break;
             default:
                 RAYCHEL_ASSERT_NOT_REACHED;
@@ -105,17 +105,19 @@ namespace Raychel {
 
         CubeTexture& operator=(const CubeTexture& rhs) noexcept
         {
+            _destroyActiveMember();
+
             type_ = rhs.type_;
             switch (type_)
             {
             case TextureType::function:
-                values_.func = rhs.values_.func;
+                new(&func_) sample_func{rhs.func_};
                 break;
             case TextureType::image:
-                values_.providers = rhs.values_.providers;
+                new(&providers_) provider_list{rhs.providers_};
                 break;
             case TextureType::constant:
-                values_.constant = rhs.values_.constant;
+                new(&constant_) value_type{rhs.constant_};
                 break;
             default:
                 RAYCHEL_ASSERT_NOT_REACHED;
@@ -125,21 +127,24 @@ namespace Raychel {
 
         CubeTexture& operator=(CubeTexture&& rhs) noexcept
         {
+            _destroyActiveMember();
+
             type_ = rhs.type_;
             switch (type_)
             {
             case TextureType::function:
-                values_.func = std::move(rhs.values_.func);
+                new(&func_) sample_func{std::move(rhs.func_)};
                 break;
             case TextureType::image:
-                values_.providers = std::move(rhs.values_.providers);
+                new(&providers_) provider_list{std::move(rhs.providers_)};
                 break;
             case TextureType::constant:
-                values_.constant = std::move(rhs.values_.constant);
+                new(&constant_) value_type{std::move(rhs.constant_)};
                 break;
             default:
                 RAYCHEL_ASSERT_NOT_REACHED;
             }
+
             return *this;
         }
 
@@ -155,55 +160,56 @@ namespace Raychel {
 
             switch(type_) {
                 case TextureType::function:
-                    return values_.func(dir);
+                    RAYCHEL_ASSERT(func_);
+                    return func_(dir);
                 case TextureType::image:
                     return _evaluate_cube_map(dir);
                 case TextureType::constant:
-                    return values_.constant;
+                    return constant_;
             }
             RAYCHEL_ASSERT_NOT_REACHED;
         }
 
+        ~CubeTexture() noexcept {
+            _destroyActiveMember();
+        }
+
     private:
 
-        value_type_ _evaluate_cube_map(const normalized3& dir) const
+        void _destroyActiveMember() noexcept
+        {
+            switch(type_) {
+                case TextureType::function:
+                    func_.~sample_func();
+                break;
+                case TextureType::image:
+                    providers_.~provider_list();
+                break;
+                case TextureType::constant:
+                    constant_.~value_type();
+                break;
+            }
+        }
+
+        value_type _evaluate_cube_map(const normalized3& dir) const
         {
             RAYCHEL_ASSERT_NORMALIZED(dir);
             //TODO: implement
-            return value_type_{};
+            return value_type{};
         }
+
+
+        TextureType type_;
 
         /**
         *\brief Space-saving wrapper for CubeTexture members
         *
         */
-        union CubeTextureValues {
-
-            CubeTextureValues()
-                :constant{}
-            {}
-
-            CubeTextureValues(const sample_func& _func)
-                :func{_func}
-            {}
-
-            CubeTextureValues(const provider_list& _providers)
-                :providers{_providers}
-            {}
-
-            CubeTextureValues(const value_type& _constant)
-                :constant{_constant}
-            {}
-
-            ~CubeTextureValues(){}
-
-            sample_func func;
-            provider_list providers;
-            value_type constant;
+        union {
+            sample_func func_;
+            provider_list providers_;
+            value_type constant_;
         };
-
-        TextureType type_;
-        CubeTextureValues values_;
     };
     
 
