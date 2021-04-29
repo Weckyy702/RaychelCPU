@@ -177,12 +177,12 @@ namespace Raychel {
 
 		const auto diff = std::abs(a-b);
 
-		auto e = epsilon;
+		auto eps = epsilon;
 		if(min != 0)
-			e = std::abs(min) * epsilon;
+			eps = std::abs(min) * epsilon;
 
 		const bool is_equal = a == b;
-		const bool is_equivalent = diff < e;
+		const bool is_equivalent = diff < eps;
 
 		return  is_equal || is_equivalent;
 	}

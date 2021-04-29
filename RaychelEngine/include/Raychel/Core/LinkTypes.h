@@ -69,10 +69,10 @@ namespace Raychel {
      */
     struct RaymarchOptions {
         //maximum distance a ray can travel in the scene [m]
-        float max_ray_distance = 50.0;
+        float max_ray_distance = 50.0f;
 
         //maximum distance a point can be away form a surface while still being cosidered *on* the surface [m]
-        float epsilon = 1e-5;
+        float epsilon = 1e-5f;
     };
 
     /**

@@ -30,10 +30,10 @@ int main(int, char**)
 
     scene.cam = Camera{Transform{vec3(0, 0, 0), start_rotation}, 1.0};
 
-    scene.addObject( make_object<SdSphere>(Transform{vec3{0, 0, 2.5}}, DiffuseMaterial{color{1, 0, 0}}, 1.0) );
-    scene.addObject( make_object<SdSphere>(Transform{vec3{2.5, 0, 0}}, DiffuseMaterial{color{0, 1, 0}}, 1.0) );
-    scene.addObject( make_object<SdSphere>(Transform{vec3{0, 0, -2.5}}, DiffuseMaterial{color{0, 0, 1}}, 1.0) );
-    scene.addObject( make_object<SdSphere>(Transform{vec3{-2.5, 0, 0}}, DiffuseMaterial{color{1, 1, 1}}, 1.0) );
+    scene.addObject( make_object<SdSphere>(Transform{vec3{0, 0, 2.5}}, DiffuseMaterial{color{1, 0, 0}}, 1.0f) );
+    scene.addObject( make_object<SdSphere>(Transform{vec3{2.5, 0, 0}}, DiffuseMaterial{color{0, 1, 0}}, 1.0f) );
+    scene.addObject( make_object<SdSphere>(Transform{vec3{0, 0, -2.5}}, DiffuseMaterial{color{0, 0, 1}}, 1.0f) );
+    scene.addObject( make_object<SdSphere>(Transform{vec3{-2.5, 0, 0}}, DiffuseMaterial{color{1, 1, 1}}, 1.0f) );
 
     const vec2i size = {853, 480};
 

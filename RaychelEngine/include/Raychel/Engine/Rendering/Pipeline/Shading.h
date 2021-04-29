@@ -83,9 +83,9 @@ namespace Raychel {
 
             float max_ray_depth=100.0f;
 
-            float distance_bias = 1e-4;
-            float normal_bias = 1e-5;
-            float surface_bias = 5e-4;
+            float distance_bias = 1e-4f;
+            float normal_bias = 1e-5f;
+            float surface_bias = 5e-4f;
         } raymarch_data_;
 
         mutable std::atomic_bool failed_ = false;

@@ -39,13 +39,13 @@ namespace Raychel {
         using std::sin, std::cos;
 
         const vec3 axis = -normalize(_axis);
-        const auto s = sin(angle * 0.5);
+        const value_type s = sin(angle * value_type(0.5));
 
         i = axis.x * s;
         j = axis.y * s;
         k = axis.z * s;
 
-        r = cos(angle * 0.5);
+        r = value_type( cos(angle * value_type(0.5)) );
     }
 
     template<typename T>

@@ -57,8 +57,8 @@ namespace Raychel {
     {
         //generate UVs in range [-0.5; 0.5]
 
-        float dx = ( static_cast<float>(x) / (output_size_.x) ) - 0.5;
-        float dy = ( static_cast<float>(y) / (output_size_.y) ) - 0.5;
+        float dx = ( static_cast<float>(x) / (output_size_.x) ) - 0.5f;
+        float dy = ( static_cast<float>(y) / (output_size_.y) ) - 0.5f;
 
         //handle non-square aspect ratios
         if(aspect_ratio > 1.0)
@@ -131,7 +131,7 @@ namespace Raychel {
 
         actual_uv += vec2{0.5, 0.5};
 
-        actual_uv.y = 1.0 - actual_uv.y;
+        actual_uv.y = 1.0f - actual_uv.y;
 
         return actual_uv;
     }

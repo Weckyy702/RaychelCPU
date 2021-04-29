@@ -3,12 +3,6 @@
 #include <sstream>
 #include <thread>
 
-#ifndef _WIN32
-    #include <ncurses.h>
-#else
-    #define RAYCHEL_USE_NCURSES_FALLBACK
-#endif
-
 #include "Raychel/Engine/Rendering/RenderTarget/AsciiTarget.h"
 
 namespace Raychel {
