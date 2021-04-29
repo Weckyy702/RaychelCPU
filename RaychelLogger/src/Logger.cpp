@@ -14,7 +14,7 @@ namespace Logger {
 	static LogLevel minLogLevel = LogLevel::info;
 
 	static bool doColor = true;
-	constexpr std::string_view reset_col = "\e[0m";
+	constexpr std::string_view reset_col = "\x1b[0m";
 
 	static std::ostream outStream { std::cout.rdbuf() };
 	static std::ofstream logFile;
@@ -120,14 +120,14 @@ namespace Logger {
 	void setLogLabel(LogLevel lv, std::string_view label)
 	{
 		_::lockStream();
-		auto _ = gsl::finally([](){ _::unlockStream(); });
+		auto _ = details::Finally([](){ _::unlockStream(); });
 		levelLabels.at(static_cast<size_t>(lv)) = label;
 	}
 
 	void setLogColor(LogLevel lv, std::string_view color)
 	{
 		_::lockStream();
-		auto _ = gsl::finally([](){ _::unlockStream(); });
+		auto _ = details::Finally([](){ _::unlockStream(); });
 		cols.at(static_cast<size_t>(lv)) = color;
 	}
 

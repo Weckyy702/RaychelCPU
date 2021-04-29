@@ -12,16 +12,6 @@
 #error "C++17 compilation is required!"
 #endif
 
-#ifdef _WIN32
-	#ifdef LOGGER_EXPORTS
-		#define LOGGER_API __declspec(dllexport)
-	#else
-		#define LOGGER_API __declspec(dllimport)
-	#endif
-#else
-	#define LOGGER_API
-#endif
-
 #include "Helper.h"
 
 #include <string>
@@ -30,7 +20,6 @@
 #include <type_traits>
 #include <sstream>
 #include <array>
-#include <gsl/gsl>
 
 namespace Logger {
 	enum class LogLevel : size_t { debug=0u, info, warn, error, critical, fatal, log };
@@ -43,20 +32,20 @@ namespace Logger {
 	namespace _ {
 
 		//internal function. Not to be used directly
-		LOGGER_API LogLevel requiredLevel();
+		LogLevel requiredLevel();
 
 		//internal function. Not to be used directly
-		LOGGER_API void setLogLevel(LogLevel);
+		void setLogLevel(LogLevel);
 
 		//internal function. Not to be used directly
-		LOGGER_API void printWithoutLabel(std::string_view);
+		void printWithoutLabel(std::string_view);
 
 		//internal function. Not to be used directly
-		LOGGER_API void print(std::string_view);
+		void print(std::string_view);
 
-		LOGGER_API void lockStream();
+		void lockStream();
 
-		LOGGER_API void unlockStream();
+		void unlockStream();
 
 		//internal function. Not to be used directly
 		template<typename T>
@@ -119,7 +108,7 @@ namespace Logger {
 		void logConcurrent(LogLevel lv, bool log_with_label, T&& obj, Args&&... args)
 		{
 			lockStream();
-			auto _ = gsl::finally([](){ unlockStream(); });
+			auto _ = details::Finally([](){ unlockStream(); });
 
 			if(lv < _::requiredLevel()) return;
 			setLogLevel(lv);
@@ -129,8 +118,8 @@ namespace Logger {
 		}
 
 		template<typename... Args>
-		void log(LogLevel lv, size_t depth, Args&&... args) {
-			_::logConcurrent(lv, depth, std::forward<Args>(args)...);
+		void log(LogLevel lv, bool log_with_label, Args&&... args) {
+			_::logConcurrent(lv, log_with_label, std::forward<Args>(args)...);
 		}
 	}
 
@@ -141,7 +130,7 @@ namespace Logger {
 	template<typename... Args>
 	void log(LogLevel lv, Args&&... args)
 	{
-		_::log(lv, 0, std::forward<Args>(args)...);
+		_::log(lv, true, std::forward<Args>(args)...);
 	}
 
 	/// \brief Log a message with the DEBUG level. Can log multiple objects seperated by comma
@@ -150,7 +139,7 @@ namespace Logger {
 	template<typename... Args>
 	void debug(Args&&... args)
 	{
-		_::log(LogLevel::debug, 0, std::forward<Args>(args)...);
+		_::log(LogLevel::debug, true, std::forward<Args>(args)...);
 	}
 
 	/// \brief Log a message with the INFO level. Can log multiple objects seperated by comma
@@ -159,7 +148,7 @@ namespace Logger {
 	template<typename... Args>
 	void info(Args&&... args)
 	{
-		_::log(LogLevel::info, 0, std::forward<Args>(args)...);
+		_::log(LogLevel::info, true, std::forward<Args>(args)...);
 	}
 
 	/// \brief Log a message with the WARN level. Can log multiple objects seperated by comma
@@ -168,7 +157,7 @@ namespace Logger {
 	template<typename... Args>
 	void warn(Args&&... args)
 	{
-		_::log(LogLevel::warn, 0, std::forward<Args>(args)...);
+		_::log(LogLevel::warn, true, std::forward<Args>(args)...);
 	}
 
 	/// \brief Log a message with the ERROR level. Can log multiple objects seperated by comma
@@ -177,7 +166,7 @@ namespace Logger {
 	template<typename... Args>
 	void error(Args&&... args)
 	{
-		_::log(LogLevel::error, 0, std::forward<Args>(args)...);
+		_::log(LogLevel::error, true, std::forward<Args>(args)...);
 	}
 
 	/// \brief Log a message with the ERROR level. Can log multiple objects seperated by comma
@@ -186,7 +175,7 @@ namespace Logger {
 	template<typename... Args>
 	void critical(Args&&... args)
 	{
-		_::log(LogLevel::critical, 0, std::forward<Args>(args)...);
+		_::log(LogLevel::critical, true, std::forward<Args>(args)...);
 	}
 
 	/// \brief Log a message with the FATAL level. Can log multiple objects seperated by comma
@@ -195,7 +184,7 @@ namespace Logger {
 	template<typename... Args>
 	void fatal(Args&&... args)
 	{
-		_::log(LogLevel::fatal, 0, std::forward<Args>(args)...);
+		_::log(LogLevel::fatal, true, std::forward<Args>(args)...);
 	}
 
 	/// \brief Log a message regardless of the minimum required log level. Can log multiple objects seperated by a comma.
@@ -204,48 +193,48 @@ namespace Logger {
 	/// \param ...args Objects to be logged
 	template<typename... Args>
 	void log(Args&&... args) {
-		_::log(LogLevel::log, 1, std::forward<Args>(args)...);
+		_::log(LogLevel::log, false, std::forward<Args>(args)...);
 	}
 
 	//set the label that is displayed in front of the message [LABEL] msg
-	LOGGER_API void setLogLabel(LogLevel, std::string_view);
+	void setLogLabel(LogLevel, std::string_view);
 
 	//set the color that should be used for the level. Must be an ANSI compatible color code
-	LOGGER_API void setLogColor(LogLevel, std::string_view);
+	void setLogColor(LogLevel, std::string_view);
 
 	//set an alternative stream for the logger to write to
-	LOGGER_API void setOutStream(std::ostream& os);
+	void setOutStream(std::ostream& os);
 
 	//disable colored output
-	LOGGER_API void disableColor();
+	void disableColor();
 
 	//enable colored output
-	LOGGER_API void enableColor();
+	void enableColor();
 
 	//start a timer and associate it with the label
-	LOGGER_API std::string_view startTimer(std::string_view label);
+	std::string_view startTimer(std::string_view label);
 
 	//return the duration since the last call to startTimer(label). removes label from the list of active labels
-	LOGGER_API duration_t endTimer(std::string_view label);
+	duration_t endTimer(std::string_view label);
 
 	//return the duration since the last call to startTimer(label). does NOT remove label from the list of acitve labels
-	LOGGER_API duration_t getTimer(std::string_view label);
+	duration_t getTimer(std::string_view label);
 
 	//log the duration since the last call to startTimer(label). removes label from the list of active labels
-	LOGGER_API void logDuration(std::string_view label, const std::string& prefix = ""s, const std::string& suffix = "ms\n"s);
+	void logDuration(std::string_view label, const std::string& prefix = ""s, const std::string& suffix = "ms\n"s);
 
 	//log the duration since the last call to startTimer(label). does NOT remove label from the list of acitve labels
-	LOGGER_API void logDurationPersistent(std::string_view label, const std::string& prefix=""s, const std::string& suffix = "ms\n"s);
+	void logDurationPersistent(std::string_view label, const std::string& prefix=""s, const std::string& suffix = "ms\n"s);
 
 	//set minimum level the Message has to be sent with in order to show up. Default: INFO
-	LOGGER_API LogLevel setMinimumLogLevel(LogLevel);
+	LogLevel setMinimumLogLevel(LogLevel);
 
 	/// \brief Configure the Logger to log into a file instead of a std::ostream
 	/// \param directory Directory of the logfile. must end with "/"
 	/// \param fileName Name of the logfile. Does not need an extension
-	LOGGER_API void initLogFile(const std::string& directory, const std::string& fileName = "Log.log");
+	void initLogFile(const std::string& directory, const std::string& fileName = "Log.log");
 
-	LOGGER_API void dumpLogFile();
+	void dumpLogFile();
 }
 
 
