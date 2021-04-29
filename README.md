@@ -44,14 +44,30 @@ General Information
 RaychelCPU is written in standard C++17 using the C++ Guideline Suport Library  at https://github.com/Microsoft/GSL.
 I try to keep all the code as standard and "C++17-ish" as possible.
 I have not tested Compiler compatibility aside from clang and GCC, so please report any issues to me.
+(I am currently working on Windows and MSVC support)
+
+How to build
+-
+Cmake 3.14 or later is required and the libraries marked with *R* in the list below need to be installed.
+
+  * Windows
+    -
+    You will need Visual Studio to do most of the compiling.
+
+    Run cmake in the basefolder of the repository, open the resulting RaychelCPU.sln in Visual Studio and press "build"
+  
+  * GNU/Linux
+    -
+    run cmake, then run make and you have your binaries built
+
 
 Library Credit
 -
 Credit where credit is due. I am using the following libraries:
 * C++ Guideline Suport Library by Microsoft: https://github.com/Microsoft/GSL
-* PNG++ is a modern wrapper around libPNG: https://github.com/mecwerks/png-plusplus
-* libPNG is the official library to create PNG images: https://github.com/glennrp/libpng
-* ncurses is an API allowing for GUI-like programs in the terminal https://github.com/mirror/ncurses ()
+* PNG++ is a modern wrapper around libPNG: https://github.com/mecwerks/png-plusplus       *R*
+* libPNG is the official library to create PNG images: https://github.com/glennrp/libpng  *R*
+* ncurses is an API allowing for GUI-like programs in the terminal https://github.com/mirror/ncurses (optional)
 
 I found a bug!!!
 -
