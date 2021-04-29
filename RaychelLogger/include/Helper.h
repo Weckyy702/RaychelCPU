@@ -9,7 +9,6 @@
 #define HELPER_H_
 
 #include <type_traits>
-#include <functional>
 #include <string_view>
 
 namespace Logger {
@@ -20,6 +19,8 @@ namespace Logger {
 		constexpr uint32_t bit() {
 			return 1ul << off_;
 		}
+
+
 
 		template<typename S, typename T, typename = void>
 		struct is_to_stream_writable : std::false_type {};
@@ -43,6 +44,8 @@ namespace Logger {
 		template<typename T>
 		constexpr bool is_std_hashable_v = is_std_hashable<T>::value;
 
+
+
 		//thank you to einpoklum at https://stackoverflow.com/questions/81870/is-it-possible-to-print-a-variables-type-in-standard-c/56766138#56766138
 		template <typename T>
 		constexpr std::string_view type_name()
@@ -65,6 +68,21 @@ namespace Logger {
 			name.remove_suffix(suffix.size());
 			return name;
 		}
+
+
+		template<typename F>
+		class Finally {
+		public:
+			Finally(F&& f)
+				:f_{std::forward<F>(f)}
+			{}
+
+			~Finally() noexcept {
+				f_();
+			}
+		private:
+			F f_;
+		};
 	}
 }
 
