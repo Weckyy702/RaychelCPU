@@ -5,6 +5,10 @@
 
 #include "Raychel/Engine/Rendering/RenderTarget/AsciiTarget.h"
 
+#ifndef RAYCHEL_USE_NCURSES_FALLBACK
+#include <ncurses.h>
+#endif
+
 namespace Raychel {
 
     int getColorPaletteIndex(const color&);

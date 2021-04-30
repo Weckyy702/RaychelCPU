@@ -12,6 +12,17 @@ if(${USE_RAYCHEL_DEBUG})
 
 endif()
 
+include(CheckIPOSupported)
+
+check_ipo_supported(RESULT IPO_SUPPORTED OUTPUT ERROR)
+
+if(IPO_SUPPORTED)
+    message(STATUS "IPO / LTO enabled")
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+else()
+    message(STATUS "IPO / LTO disabled <${ERROR}>")
+endif()
+
 add_subdirectory(RaychelLogger)
 
 add_subdirectory(RaychelEngine)
