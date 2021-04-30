@@ -19,9 +19,9 @@ FetchContent_Declare(PNGPP
 
 FetchContent_MakeAvailable(PNGPP)
 
-find_library(NCURSES ncurses)
+find_library(NCURSES ncurses curses)
 
-if(NOT ${NCURSES})
+if(NCURSES-NOTFOUND)
     message(STATUS "unable to find ncurses library, using fallback (no colors)")
     add_compile_definitions(RAYCHEL_USE_NCURSES_FALLBACK)
 
