@@ -7,19 +7,21 @@ project(RaychelCPU_test VERSION 0.0.1)
 
 include(FetchContent)
 
-find_package(microsoft-gsl)
-if(NOT microsoft-gsl_FOUND)
+find_file(GSL_MAIN_INCLUDE "gsl/gsl")
+if(NOT GSL_MAIN_INCLUDE)
     FetchContent_Declare(GSL
         GIT_REPOSITORY "https://github.com/microsoft/GSL"
         GIT_TAG "v3.1.0"
     )
 
     FetchContent_MakeAvailable(GSL)
+else()
+    set(GSL "")
 endif() 
 
 
-find_package(libpng)
-if(NOT libpng_FOUND)
+find_library(LIB_PNG png)
+if(NOT LIB_PNG)
     FetchContent_Declare(PNG
         GIT_REPOSITORY "https://github.com/glennrp/libpng"
     )
@@ -28,8 +30,8 @@ if(NOT libpng_FOUND)
 endif()
 
 
-find_package(png++)
-if(NOT png++_FOUND)
+find_file(PNGPP_MAIN_INCLUDE png++/png.hpp)
+if(NOT PNGPP_MAIN_INCLUDE)
     FetchContent_Declare(pngpp
         GIT_REPOSITORY "https://github.com/usagi/pngpp"
     )
@@ -92,7 +94,7 @@ target_link_libraries(RaychelCPU_test PRIVATE
     tbb                         #this might be bad
     png
     ${LIB_NCURSES}
-    GSL
+    ${GSL}
 )
 
 #build time support for the sanitizers
