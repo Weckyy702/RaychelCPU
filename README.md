@@ -48,13 +48,15 @@ I have not tested Compiler compatibility aside from clang and GCC, so please rep
 
 How to build
 -
-Cmake 3.14 or later is required and the libraries marked with *R* in the list below need to be installed.
+Cmake 3.14 or later is required and the libraries marked with *required* in the list below need to be installed manually.
 
   * Windows
     -
     You will need Visual Studio to do most of the compiling.
 
     Run cmake in the basefolder of the repository, open the resulting RaychelCPU.sln in Visual Studio and press "build"
+
+    For installing the required dependency Zlib, I recommend zlib.install at https://github.com/horta/zlib.install
   
   * GNU/Linux
     -
@@ -65,8 +67,9 @@ Library Credit
 -
 Credit where credit is due. I am using the following libraries:
 * C++ Guideline Suport Library by Microsoft: https://github.com/Microsoft/GSL
-* PNG++ is a modern wrapper around libPNG: https://github.com/mecwerks/png-plusplus       *R*
-* libPNG is the official library to create PNG images: https://github.com/glennrp/libpng  *R*
+* PNG++ is a modern wrapper around libPNG: https://github.com/mecwerks/png-plusplus
+* libPNG is the official library to create PNG images: https://github.com/glennrp/libpng  
+* zlib is a general purpose data compression library: https://github.com/madler/zlib  *required*
 * ncurses is an API allowing for GUI-like programs in the terminal https://github.com/mirror/ncurses (optional)
 
 I found a bug!!!

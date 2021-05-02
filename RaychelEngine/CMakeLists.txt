@@ -2,31 +2,58 @@ cmake_minimum_required(VERSION 3.14)
 
 project(RaychelCPU_test VERSION 0.0.1)
 
-#find required libraries                TODO: add rest of the libraries
+#find required libraries, download them if necessay
+#TODO: add rest of the libraries
 
 include(FetchContent)
 
-FetchContent_Declare(GSL
-    GIT_REPOSITORY "https://github.com/microsoft/GSL"
-    GIT_TAG "v3.1.0"
-)
+find_package(microsoft-gsl)
+if(NOT microsoft-gsl_FOUND)
+    FetchContent_Declare(GSL
+        GIT_REPOSITORY "https://github.com/microsoft/GSL"
+        GIT_TAG "v3.1.0"
+    )
 
-FetchContent_MakeAvailable(GSL)
+    FetchContent_MakeAvailable(GSL)
+endif() 
 
-FetchContent_Declare(PNGPP
-    GIT_REPOSITORY "https://github.com/usagi/pngpp"
-)
 
-FetchContent_MakeAvailable(PNGPP)
+find_package(libpng)
+if(NOT libpng_FOUND)
+    FetchContent_Declare(PNG
+        GIT_REPOSITORY "https://github.com/glennrp/libpng"
+    )
 
-find_library(NCURSES ncurses curses)
+    FetchContent_MakeAvailable(PNG)
+endif()
 
-if(NCURSES-NOTFOUND)
+
+find_package(png++)
+if(NOT png++_FOUND)
+    FetchContent_Declare(pngpp
+        GIT_REPOSITORY "https://github.com/usagi/pngpp"
+    )
+
+    FetchContent_GetProperties(pngpp)
+    if(NOT pngpp_POPULATED)
+        FetchContent_Populate(pngpp)
+        file(GLOB PNGPP_HEADERS "${pngpp_SOURCE_DIR}/*.hpp")
+        file(REMOVE_RECURSE "${pngpp_SOURCE_DIR}/include/png++")
+        file(COPY ${PNGPP_HEADERS} DESTINATION "${pngpp_SOURCE_DIR}/include/png++/")
+    endif()
+endif()
+
+
+find_library(LIB_NCURSES ncurses curses)
+
+if(NOT LIB_NCURSES)
     message(STATUS "unable to find ncurses library, using fallback (no colors)")
     add_compile_definitions(RAYCHEL_USE_NCURSES_FALLBACK)
 
-    set(NCURSES "")
+    set(LIB_NCURSES "")
 endif()
+
+
 
 #set all sources for the main testing file
 
@@ -57,17 +84,15 @@ configure_file( ${PROJECT_SOURCE_DIR}/include/CMakeSettings.h.in
 
 target_include_directories(RaychelCPU_test PUBLIC
     ${PROJECT_SOURCE_DIR}/include
+    ${pngpp_SOURCE_DIR}/include
 )
-
-
 
 target_link_libraries(RaychelCPU_test PRIVATE
     RaychelLogger
     tbb                         #this might be bad
     png
-    ${NCURSES}
+    ${LIB_NCURSES}
     GSL
-    INTERFACE PNGPP
 )
 
 #build time support for the sanitizers
