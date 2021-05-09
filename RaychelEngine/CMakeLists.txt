@@ -184,7 +184,9 @@ if(LINK_GSL)
     )
 endif()
 
-if(${CMAKE_CXX_COMPILER} MATCHES ".*/gcc.*")
+message(STATUS ${CMAKE_CXX_COMPILER})
+
+if(${CMAKE_CXX_COMPILER} MATCHES "(g.*)|(clang.*)|(c.*)|")
     target_link_libraries(RaychelCPU_test PUBLIC
         tbb
     )
