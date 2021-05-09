@@ -5,33 +5,58 @@ project(RaychelCPU_test VERSION 0.0.1)
 #find required libraries, download them if necessay
 #TODO: add rest of the libraries
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+
 include(FetchContent)
 
 find_file(GSL_MAIN_INCLUDE "gsl/gsl")
 if(NOT GSL_MAIN_INCLUDE)
+
+    message(STATUS "Could not find a local installation of gsl, downloading one off github...")
+
     FetchContent_Declare(GSL
         GIT_REPOSITORY "https://github.com/microsoft/GSL"
         GIT_TAG "v3.1.0"
     )
 
     FetchContent_MakeAvailable(GSL)
+
+    set(LINK_GSL true)
 else()
-    set(GSL "")
+    set(LINK_GSL false)
 endif() 
+
 
 
 find_library(LIB_PNG png)
 if(NOT LIB_PNG)
-    FetchContent_Declare(PNG
+
+    message(STATUS "Could not find a local installation of libpng, downloading one off github...")
+
+    FetchContent_Declare(libpng
         GIT_REPOSITORY "https://github.com/glennrp/libpng"
+        GIT_TAG "v1.6.35"
     )
 
-    FetchContent_MakeAvailable(PNG)
+    FetchContent_Populate(libpng)
+
+    include_directories(SYSTEM "${libpng_SOURCE_DIR}")
+
+    file(READ  "${libpng_SOURCE_DIR}/scripts/pnglibconf.h.prebuilt" PNGLIBCONF_H_CONTENT)
+    file(WRITE "${libpng_SOURCE_DIR}/pnglibconf.h" ${PNGLIBCONF_H_CONTENT})
+
+    add_subdirectory(${libpng_SOURCE_DIR} ${libpng_BINARY_DIR})
+
+    #file(COPY )
 endif()
 
 
-find_file(PNGPP_MAIN_INCLUDE png++/png.hpp)
+
+find_file(PNGPP_MAIN_INCLUDE "png++/png.hpp")
 if(NOT PNGPP_MAIN_INCLUDE)
+
+    message(STATUS "Could not find a local installation of png++, downloading one off github...")
+
     FetchContent_Declare(pngpp
         GIT_REPOSITORY "https://github.com/usagi/pngpp"
     )
@@ -44,6 +69,7 @@ if(NOT PNGPP_MAIN_INCLUDE)
         file(COPY ${PNGPP_HEADERS} DESTINATION "${pngpp_SOURCE_DIR}/include/png++/")
     endif()
 endif()
+
 
 
 find_library(LIB_NCURSES ncurses curses)
