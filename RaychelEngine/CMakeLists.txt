@@ -186,7 +186,7 @@ endif()
 
 message(STATUS ${CMAKE_CXX_COMPILER})
 
-if(${CMAKE_CXX_COMPILER} MATCHES "(g.*)|(clang.*)|(c.*)|")
+if(NOT MSVC)
     target_link_libraries(RaychelCPU_test PUBLIC
         tbb
     )
