@@ -106,6 +106,19 @@ add_executable(RaychelCPU_test
     ${SOURCES}
 )
 
+#this assumes that zlib has been installed via zlib.install at https://github.com/horta/zlib.install
+if(WIN32)
+    find_package(ZLIB REQUIRED)
+    set(ZLIB_LIBRARY_DIR ${ZLIB_LIBRARY})
+
+    string(REPLACE "lib/zlib.lib" "bin/zlib.dll" ZLIB_DLL_LOCATION ${ZLIB_LIBRARY_DIR})
+
+    file(COPY ${ZLIB_DLL_LOCATION} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+
+    add_custom_command(TARGET RaychelCPU_test POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/zlib.dll $<TARGET_FILE_DIR:RaychelCPU_test>    
+    )   
+endif()
 configure_file( ${PROJECT_SOURCE_DIR}/include/CMakeSettings.h.in
                 ${PROJECT_SOURCE_DIR}/include/CMakeSettings.h
 )
