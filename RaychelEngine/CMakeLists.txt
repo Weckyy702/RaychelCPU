@@ -46,8 +46,6 @@ if(NOT LIB_PNG)
     file(WRITE "${libpng_SOURCE_DIR}/pnglibconf.h" ${PNGLIBCONF_H_CONTENT})
 
     add_subdirectory(${libpng_SOURCE_DIR} ${libpng_BINARY_DIR})
-
-    #file(COPY )
 endif()
 
 
@@ -135,23 +133,44 @@ target_include_directories(RaychelCPU_test PUBLIC
 
 #Set compiler flags
 #build time support for sanitizers
-if(${USE_ASAN})
+if(${USE_ASAN} AND NOT MSVC) #TODO: fix this bug
     message(STATUS "Enabled ASAN support")
-    target_compile_options(RaychelCPU_test PUBLIC -fsanitize=address -fno-omit-frame-pointer)
-    target_link_options(RaychelCPU_test PUBLIC -fsanitize=address)
+
+    target_compile_options(RaychelCPU_test PUBLIC -fsanitize=address)
+
+    if(NOT MSVC)
+        target_compile_options(RaychelCPU_test PUBLIC -fno-omit-frame-pointer)
+        target_link_options(RaychelCPU_test PUBLIC -fsanitize=address)
+    endif()
+
 endif()
 
-if(${USE_UBSAN})
+#MSVC does not support UBSAN :(
+if(${USE_UBSAN} AND NOT MSVC)
     message(STATUS "EnabledUbSAN support")
-    target_compile_options(RaychelCPU_test PUBLIC -fsanitize=undefined -fno-sanitize-recover -fno-omit-frame-pointer)
+
+    target_compile_options(RaychelCPU_test PUBLIC
+        -fsanitize=undefined
+        -fsanitize=float-divide-by-zero
+        -fno-sanitize-recover
+        -fno-omit-frame-pointer
+    )
     target_link_options(RaychelCPU_test PUBLIC -fsanitize=undefined)
 endif()
 
 #General compiler flags
 if(${MSVC})
-    target_compile_options(RaychelCPU_test PUBLIC /W4 /wd4068)
+    target_compile_options(RaychelCPU_test PUBLIC 
+        /W4 
+        /wd4068 #unknown pragma
+    )
 else()
-    target_compile_options(RaychelCPU_test PUBLIC -Wall -Wextra -Wshadow -Wno-unknown-pragmas)
+    target_compile_options(RaychelCPU_test PUBLIC
+        -Wall
+        -Wextra
+        -Wshadow 
+        -Wno-unknown-pragmas
+    )
 endif()
 
 include(CheckIPOSupported)

@@ -16,7 +16,7 @@ namespace Logger {
 	namespace details {
 
 		template<size_t off_, typename = std::enable_if_t<(off_ < sizeof(uint32_t))>>
-		[[nodicard]] constexpr uint32_t bit() noexcept
+		[[nodiscard]] constexpr uint32_t bit() noexcept
 		{
 			return 1UL << off_;
 		}

@@ -49,7 +49,7 @@ namespace Logger {
 
 		//internal function. Not to be used directly
 		template<typename T>
-		[[nodicard]] std::string getRepNonStreamable(T&& obj) noexcept
+		[[nodiscard]] std::string getRepNonStreamable(T&& obj) noexcept
 		{
 			std::ostringstream interpreter;
 
