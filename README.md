@@ -4,18 +4,15 @@ What is ray marching?
 -
 In ray marching, every object is defined by a so called **signed distance function**, short SDF.
 These functions return the distance to an objects surface, negative on the inside.
-To trace a ray in a certain direction, we take the minimum of all the SDFs in the scene and move by that amount. That is repeated until we have hit an object.
-Then we just apply the rendering equation to get the shaded color of that point.
+To trace a ray in a certain direction, just take the minimum of all the SDFs in the scene and move by that amount. That is repeated until you have hit an object.
+Then just apply the rendering equation to get the shaded color of that point.
 
-Why render on the CPU?
--
-I don't want to implement Compute Shaders. Wait for RaychelGPU
-
-What are the features?
+Features
 -
 Raychel is still very much WIP and there are most certainly many many bugs left to squash.
   * Currently supported are:
     * Materials:
+      *coming soon™*
       <!-- * Diffuse
       * Reflective
       * Refractive
@@ -23,6 +20,7 @@ Raychel is still very much WIP and there are most certainly many many bugs left 
       * Volumetric [WIP] -->
     
     * Lighting:
+      *coming soon™*
       <!-- * Lamp lighting [WIP]
       * Global illumination
       * Object lighting -->
@@ -43,8 +41,10 @@ General Information
 -
 RaychelCPU is written in standard C++17 using the C++ Guideline Suport Library  at https://github.com/Microsoft/GSL.
 I try to keep all the code as standard and "C++17-ish" as possible.
-I have not tested Compiler compatibility aside from clang and GCC, so please report any issues to me.
-(I am currently working on Windows and MSVC support)
+Compilers that work for sure:
+  * Clang
+  * GCC
+  * MSVC
 
 How to build
 -
@@ -52,26 +52,32 @@ Cmake 3.14 or later is required and the libraries marked with *required* in the 
 
   * Windows
     -
-    You will need Visual Studio to do most of the compiling.
+    You will need CMake, Visual Studio with the C++ environment and ZLib.
+    For installing Zlib, I recommend zlib.install at https://github.com/horta/zlib.install
 
-    Run cmake in the basefolder of the repository, open the resulting RaychelCPU.sln in Visual Studio and press "build"
-
-    For installing the required dependency Zlib, I recommend zlib.install at https://github.com/horta/zlib.install
-  
+    Run cmake, open the resulting RaychelCPU.sln in Visual Studio, right click RaychelCPU_test and click "build"
+    
   * GNU/Linux
     -
-    run cmake, then run make and you have your binaries built
+    Run cmake, then run make and you have your binaries built in the *bin* directory
+    
+    If any of the dependencies is not installed, it is likely easiest to just install them via your package manager
 
 
 Library Credit
 -
 Credit where credit is due. I am using the following libraries:
-* C++ Guideline Suport Library by Microsoft: https://github.com/Microsoft/GSL
-* PNG++ is a modern wrapper around libPNG: https://github.com/mecwerks/png-plusplus
-* libPNG is the official library to create PNG images: https://github.com/glennrp/libpng  
-* zlib is a general purpose data compression library: https://github.com/madler/zlib  *required*
-* ncurses is an API allowing for GUI-like programs in the terminal https://github.com/mirror/ncurses (optional)
+* Microsofts Implementation of the C++ Core Guideline Support Library: 
+  https://github.com/Microsoft/GSL
+* PNG++ is a modern wrapper around libPNG: 
+  https://github.com/mecwerks/png-plusplus
+* libPNG is the official library to create PNG images: 
+  https://github.com/glennrp/libpng  
+* zlib is a general purpose data compression library: 
+  https://github.com/madler/zlib  *required*
+* ncurses is an API allowing for GUI-like programs in the terminal
+  https://github.com/mirror/ncurses *optional*
 
 I found a bug!!!
 -
-Nicely done! Please report it in the issues tab or at weckyy702@gmail.com
+Nicely done! Please report it in the Issues tab or at weckyy702@gmail.com
