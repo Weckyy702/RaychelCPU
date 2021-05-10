@@ -184,8 +184,6 @@ if(LINK_GSL)
     )
 endif()
 
-message(STATUS ${CMAKE_CXX_COMPILER})
-
 if(NOT MSVC)
     target_link_libraries(RaychelCPU_test PUBLIC
         tbb
