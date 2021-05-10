@@ -9,7 +9,7 @@
 #define LOGGER_H_
 
 #if !((defined(__cplusplus) && (__cplusplus >= 201703L)) || defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
-#error "C++17 compilation is required!"
+	#error "C++17 compilation is required!"
 #endif
 
 #include "Helper.h"
@@ -22,7 +22,7 @@
 #include <array>
 
 namespace Logger {
-	enum class LogLevel : size_t { debug=0u, info, warn, error, critical, fatal, log };
+	enum class LogLevel : size_t { debug=0U, info, warn, error, critical, fatal, log };
 
 	using namespace std::string_literals;
 
@@ -32,24 +32,25 @@ namespace Logger {
 	namespace _ {
 
 		//internal function. Not to be used directly
-		LogLevel requiredLevel();
+		[[nodiscard]] LogLevel requiredLevel() noexcept;
 
 		//internal function. Not to be used directly
-		void setLogLevel(LogLevel);
+		void setLogLevel(LogLevel) noexcept;
 
 		//internal function. Not to be used directly
-		void printWithoutLabel(std::string_view);
+		void printWithoutLabel(std::string_view) noexcept;
 
 		//internal function. Not to be used directly
-		void print(std::string_view);
+		void print(std::string_view) noexcept;
 
 		void lockStream();
 
-		void unlockStream();
+		void unlockStream() noexcept;
 
 		//internal function. Not to be used directly
 		template<typename T>
-		std::string getRepNonStreamable(T&& obj) {
+		[[nodicard]] std::string getRepNonStreamable(T&& obj) noexcept
+		{
 			std::ostringstream interpreter;
 
 			interpreter << details::type_name<std::remove_reference_t<T>>() << " at 0x" << std::hex << (uintptr_t)&obj;
@@ -58,7 +59,8 @@ namespace Logger {
 		}
 
 		template<typename T>
-		std::string getRepStreamable(T&& obj) {
+		[[nodiscard]] std::string getRepStreamable(T&& obj) noexcept
+		{
 			std::ostringstream interpreter;
 
 			interpreter << obj;
@@ -67,7 +69,8 @@ namespace Logger {
 		}
 
 		template<typename T, typename = std::enable_if_t<!std::is_same_v<T, const char*>>>
-		std::string getRepStreamable(T* obj) {
+		[[nodiscard]] std::string getRepStreamable(T* obj) noexcept
+		{
 			std::ostringstream interpreter;
 
 			interpreter << details::type_name<T>() << "* at 0x" << std::hex << (uintptr_t)obj;
@@ -77,14 +80,15 @@ namespace Logger {
 
 		//overload getRepStreamable so C-style strings don't get logged as pointers
 		template<typename = void>
-		std::string getRepStreamable(const char* obj)
+		[[nodiscard]] std::string getRepStreamable(const char* obj) noexcept
 		{
 			return std::string(obj);
 		}
 
 		//internal function. Not to be used directly
 		template<typename T, std::enable_if_t<details::is_to_stream_writable_v<std::ostringstream, T>, bool> = true>
-		void logObj(bool log_with_label, T&& obj) {
+		void logObj(bool log_with_label, T&& obj) noexcept
+		{
 				std::string representation = getRepStreamable(std::forward<T>(obj));
 
 			if (log_with_label)
@@ -95,7 +99,8 @@ namespace Logger {
 
 		//internal function. Not to be used directly
 		template<typename T, std::enable_if_t<!details::is_to_stream_writable_v<std::ostringstream, T>, bool> = false>
-		void logObj(bool log_with_label, T&& obj) {
+		void logObj(bool log_with_label, T&& obj) noexcept
+		{
 			std::string representation = getRepNonStreamable(std::forward<T>(obj));
 
 			if (log_with_label)
@@ -108,11 +113,11 @@ namespace Logger {
 		void logConcurrent(LogLevel lv, bool log_with_label, T&& obj, Args&&... args)
 		{
 			lockStream();
-			auto _ = details::Finally([](){ unlockStream(); });
+			[[maybe_unused]] const auto unlock_mutex_on_exit = details::Finally([](){ unlockStream(); });
 
 			if(lv < _::requiredLevel()) return;
-			setLogLevel(lv);
 
+			setLogLevel(lv);
 			logObj(log_with_label, std::forward<T>(obj));
 			(logObj(false, std::forward<Args>(args)), ...);
 		}
@@ -197,44 +202,47 @@ namespace Logger {
 	}
 
 	//set the label that is displayed in front of the message [LABEL] msg
-	void setLogLabel(LogLevel, std::string_view);
+	void setLogLabel(LogLevel, std::string_view) noexcept;
 
 	//set the color that should be used for the level. Must be an ANSI compatible color code
-	void setLogColor(LogLevel, std::string_view);
+	void setLogColor(LogLevel, std::string_view) noexcept;
 
 	//set an alternative stream for the logger to write to
 	void setOutStream(std::ostream& os);
 
 	//disable colored output
-	void disableColor();
+	void disableColor() noexcept;
 
 	//enable colored output
-	void enableColor();
+	void enableColor() noexcept;
 
 	//start a timer and associate it with the label
-	std::string_view startTimer(std::string_view label);
+	std::string_view startTimer(std::string_view label) noexcept;
 
 	//return the duration since the last call to startTimer(label). removes label from the list of active labels
-	duration_t endTimer(std::string_view label);
+	[[nodiscard]] duration_t endTimer(std::string_view label) noexcept;
 
 	//return the duration since the last call to startTimer(label). does NOT remove label from the list of acitve labels
-	duration_t getTimer(std::string_view label);
+	[[nodiscard]] duration_t getTimer(std::string_view label) noexcept;
 
 	//log the duration since the last call to startTimer(label). removes label from the list of active labels
-	void logDuration(std::string_view label, const std::string& prefix = ""s, const std::string& suffix = "ms\n"s);
+	void logDuration(std::string_view label, const std::string& prefix = ""s, const std::string& suffix = "ms\n"s) noexcept;
 
 	//log the duration since the last call to startTimer(label). does NOT remove label from the list of acitve labels
-	void logDurationPersistent(std::string_view label, const std::string& prefix=""s, const std::string& suffix = "ms\n"s);
+	void logDurationPersistent(std::string_view label, const std::string& prefix=""s, const std::string& suffix = "ms\n"s) noexcept;
 
 	//set minimum level the Message has to be sent with in order to show up. Default: INFO
-	LogLevel setMinimumLogLevel(LogLevel);
+	LogLevel setMinimumLogLevel(LogLevel) noexcept;
 
 	/// \brief Configure the Logger to log into a file instead of a std::ostream
 	/// \param directory Directory of the logfile. must end with "/"
 	/// \param fileName Name of the logfile. Does not need an extension
 	void initLogFile(const std::string& directory, const std::string& fileName = "Log.log");
 
-	void dumpLogFile();
+	/**
+	*\brief Close the current log file, if existent
+	*/
+	void dumpLogFile() noexcept;
 }
 
 

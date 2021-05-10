@@ -55,21 +55,21 @@ namespace Logger {
 
 	namespace _ {
 
-		LogLevel requiredLevel()
+		LogLevel requiredLevel() noexcept
 		{
 			return minLogLevel;
 		}
 
-		void setLogLevel(LogLevel level)
+		void setLogLevel(LogLevel level) noexcept
 		{
 			currentLevel = level;
 		}
 
-		void printWithoutLabel(std::string_view msg)
+		void printWithoutLabel(std::string_view msg) noexcept
 		{
 			if (currentLevel >= minLogLevel) {
 				if(doColor) {
-					auto col = getLogColor();
+					const auto col = getLogColor();
 					outStream
 					.write(col.data(), col.size())
 					.write(msg.data(), msg.size())
@@ -80,12 +80,12 @@ namespace Logger {
 			}
 		}
 
-		void print(std::string_view msg)
+		void print(std::string_view msg) noexcept
 		{
 			if (currentLevel >= minLogLevel) {
 				if(doColor) {
-					auto col = getLogColor();
-					auto label = getLogLabel();
+					const auto col = getLogColor();
+					const auto label = getLogLabel();
 
 					outStream
 					.write(col.data(), col.size())
@@ -94,7 +94,7 @@ namespace Logger {
 					.write("] ", 2)
 					.write(reset_col.data(), reset_col.size());
 				} else {
-					auto label = getLogLabel();
+					const auto label = getLogLabel();
 
 					outStream
 					.write("[", 1)
@@ -110,24 +110,26 @@ namespace Logger {
 			mtx.lock();
 		}
 
-		void unlockStream()
+		void unlockStream() noexcept
 		{
 			mtx.unlock();
 		}
 
 	}
 
-	void setLogLabel(LogLevel lv, std::string_view label)
+	void setLogLabel(LogLevel lv, std::string_view label) noexcept
 	{
 		_::lockStream();
-		auto _ = details::Finally([](){ _::unlockStream(); });
+		[[maybe_unused]] const auto unlock_mutex_on_exit = details::Finally([](){ _::unlockStream(); });
+
 		levelLabels.at(static_cast<size_t>(lv)) = label;
 	}
 
-	void setLogColor(LogLevel lv, std::string_view color)
+	void setLogColor(LogLevel lv, std::string_view color) noexcept
 	{
 		_::lockStream();
-		auto _ = details::Finally([](){ _::unlockStream(); });
+		[[maybe_unused]] const auto unlock_mutex_on_exit = details::Finally([](){ _::unlockStream(); });
+
 		cols.at(static_cast<size_t>(lv)) = color;
 	}
 
@@ -136,72 +138,70 @@ namespace Logger {
 		outStream.rdbuf(os.rdbuf());
 	}
 
-	void disableColor()
+	void disableColor() noexcept
 	{
 		doColor = false;
 	}
 
-	void enableColor()
+	void enableColor() noexcept
 	{
 		doColor = true;
 	}
 
-	std::string_view startTimer(std::string_view label)
+	std::string_view startTimer(std::string_view label) noexcept
 	{
-		timePoint_t tp = std::chrono::high_resolution_clock::now();
+		const auto tp = std::chrono::high_resolution_clock::now();
+
 		timePoints.insert_or_assign(label, tp);
 		return label;
 	}
 
-	duration_t endTimer(std::string_view label)
+	duration_t endTimer(std::string_view label) noexcept
 	{
 		using namespace std::chrono;
-		auto endPoint = high_resolution_clock::now();
+
+		const auto endPoint = high_resolution_clock::now();
 		if (timePoints.find(label) != timePoints.end()) {
-			auto startTime = timePoints.extract(label).mapped();
+			const auto startTime = timePoints.extract(label).mapped();
 			return duration_cast<duration_t>(endPoint - startTime);
-		} else {
-			error("Label ", label, " not found!\n");
-			return duration_t(-1);
 		}
+
+		error("Label ", label, " not found!\n");
+		return duration_t(-1);
 	}
 
-	duration_t getTimer(std::string_view label)
+	duration_t getTimer(std::string_view label) noexcept
 	{
 		using namespace std::chrono;
-		auto endPoint = high_resolution_clock::now();
+
+		const auto endPoint = high_resolution_clock::now();
 		if (timePoints.find(label) != timePoints.end()) {
-			auto startTime = timePoints.at(label);
+			const auto startTime = timePoints.at(label);
 			return duration_cast<duration_t>(endPoint - startTime);
-		} else {
-			error("Label ", label, "not found!\n");
-			return duration_t(-1);
 		}
+		error("Label ", label, "not found!\n");
+		return duration_t(-1);
 	}
 
-	void logDuration(std::string_view label, const std::string& _prefix,
-			const std::string& suffix)
+	void logDuration(std::string_view label, const std::string& _prefix, const std::string& suffix) noexcept
 	{
-		duration_t dur = endTimer(label);
+		const auto dur = endTimer(label);
 		if (dur.count() != -1) {
-			std::string prefix =
-					(_prefix == "") ? std::string(label) + ": "s : _prefix;
+			const std::string prefix = (_prefix.empty()) ? (std::string(label) + ": "s) : _prefix;
 			info(prefix, dur.count(), suffix);
 		}
 	}
 
-	void logDurationPersistent(std::string_view label, const std::string& _prefix,
-			const std::string& suffix)
+	void logDurationPersistent(std::string_view label, const std::string& _prefix, const std::string& suffix) noexcept
 	{
-		duration_t dur = getTimer(label);
+		const auto dur = getTimer(label);
 		if (dur.count() != -1) {
-			std::string prefix =
-					(_prefix == "") ? std::string(label) + ": "s : _prefix;
+			const std::string prefix = (_prefix.empty()) ? (std::string(label) + ": "s) : _prefix;
 			info(prefix, dur.count(), suffix);
 		}
 	}
 
-	LogLevel setMinimumLogLevel(LogLevel lv)
+	LogLevel setMinimumLogLevel(LogLevel lv) noexcept
 	{
 		minLogLevel = lv;
 		return minLogLevel;
@@ -209,24 +209,33 @@ namespace Logger {
 
 	void initLogFile(const std::string& directory, const std::string& filename)
 	{
-		fs::path dir{directory};
-		fs::path filepath = dir / filename;
-		if(directory != "") {
+		const fs::path dir{directory};
+		if(!directory.empty()) {
 			std::error_code ec;
 			fs::create_directories(dir, ec);
+
+			if(ec) {
+				error("failed to open log file '", directory, "/", filename, "': ", ec.message());
+			}
 		}
+
 		if(logFile.is_open()) {
 			dumpLogFile();
 		}
+
+		const fs::path filepath = dir / filename;
+		
 		logFile = std::ofstream{filepath};
 		outStream.rdbuf(logFile.rdbuf());
 	}
 
-	void dumpLogFile()
+	void dumpLogFile() noexcept
 	{
-		if(outStream.rdbuf() == logFile.rdbuf()) {
-			outStream.rdbuf(std::cout.rdbuf());
+		if(logFile.is_open()) {
+			if(outStream.rdbuf() == logFile.rdbuf()) {
+				outStream.rdbuf(std::cout.rdbuf());
+			}
+			logFile.close();
 		}
-		logFile.close();
 	}
 }

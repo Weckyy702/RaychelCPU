@@ -16,8 +16,9 @@ namespace Logger {
 	namespace details {
 
 		template<size_t off_, typename = std::enable_if_t<(off_ < sizeof(uint32_t))>>
-		constexpr uint32_t bit() {
-			return 1ul << off_;
+		[[nodicard]] constexpr uint32_t bit() noexcept
+		{
+			return 1UL << off_;
 		}
 
 
@@ -48,7 +49,7 @@ namespace Logger {
 
 		//thank you to einpoklum at https://stackoverflow.com/questions/81870/is-it-possible-to-print-a-variables-type-in-standard-c/56766138#56766138
 		template <typename T>
-		constexpr std::string_view type_name()
+		[[nodiscard]] constexpr std::string_view type_name() noexcept
 		{
 			std::string_view name, prefix, suffix;
 #ifdef __clang__
@@ -76,6 +77,12 @@ namespace Logger {
 			Finally(F&& f)
 				:f_{std::forward<F>(f)}
 			{}
+
+			Finally(const Finally&) =default;
+			Finally(Finally&&) noexcept =default;
+
+			Finally& operator=(const Finally&) =default;
+			Finally& operator=(Finally&&)noexcept =default;
 
 			~Finally() noexcept {
 				f_();
