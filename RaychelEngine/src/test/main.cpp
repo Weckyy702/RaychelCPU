@@ -22,7 +22,7 @@ int main(int, char**)
 
     Scene scene;
 
-    scene.background_texture_ = CubeTexture<color>{[](const vec3& dir){
+    scene.background_texture_ = CubeTexture<color>{[](const vec3& dir) {
         return color{dir};
     }};
 
@@ -35,14 +35,14 @@ int main(int, char**)
     scene.addObject( make_object<SdSphere>(Transform{vec3{0, 0, -2.5}}, DiffuseMaterial{color{0, 0, 1}}, 1.0f) );
     scene.addObject( make_object<SdSphere>(Transform{vec3{-2.5, 0, 0}}, DiffuseMaterial{color{1, 1, 1}}, 1.0f) );
 
-    const vec2i size = {853, 480};
+    const vec2i size = {50, 75};
 
     RenderController renderer;
 
     renderer.setCurrentScene(&scene);
     renderer.setOutputSize(size);
 
-    RenderTarget* target = new ImageTargetPng{size, "../../res", 4};
+    RenderTarget* target = new AsciiTarget{ size, true };//ImageTargetPng{size, "../../res", 4};
 
     auto label = Logger::startTimer("Total time");
 

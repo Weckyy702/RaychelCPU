@@ -12,7 +12,7 @@ namespace Raychel {
             :SdObject{_d}, radius{_r}
         {}
 
-        SdSphere(SdSphere&& rhs)
+        SdSphere(SdSphere&& rhs) noexcept
             :SdObject{makeObjectData(std::move(rhs))}, radius{rhs.radius}
         {}
 

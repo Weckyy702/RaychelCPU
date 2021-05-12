@@ -57,7 +57,7 @@ namespace Raychel {
                 }
             }
 
-            TextureProvider(TextureProvider&& rhs)
+            TextureProvider(TextureProvider&& rhs) noexcept
                 :type_{rhs.type_}
             {
                 switch (type_)

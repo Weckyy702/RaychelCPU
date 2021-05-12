@@ -60,11 +60,11 @@ namespace Raychel {
 
 
         vec2i output_size_;
-        float aspect_ratio;
+        float aspect_ratio=0.0;
 
         //Non-owning references to scene specific data
-        const std::vector<IRaymarchable_p>* objects_;
-        const CubeTexture<color>* background_texture_;
+        const std::vector<IRaymarchable_p>* objects_=nullptr;
+        const CubeTexture<color>* background_texture_=nullptr;
 
         //Buffer of all UVs for which to raymarch
         std::vector<RaymarchData> requests_;
