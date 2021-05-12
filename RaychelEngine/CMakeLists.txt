@@ -133,7 +133,7 @@ target_include_directories(RaychelCPU_test PUBLIC
 
 #Set compiler flags
 #build time support for sanitizers
-if(${USE_ASAN} AND NOT MSVC) #TODO: fix this bug
+if(${USE_ASAN})
     message(STATUS "Enabled ASAN support")
 
     target_compile_options(RaychelCPU_test PUBLIC -fsanitize=address)
@@ -141,6 +141,8 @@ if(${USE_ASAN} AND NOT MSVC) #TODO: fix this bug
     if(NOT MSVC)
         target_compile_options(RaychelCPU_test PUBLIC -fno-omit-frame-pointer)
         target_link_options(RaychelCPU_test PUBLIC -fsanitize=address)
+    else()
+        message(WARNING "It looks like you're using MSVC. On Visual Studio, please head into RaychelCPU properties and tick 'Enable Address Sanitizer'")
     endif()
 
 endif()

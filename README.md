@@ -56,6 +56,8 @@ Cmake 3.14 or later is required and the libraries marked with *required* in the 
     For installing Zlib, I recommend zlib.install at https://github.com/horta/zlib.install
 
     Run cmake, open the resulting RaychelCPU.sln in Visual Studio, right click RaychelCPU_test and click "build"
+
+    If you would like to use ASAN, you need to enable it in the Project properties
     
   * GNU/Linux
     -
