@@ -20,6 +20,7 @@ namespace Logger {
 	static std::ofstream logFile;
 
 	static std::mutex mtx;
+	static bool mtx_engaged;
 
 	static std::unordered_map<std::string_view, timePoint_t> timePoints;
 
@@ -108,11 +109,15 @@ namespace Logger {
 		void lockStream()
 		{
 			mtx.lock();
+			mtx_engaged = true;
 		}
 
 		void unlockStream() noexcept
 		{
-			mtx.unlock();
+			if (mtx_engaged) {
+				mtx.unlock();
+				mtx_engaged = false;
+			}
 		}
 
 	}
