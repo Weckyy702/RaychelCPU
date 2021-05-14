@@ -171,21 +171,21 @@ namespace Raychel {
 	QuaternionImp<T> inverse(const QuaternionImp<T>&);
 
 		/**
-	*\brief Linearly interpolate two Quaternions
+	*\brief Smoothly interpolate two normalized Quaternions (Versors)
 	*
 	*\tparam T Type of the quaternion
 	*\param _a first quaternion (x=0.0)
 	*\param _b second quaternion (x=1.0)
 	*\param x value of interpolation
-	*\return QuaternionImp<T> 
+	*\return QuaternionImp<T> the interpolated Quaternion
 	*/
 	template<typename T>
 	QuaternionImp<T> lerp(const QuaternionImp<T>& _a, const QuaternionImp<T>& _b, float x)
 	{
 		constexpr auto threshold = 0.995;
 
-		auto a = normalize(_a);
-		auto b = normalize(_b);
+		const auto a = normalize(_a);
+		const auto b = normalize(_b);
 
 		auto d = dot(a.v(), b.v());
 
@@ -199,13 +199,13 @@ namespace Raychel {
 			return normalize(a * x + b * (1.0 - x));
 		}
 
-		auto theta0 = std::acos(d);
-		auto theta = theta0 * x;
-		auto sinTheta = std::sin(theta);
-		auto sinTheta0 = std::sin(theta0);
+		const auto theta0 = std::acos(d);
+		const auto theta = theta0 * x;
+		const auto sinTheta = std::sin(theta);
+		const auto sinTheta0 = std::sin(theta0);
 
-		auto s1 = sinTheta / sinTheta0;
-		auto s0 = std::cos(theta) - (d * s1);
+		const auto s1 = sinTheta / sinTheta0;
+		const auto s0 = std::cos(theta) - (d * s1);
 
 		return (a * s0) + (b * s1);
 

@@ -71,13 +71,13 @@ namespace Raychel {
 		*\tparam _To Type of the converted color
 		*\return colorImp<_To> 
 		*/
-		template<typename _To>
-		colorImp<_To> to() const noexcept;
+		template<typename To>
+		colorImp<To> to() const noexcept;
 		
 		/**
 		*\brief Convert the color to a pointer-to-red. For functions that need colors as arrays
 		*
-		*\return const value_type* 
+		*\return const value_type*
 		*/
 		explicit operator const value_type* () const;
 
@@ -93,7 +93,7 @@ namespace Raychel {
 		colorImp& operator*=(const colorImp&);
 		colorImp& operator/=(value_type);
 
-		value_type r= value_type(0), g= value_type(0), b= value_type(0);
+		value_type r{0}, g{0}, b{0};
 	};
 
 	template<typename T>
@@ -103,7 +103,7 @@ namespace Raychel {
 	colorImp<T> operator-(const colorImp<T>&);
 
 	template<typename T>
-	colorImp<T> operator+(const colorImp<T>&, const colorImp<T>);
+	colorImp<T> operator+(const colorImp<T>&, const colorImp<T>&);
 
 	template<typename T>
 	colorImp<T> operator-(const colorImp<T>&, const colorImp<T>&);

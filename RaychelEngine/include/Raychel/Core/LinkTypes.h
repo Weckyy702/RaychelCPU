@@ -41,7 +41,7 @@ namespace Raychel {
     struct ObjectData
     {
         Transform t;
-        IMaterial* mat;
+        IMaterial* mat{nullptr};
         //...
     };
     /**
@@ -52,8 +52,8 @@ namespace Raychel {
     {
 
         color c;
-        float b;
-        float sz;
+        float b{0.0F};
+        float sz{0.0F};
 
     };
 
@@ -69,10 +69,10 @@ namespace Raychel {
      */
     struct RaymarchOptions {
         //maximum distance a ray can travel in the scene [m]
-        float max_ray_distance = 50.0f;
+        float max_ray_distance = 50.0F;
 
         //maximum distance a point can be away form a surface while still being cosidered *on* the surface [m]
-        float epsilon = 1e-5f;
+        float epsilon = 1e-5F;
     };
 
     /**
@@ -113,10 +113,10 @@ namespace Raychel {
         vec3 surface_point, hit_normal;
         vec3 in_direction;
 
-        size_t num_ray_steps;
-        float ray_depth;
+        size_t num_ray_steps{0};
+        float ray_depth{0.0F};
 
-        size_t recursion_depth;
+        size_t recursion_depth{0};
     };
 
     /**
@@ -126,7 +126,7 @@ namespace Raychel {
     struct RaymarchHitInfo
     {
         ShadingData shading_data;
-        const IRaymarchable* hit_object;
+        const IRaymarchable* hit_object{nullptr};
     };
     
 
