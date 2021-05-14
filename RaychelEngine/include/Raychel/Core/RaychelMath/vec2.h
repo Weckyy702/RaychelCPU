@@ -37,14 +37,14 @@ namespace Raychel {
 	*
 	*\tparam _number Type of the vector. Must be arithmetic
 	*/
-	template<RAYCHEL_NUMBER _number>
+	template<typename _number>
 	struct vec2Imp {
 
 		using value_type = std::remove_reference_t<std::remove_cv_t<_number>>;
 
 	private:
 
-		RAYCHEL_ENSURE_NUMBER(value_type, "Raychel::vec2<T> requires T to be of atithmetic type!");
+		static_assert(std::is_arithmetic_v<value_type>, "Raychel::vec2<T> requires T to be of atithmetic type!");
 
 		using vec3 = vec3Imp<value_type>;
 		using color = colorImp<value_type>;

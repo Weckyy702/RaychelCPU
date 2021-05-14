@@ -48,20 +48,6 @@
 #include "Logger.h"
 #include "RaychelMath/constants.h"
 
-#if __has_cpp_attribute(__cpp_concepts) >= 201907L
-#include <concepts>
-namespace Raychel {
-	template<typename T>
-	concept arithmetic = std::integral<T> || std::floating_point<T>;
-}
-#define RAYCHEL_NUMBER arithmetic
-#define RAYCHEL_ENSURE_NUMBER(t_arg, msg)
-
-#else
-
-#define RAYCHEL_NUMBER typename
-#define RAYCHEL_ENSURE_NUMBER(t_arg, msg) static_assert(std::is_arithmetic_v<t_arg>, msg)
-
 #endif
 
 #if defined(__clang__) || defined(__GNUC__)
@@ -69,7 +55,7 @@ namespace Raychel {
 #elif defined(_MSC_VER)
 	#define RAYCHEL_FUNC_NAME __FUNCSIG__
 #else
-	#error "What Compiler are you using bro?!?"
+	#error "Unknown compiler detected!"
 #endif
 
 #ifdef RAYCHEL_DEBUG
@@ -83,11 +69,11 @@ namespace Raychel {
 								std::exit(0x41);
 
 #if defined(RAYCHEL_DEBUG) || !defined(NDEBUG)
-	#define RAYCHEL_ASSERT(exp) if(!exp) { \
+	#define RAYCHEL_ASSERT(exp) if(!(exp)) { \
 		RAYCHEL_TERMINATE("Assertion '", GSL_STRINGIFY(exp), "' failed!");\
 	}
 #else
-	#define RAYCHEL_ASSERT(exp)
+	#define RAYCHEL_ASSERT(exp) Expects(exp)
 #endif
 
 #define RAYCHEL_ASSERT_NOT_REACHED RAYCHEL_TERMINATE("Assertion failed! Expected to not execute ", __LINE__)
@@ -105,24 +91,24 @@ namespace Raychel {
 	using gsl::byte, gsl::not_null;
 	using std::size_t;
 
-	template<RAYCHEL_NUMBER _num>
+	template<typename _num>
 	struct vec2Imp;
-	template<RAYCHEL_NUMBER _num>
+	template<typename _num>
 	struct vec3Imp;
-	template<RAYCHEL_NUMBER _num>
+	template<typename _num>
 	struct colorImp;
 	/*TODO: implement
-	template<RAYCHEL_NUMBER _num>
+	template<typename _num>
 	class colorAlphaImp;
 	*/
-	template<RAYCHEL_NUMBER _num>
+	template<typename _num>
 	class QuaternionImp;
-	template<RAYCHEL_NUMBER _num>
+	template<typename _num>
 	struct TransformImp;
 
-	template<RAYCHEL_NUMBER _number>
+	template<typename _number>
 	constexpr _number sq(_number x) {
-		RAYCHEL_ENSURE_NUMBER(_number, "Raychel::sq<T> requires T to be of arithmetic type!");
+		static_assert(std::is_arithmetic_v<_number>, "Raychel::sq<T> requires T to be of arithmetic type!");
 		return x * x;
 	}
 

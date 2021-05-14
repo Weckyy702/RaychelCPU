@@ -37,13 +37,13 @@ namespace Raychel {
 	*
 	*\tparam _number Type of the Quaternion. Must be arithmetic
 	*/
-	template<RAYCHEL_NUMBER _number>
+	template<typename _number>
 	class QuaternionImp {
 	public:
 		using value_type = std::remove_reference_t<std::remove_cv_t<_number>>;
 
 	private:
-		RAYCHEL_ENSURE_NUMBER(value_type, "Raychel::Quaternion<T> requires T to be of arithmetic type!");
+		static_assert(std::is_arithmetic_v<value_type>, "Raychel::Quaternion<T> requires T to be of arithmetic type!");
 		using vec3 = vec3Imp<value_type>;
 
 	public:
@@ -107,7 +107,7 @@ namespace Raychel {
         QuaternionImp& operator*=(const QuaternionImp&);
         QuaternionImp& operator/=(value_type);
 
-        value_type r, i, j, k;
+        value_type r{0}, i{0}, j{0}, k{0};
 	};
 
 	template<typename T>

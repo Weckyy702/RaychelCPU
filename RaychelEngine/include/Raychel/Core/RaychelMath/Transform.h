@@ -40,7 +40,7 @@ namespace Raychel
     *
     *\tparam _number Type of the Transform. Must be arithmetic
     */
-    template<RAYCHEL_NUMBER _number>
+    template<typename _number>
     struct TransformImp
     {
 
@@ -49,7 +49,7 @@ namespace Raychel
 
     private:
 
-        RAYCHEL_ENSURE_NUMBER(value_type, "Raychel::vec3<T> requires T to be of arithmetic type!");
+        static_assert(std::is_arithmetic_v<value_type>, "Raychel::vec3<T> requires T to be of arithmetic type!");
         using vec3 = vec3Imp<value_type>;
         using Quaternion = QuaternionImp<value_type>;
     
