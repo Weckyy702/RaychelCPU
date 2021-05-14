@@ -48,8 +48,6 @@
 #include "Logger.h"
 #include "RaychelMath/constants.h"
 
-#endif
-
 #if defined(__clang__) || defined(__GNUC__)
 	#define RAYCHEL_FUNC_NAME __PRETTY_FUNCTION__
 #elif defined(_MSC_VER)
