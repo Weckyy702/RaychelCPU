@@ -155,7 +155,7 @@ namespace Raychel {
 	}
 
 	template<typename T>
-	vec3Imp<T> operator+(const vec3Imp<T>& a, const vec3Imp<T> b)
+	vec3Imp<T> operator+(const vec3Imp<T>& a, const vec3Imp<T>& b)
 	{
 		return { a.x + b.x, a.y + b.y, a.z + b.z };
 	}

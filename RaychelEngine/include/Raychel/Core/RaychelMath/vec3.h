@@ -98,7 +98,7 @@ namespace Raychel {
 	vec3Imp<T> operator-(const vec3Imp<T>&);
 
 	template<typename T>
-	vec3Imp<T> operator+(const vec3Imp<T>&, const vec3Imp<T>);
+	vec3Imp<T> operator+(const vec3Imp<T>&, const vec3Imp<T>&);
 
 	template<typename T>
 	vec3Imp<T> operator-(const vec3Imp<T>&, const vec3Imp<T>&);
