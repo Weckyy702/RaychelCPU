@@ -43,8 +43,8 @@ namespace Raychel {
 
         Camera()=default;
 
-        Camera(const Transform& _t, float _zoom)
-            :transform_(_t), zoom_(_zoom)
+        Camera(const Transform& t, float zoom)
+            :transform_{t}, zoom_{zoom}
         {}
 
         vec3 forward() const noexcept;

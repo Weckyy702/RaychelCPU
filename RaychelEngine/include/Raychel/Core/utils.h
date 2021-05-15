@@ -63,7 +63,7 @@
 #endif
 
 //terminate the application with the provided message
-#define RAYCHEL_TERMINATE(...) Logger::fatal( RAYCHEL_FUNC_NAME, " at ", __FILE__, ":", __LINE__, ": ", __VA_ARGS__, '\n');	\
+#define RAYCHEL_TERMINATE(...) Logger::fatal( RAYCHEL_FUNC_NAME, " at (", __FILE__, ":", __LINE__, "): ", __VA_ARGS__, '\n');	\
 								std::exit(0x41);
 
 #if defined(RAYCHEL_DEBUG) || !defined(NDEBUG)
@@ -117,9 +117,9 @@ namespace Raychel {
 	*\param a first number (x=0.0)
 	*\param b second number (x=1.0)
 	*\param x value of interpolation
-	*\return _number
+	*\return _number the interpolated number
 	*/
-	template<typename _number, typename = std::enable_if_t<std::is_arithmetic_v<_number>>>
+	template<typename _number>
 	constexpr _number lerp(_number a, _number b, long double x)
 	{
 		return (x * b) + ((1.0-x) * a);
@@ -165,10 +165,9 @@ namespace Raychel {
 		if(min != 0)
 			eps = std::abs(min) * epsilon;
 
-		const bool is_equal = a == b;
-		const bool is_equivalent = diff < eps;
+		const bool is_equal = (a == b);
 
-		return  is_equal || is_equivalent;
+		return  is_equal || (diff < eps);
 	}
 
 }

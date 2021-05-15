@@ -38,7 +38,7 @@ namespace Raychel {
     *\brief Abstract interface for Materials
     *
     */
-    struct IMaterial {
+    class IMaterial {
 
     protected:
         IMaterial()=default;
@@ -52,8 +52,19 @@ namespace Raychel {
 
     public:
         
+        /**
+        *\brief Get the surface color of the Material with the parameters given in data
+        *
+        *\param data parameters for the Materials surface color equation
+        *\return color 
+        */
         virtual color getSurfaceColor(const ShadingData& data)const =0;
 
+        /**
+        *\brief Set the parent Renderer used for rendering callbacks
+        *
+        *\param new_renderer The new parent renderer
+        */
         virtual void setParentRenderer(not_null<RaymarchRenderer*> new_renderer)=0;
 
         virtual ~IMaterial()=default;

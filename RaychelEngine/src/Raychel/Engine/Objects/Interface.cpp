@@ -3,7 +3,7 @@
 
 namespace Raychel {
 
-    vec3 SdObject::getDirection(const vec3& p) const
+    vec3 SdObject::getDirectionToObject(const vec3& p) const
     {
         return transform().position-p;
     }
