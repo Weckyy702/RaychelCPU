@@ -16,7 +16,7 @@ using namespace Raychel;
 
 int main(int /*unused*/, char** /*unused*/)
 {
-    Logger::setMinimumLogLevel(Logger::LogLevel::debug);
+    Logger::setMinimumLogLevel(Logger::LogLevel::log);
 
     Logger::log("Welcome to Raychel Version ", RAYCHEL_VERSION_TAG, '\n');
 
@@ -30,12 +30,12 @@ int main(int /*unused*/, char** /*unused*/)
 
     auto& cam = scene.setCamera({ Transform{vec3(0, 0, 0), start_rotation}, 0.25 });
 
-    scene.addObject( make_object<SdSphere>(Transform{vec3{0, 0, 2.5}}, DiffuseMaterial{color{1, 0, 0}}, 1.0f) );
-    scene.addObject( make_object<SdSphere>(Transform{vec3{2.5, 0, 0}}, DiffuseMaterial{color{0, 1, 0}}, 1.0f) );
-    scene.addObject( make_object<SdSphere>(Transform{vec3{0, 0, -2.5}}, DiffuseMaterial{color{0, 0, 1}}, 1.0f) );
-    scene.addObject( make_object<SdSphere>(Transform{vec3{-2.5, 0, 0}}, DiffuseMaterial{color{1, 1, 1}}, 1.0f) );
+    scene.addObject<SdSphere>( make_object_data({vec3{0, 0, 2.5}, Quaternion{}}, DiffuseMaterial(color(1, 0, 0))), 1.0F);
+    scene.addObject<SdSphere>( make_object_data({vec3{2.5, 0, 0}, Quaternion{}}, DiffuseMaterial(color(0, 1, 0))), 1.0F);
+    scene.addObject<SdSphere>( make_object_data({vec3{0, 0, -2.5}, Quaternion{}}, DiffuseMaterial(color(0, 0, 1))), 1.0F);
+    scene.addObject<SdSphere>( make_object_data({vec3{-2.5, 0, 0}, Quaternion{}}, DiffuseMaterial(color(1))), 1.0F);
 
-    const vec2i size = {50, 75};
+    const vec2i size = {50, 25};
 
     RenderController renderer;
 
@@ -46,7 +46,7 @@ int main(int /*unused*/, char** /*unused*/)
 
     auto label = Logger::startTimer("Total time");
 
-    for(size_t i = 0;i<180; i++) {
+    for(size_t i = 0;; i++) {
 
         auto render_label = Logger::startTimer("Render time");
         auto results = renderer.getImageRendered();
