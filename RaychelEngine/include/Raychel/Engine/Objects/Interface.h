@@ -49,7 +49,7 @@ namespace Raychel {
 
     color getSurfaceColor(const ShadingData& data) const override;
 
-    void onRendererAttached(const not_null<RaymarchRenderer*>) override;
+        void onRendererAttached(const not_null<RaymarchRenderer*> attached_renderer) override;
 
     virtual ~SdObject()=default;
 
@@ -57,7 +57,7 @@ namespace Raychel {
 
     protected:
         Transform transform_;
-        IMaterial_p material_;
+        IMaterial_p material_{};
     };
 
     class SdLamp : public IRaymarchable

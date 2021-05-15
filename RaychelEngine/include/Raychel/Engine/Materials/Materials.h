@@ -45,9 +45,9 @@ namespace Raychel {
                 :albedo_{albedo}
             {}
 
-            void initializeTextureProviders(const vec3&, const vec3&) override;
+        void initializeTextureProviders(const vec3& parent_position, const vec3& parent_bounding_box) override;
 
-            color getSurfaceColor(const ShadingData&) const override;
+        color getSurfaceColor(const ShadingData& data) const override;
 
         private:
             TextureProvider<color> albedo_;

@@ -12,11 +12,7 @@ namespace Raychel {
             :SdObject{_d}, radius{_r}
         {}
 
-        SdSphere(SdSphere&& rhs) noexcept
-            :SdObject{makeObjectData(std::move(rhs))}, radius{rhs.radius}
-        {}
-
-        float eval(const vec3&) const override;
+        float eval(const vec3& p) const override;
 
         private:
             float radius=0;

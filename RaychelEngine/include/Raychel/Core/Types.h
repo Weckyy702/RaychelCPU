@@ -80,7 +80,7 @@ namespace Raychel {
 	using normalized2 = vec2;
 	using normalized3 = vec3;
 
-	using IRaymarchable_p = not_null<IRaymarchable*>;
+	using IRaymarchable_p = not_null<gsl::owner<IRaymarchable*>>;
 	using IMaterial_p = std::unique_ptr<IMaterial>;
 
 

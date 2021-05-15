@@ -73,7 +73,7 @@ namespace Raychel {
         
         friend class RaymarchRenderer;
 
-    //private:
+    private:
 
             Transform transform_;
             float zoom_=1.0;
