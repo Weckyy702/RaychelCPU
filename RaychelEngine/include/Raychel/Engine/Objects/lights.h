@@ -5,13 +5,15 @@
 
 namespace Raychel {
 
-    struct PointLight : public LightData
+    class PointLight : public SdLamp
     {
-        PointLight(const Transform& _t, const color& _c, float _b, float _sz)
-            :LightData(_t, _c, _b, _sz)
+    public:
+        PointLight(const Transform& t, const LampData& data)
+            :SdLamp(data), transform_{t}
         {}
 
-        
+    private:
+        Transform transform_;
     };
 
 }
