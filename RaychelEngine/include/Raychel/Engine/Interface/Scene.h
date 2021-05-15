@@ -42,18 +42,25 @@ namespace Raychel {
     */
     class Scene {
 
-        public:
+    public:
 
-            Scene()=default;
+        Scene()=default;
 
         Scene(const Scene&)=delete;
         Scene& operator=(const Scene&)=delete;
         Scene(Scene&&)=default;
         Scene& operator=(Scene&&)=default;
-            {
-                static_assert(std::is_base_of_v<IRaymarchable, T>, "Only Objects that derive from Raychel::IRaymarchable can be added to a scene!");
-                objects_.push_back(new T(std::forward<T>(obj)));
-            }
+
+
+
+        template<typename T, typename... Args>
+        void addObject(Args&&... args)
+        {
+            static_assert(std::is_base_of_v<IRaymarchable, T>, "Only Objects that derive from Raychel::IRaymarchable can be added to a scene!");
+            static_assert(std::is_constructible_v<T, Args...>, "Raychel::Scene::addObject<T, Args...> requires T to be constructible from Args...!");
+            
+            objects_.push_back(new T(std::forward<Args>(args)...));
+        }
 
         /**
         *\brief Set the Background texture for the scene
@@ -71,21 +78,22 @@ namespace Raychel {
         */
         Camera& setCamera(const Camera& cam);
 
-            ~Scene()
-            {
-                for(auto ptr : objects_) {
-                    delete ptr;
-                }
+        ~Scene()
+        {
+            //FIXME: turn IRaymarchable_p into a smart pointer
+            for(auto ptr : objects_) {
+                delete ptr;
             }
+        }
 
-        friend class RenderController;
+    friend class RenderController;
 
     private:
         Camera cam_;
-            CubeTexture<color> background_texture_;
+        CubeTexture<color> background_texture_;
         std::vector<IRaymarchable_p> objects_{};
-            //TODO: implement
-            //std::vector<Camera> cams_;
+        //TODO: implement
+        //std::vector<Camera> cams_;
     };
 
 }
