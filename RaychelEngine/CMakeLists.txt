@@ -96,6 +96,7 @@ set(SOURCES
     ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/RenderTarget/AsciiTarget.cpp
     ${RAYCHEL_SOURCE_DIR}/Engine/Materials/Interface.cpp
     ${RAYCHEL_SOURCE_DIR}/Engine/Materials/Materials.cpp
+    ${RAYCHEL_SOURCE_DIR}/Engine/Interface/Scene.cpp
 )
 
 add_executable(RaychelCPU_test 

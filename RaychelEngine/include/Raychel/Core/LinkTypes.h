@@ -41,9 +41,10 @@ namespace Raychel {
     struct ObjectData
     {
         Transform t;
-        IMaterial* mat{nullptr};
+        IMaterial_p mat{};
         //...
     };
+
     /**
     *\brief Initialization data for non-physical light sources
     *

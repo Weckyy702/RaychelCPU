@@ -16,7 +16,6 @@ namespace Raychel {
 
         IRaymarchable(const IRaymarchable&)=delete;
         IRaymarchable(IRaymarchable&&)=delete;
-
         IRaymarchable& operator=(const IRaymarchable&)=delete;
         IRaymarchable& operator=(IRaymarchable&&)=delete;
 
@@ -24,7 +23,7 @@ namespace Raychel {
 
         virtual float eval(const vec3&) const=0;
 
-        virtual vec3 getDirection(const vec3&) const=0;
+        virtual vec3 getDirectionToObject(const vec3&) const=0;
 
         virtual color getSurfaceColor(const ShadingData&) const=0;
 
@@ -34,7 +33,8 @@ namespace Raychel {
     };
 
 
-    //Base class for Raymarchable Objects
+
+    //Base class for Objects
     class SdObject : public IRaymarchable
     {
     
@@ -45,20 +45,33 @@ namespace Raychel {
 
     public:
 
-    vec3 getDirection(const vec3& p) const override;
+        vec3 getDirectionToObject(const vec3& p) const override;
 
-    color getSurfaceColor(const ShadingData& data) const override;
+        color getSurfaceColor(const ShadingData& data) const override;
 
         void onRendererAttached(const not_null<RaymarchRenderer*> attached_renderer) override;
 
-    virtual ~SdObject()=default;
-
-    friend ObjectData makeObjectData(SdObject&&);
+        virtual ~SdObject()=default;
 
     protected:
+
+        SdObject(ObjectData&& _data)
+            :transform_{_data.t} , material_{std::move(_data.mat)}
+        {}
+
+        const Transform& transform() const { return transform_; }
+        const IMaterial_p& material() const { return material_; }
+
+    private:
         Transform transform_;
         IMaterial_p material_{};
     };
+
+    template<typename Mat>
+    ObjectData make_object_data(const Transform& transform, Mat&& mat)
+    {
+        return ObjectData{ transform, std::make_unique<Mat>(std::forward<Mat>(mat)) };
+    }
 
     class SdLamp : public IRaymarchable
     {
@@ -66,7 +79,7 @@ namespace Raychel {
         SdLamp& operator=(const SdLamp&)=delete;
         SdLamp(SdLamp&&)=delete;
         SdLamp& operator=(SdLamp&&)=delete;
-
+    
     protected:
 
         SdLamp(const LampData& _data)
@@ -78,7 +91,7 @@ namespace Raychel {
         float size() const noexcept { return size_; }
 
         virtual ~SdLamp()=0;
-
+        
     private:
         color color_;
         float brightness_{1.0};

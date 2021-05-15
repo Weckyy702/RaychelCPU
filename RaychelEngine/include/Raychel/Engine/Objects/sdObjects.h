@@ -8,8 +8,8 @@ namespace Raychel {
     struct SdSphere : public SdObject
     {
 
-        SdSphere(const ObjectData& _d, float _r)
-            :SdObject{_d}, radius{_r}
+        SdSphere(ObjectData&& data, float _r)
+            :SdObject{std::move(data)}, radius{_r}
         {}
 
         float eval(const vec3& p) const override;
