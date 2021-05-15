@@ -38,10 +38,10 @@ namespace Raychel {
     class SdObject : public IRaymarchable
     {
     
-    protected:
-        SdObject(const ObjectData& _data)
-            :transform_{_data.t} , material_{_data.mat}
-        {}
+        SdObject(const SdObject&)=delete;
+        SdObject& operator=(const SdObject&)=delete;
+        SdObject(SdObject&&)=delete;
+        SdObject& operator=(SdObject&&)=delete;
 
     public:
 
@@ -62,32 +62,28 @@ namespace Raychel {
 
     class SdLamp : public IRaymarchable
     {
+        SdLamp(const SdLamp&)=delete;
+        SdLamp& operator=(const SdLamp&)=delete;
+        SdLamp(SdLamp&&)=delete;
+        SdLamp& operator=(SdLamp&&)=delete;
 
     protected:
+
         SdLamp(const LampData& _data)
-            :lampColor{_data.c}, lampBrightness{_data.b}, lampSize{_data.sz}
+            :color_{_data.c}, brightness_{_data.b}, size_{_data.sz}
         {}
 
-    protected:
-        color lampColor;
-        float lampBrightness=1.0;
-        float lampSize=1.0;
+        color lampColor() const noexcept { return color_; }
+        float brightness() const noexcept { return brightness_; }
+        float size() const noexcept { return size_; }
+
+        virtual ~SdLamp()=0;
+
+    private:
+        color color_;
+        float brightness_{1.0};
+        float size_{0.0};
     };
-
-    inline ObjectData makeObjectData(SdObject&& rhs)
-    {
-        //release the previous objects ownership of the material
-        IMaterial* mat = rhs.material_.release();
-
-        return {rhs.transform_, mat};
-    }
-
-    template<typename T, typename Mat, typename... Args>
-    T make_object(const Transform& transform, Mat&& mat, Args&&... args) {
-        static_assert(std::is_base_of_v<SdObject, T>, "Raychel::make_object<T> requires T to be derived from Raychel::SdObject!");
-        static_assert(std::is_base_of_v<Material, Mat>, "Raychel::make_object<Mat> requires Mat to be derived from Raychel::Material!");
-        return T(ObjectData{transform, new Mat{std::move(mat)}}, std::forward<Args>(args)...);
-    }
 
 }
 

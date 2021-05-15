@@ -3,5 +3,5 @@
 
 float Raychel::SdSphere::eval(const vec3& _p) const
 {
-    return dist(_p, transform_.position) - radius;
+    return dist(_p, transform().position) - radius;
 }

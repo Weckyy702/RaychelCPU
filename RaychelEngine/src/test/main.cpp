@@ -14,7 +14,7 @@
 
 using namespace Raychel;
 
-int main(int, char**)
+int main(int /*unused*/, char** /*unused*/)
 {
     Logger::setMinimumLogLevel(Logger::LogLevel::debug);
 
@@ -22,13 +22,13 @@ int main(int, char**)
 
     Scene scene;
 
-    scene.background_texture_ = CubeTexture<color>{[](const vec3& dir) {
+    scene.setBackgroundTexture({[](const vec3& dir) {
         return color{dir};
-    }};
+    }});
 
     Quaternion start_rotation = Quaternion{};
 
-    scene.cam = Camera{Transform{vec3(0, 0, 0), start_rotation}, 1.0};
+    auto& cam = scene.setCamera({ Transform{vec3(0, 0, 0), start_rotation}, 0.25 });
 
     scene.addObject( make_object<SdSphere>(Transform{vec3{0, 0, 2.5}}, DiffuseMaterial{color{1, 0, 0}}, 1.0f) );
     scene.addObject( make_object<SdSphere>(Transform{vec3{2.5, 0, 0}}, DiffuseMaterial{color{0, 1, 0}}, 1.0f) );
@@ -42,7 +42,7 @@ int main(int, char**)
     renderer.setCurrentScene(&scene);
     renderer.setOutputSize(size);
 
-    RenderTarget* target = new AsciiTarget{ size, true };//ImageTargetPng{size, "../../res", 4};
+    gsl::owner<RenderTarget*> target = new AsciiTarget{ size, true };//new ImageTargetPng{size, "../../res", 4};
 
     auto label = Logger::startTimer("Total time");
 
@@ -62,7 +62,7 @@ int main(int, char**)
             target->finishFramebufferWrite();
         Logger::logDuration(file_label);
 
-        scene.cam.updateYaw(2_deg);
+        cam.updateYaw(2_deg);
 
         using namespace std::chrono_literals;
     }

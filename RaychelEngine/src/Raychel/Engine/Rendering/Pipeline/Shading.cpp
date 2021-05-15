@@ -28,7 +28,7 @@ namespace Raychel {
     }
 
     void RaymarchRenderer::set_scene_callback_renderer() {
-        for(auto& obj : *objects_) {
+        for(const auto& obj : *objects_) {
             obj->onRendererAttached(this);
         }
     }
@@ -43,8 +43,8 @@ namespace Raychel {
 
         aspect_ratio = static_cast<float>(output_size_.x) / output_size_.y;
 
-        for(auto i = 0u; i < output_size_.y; i++) {
-            for(auto j = 0u; j < output_size_.x; j++) {
+        for(auto i = 0U; i < output_size_.y; i++) {
+            for(auto j = 0U; j < output_size_.x; j++) {
                 requests_.push_back(_getRootRequest(j, i));
             }
         }
@@ -57,8 +57,8 @@ namespace Raychel {
     {
         //generate UVs in range [-0.5; 0.5]
 
-        float dx = ( static_cast<float>(x) / (output_size_.x) ) - 0.5f;
-        float dy = ( static_cast<float>(y) / (output_size_.y) ) - 0.5f;
+        float dx = ( static_cast<float>(x) / (output_size_.x) ) - 0.5F;
+        float dy = ( static_cast<float>(y) / (output_size_.y) ) - 0.5F;
 
         //handle non-square aspect ratios
         if(aspect_ratio > 1.0)
@@ -131,7 +131,7 @@ namespace Raychel {
 
         actual_uv += vec2{0.5, 0.5};
 
-        actual_uv.y = 1.0f - actual_uv.y;
+        actual_uv.y = 1.0 - actual_uv.y;
 
         return actual_uv;
     }

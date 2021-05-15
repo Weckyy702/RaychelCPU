@@ -41,7 +41,12 @@ namespace Raychel {
     struct IMaterial {
 
     protected:
-        IMaterial()=default; //TODO: change that
+        IMaterial()=default;
+
+        IMaterial(const IMaterial&)=delete;
+        IMaterial& operator=(const IMaterial&)=delete;
+        IMaterial(IMaterial&&)=delete;
+        IMaterial& operator=(IMaterial&&)=delete;
 
         virtual void initializeTextureProviders(const vec3& parent_position, const vec3& parent_size)=0;
 
@@ -67,9 +72,11 @@ namespace Raychel {
     protected:
         Material()=default;
 
-    protected:
+        RaymarchRenderer const* parent_renderer() const noexcept { return parent_renderer_; }
+
+    private:
         //Reference to renderer that renders this materials scene
-        const RaymarchRenderer* parent_renderer_=nullptr;
+        RaymarchRenderer const* parent_renderer_=nullptr;
     };
     
 }

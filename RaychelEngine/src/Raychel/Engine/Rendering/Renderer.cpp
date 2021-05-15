@@ -24,7 +24,7 @@ namespace Raychel {
     std::optional<Texture<RenderResult>> RenderController::getImageRendered()
     {
         //TODO implement postprocessing
-        return renderer_.renderImage(current_scene_->cam);
+        return renderer_.renderImage(current_scene_->cam_);
     }
 
 }
