@@ -161,7 +161,7 @@ namespace Raychel {
                 }
             }
 
-            value_type _get_value_from_texture(const normalized3&, const vec3&) const
+            value_type _get_value_from_texture(const vec3&, const normalized3&) const
             {
                 //TODO: implement
                 return value_type{};
