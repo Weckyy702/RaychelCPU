@@ -73,22 +73,22 @@ namespace Raychel {
         //buffer forward, right and up vectors here
         struct {
             vec3 position, forward, right, up;
-            float zoom;
+            float zoom{0.0};
         } cam_data_;
 
         //size of this struct should be less than a cache line
         //these values are dependent on RaymarchOptions::_epsilon
         struct {
-            size_t max_recursion_depth=5;
+            size_t max_recursion_depth{5};
 
-            float max_ray_depth=100.0f;
+            float max_ray_depth{100.0F};
 
-            float distance_bias = 1e-4f;
-            float normal_bias = 1e-5f;
-            float surface_bias = 5e-4f;
+            float distance_bias{1e-4F};
+            float normal_bias{1e-5F};
+            float surface_bias{5e-4F};
         } raymarch_data_;
 
-        mutable std::atomic_bool failed_ = false;
+        mutable std::atomic_bool failed_ {false};
         mutable exception_context current_exception_{"", "", false};
     };
 

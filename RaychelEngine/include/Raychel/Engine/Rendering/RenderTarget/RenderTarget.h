@@ -46,6 +46,11 @@ namespace Raychel {
             :output_size_{size}
         {}
 
+        RenderTarget(const RenderTarget&)=delete;
+        RenderTarget& operator=(const RenderTarget&)=delete;
+        RenderTarget(RenderTarget&&)=delete;
+        RenderTarget& operator=(RenderTarget&&)=delete;
+
     public:
         inline vec2i size() const noexcept
         {

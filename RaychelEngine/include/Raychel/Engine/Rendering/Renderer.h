@@ -29,7 +29,7 @@ namespace Raychel
         private:
 
             //non-owning reference to current scene
-            Scene* current_scene_ =nullptr;
+            Scene* current_scene_{nullptr};
             vec2i output_size_;
 
             RaymarchRenderer renderer_;

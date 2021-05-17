@@ -27,8 +27,8 @@ namespace Raychel {
 
     void AsciiTarget::writeFramebuffer(const Texture<RenderResult>& framebuffer)
     {
-        for(size_t i = 0u; i < size().x; i++) {
-            for(size_t j = 0u; j < size().y; j++) {
+        for(size_t i = 0U; i < size().x; i++) {
+            for(size_t j = 0U; j < size().y; j++) {
                 auto col = framebuffer.at(vec2i{i, j}).output;
                 
                 auto col_brightness = brightness(col);
@@ -97,15 +97,14 @@ namespace Raychel {
         if(col.r > col.g) {
             if(col.b > col.r) {
                 return 3;
-            } else {
-                return 1;
             }
-        } else {
-            if(col.b > col.g) {
-                return 3;
-            } else if(col.b != 0) {
-                return 2;
-            }
+            return 1;
+        }
+        if(col.b > col.g) {
+            return 3;
+        }
+        if(col.b != 0) {
+            return 2;
         }
         return 0;
     }

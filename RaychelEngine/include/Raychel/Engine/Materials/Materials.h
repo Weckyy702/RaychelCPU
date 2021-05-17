@@ -54,6 +54,8 @@ namespace Raychel {
 
         color getSurfaceColor(const ShadingData& data) const override;
 
+        ~DiffuseMaterial() override=default;
+
     private:
         TextureProvider<color> albedo_;
     };

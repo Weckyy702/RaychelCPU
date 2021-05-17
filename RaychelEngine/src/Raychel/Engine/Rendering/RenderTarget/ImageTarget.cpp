@@ -24,7 +24,7 @@ namespace Raychel
         image_t image{image_size.x, image_size.y};
 
 
-        static const auto write_pixel = [&](const RenderResult& res) {
+        const auto write_pixel = [_size, &image](const RenderResult& res) {
 
             const auto screen_uv = res.uv * _size;
             const auto pixel_uv = screen_uv.to<png::uint_32>();

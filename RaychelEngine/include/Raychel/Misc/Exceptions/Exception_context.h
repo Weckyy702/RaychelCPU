@@ -57,9 +57,9 @@ namespace Raychel {
         }
 
     private:
-        gsl::czstring<> what_;
-        gsl::czstring<> origin_;
-        const bool fatal_;
+        gsl::czstring<> what_{""};
+        gsl::czstring<> origin_{""};
+        const bool fatal_{false};
     };
 
 }
