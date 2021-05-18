@@ -51,47 +51,45 @@ namespace Raychel {
 
 	public:
 
-		colorImp() = default;
-
-		explicit colorImp(value_type _b)
+		constexpr explicit colorImp(value_type _b) noexcept
 			:r(_b), g(_b), b(_b)
 		{}
 
-		colorImp(value_type _r, value_type _g)
+		constexpr colorImp(value_type _r, value_type _g) noexcept
 			:r(_r), g(_g), b(0)
 		{}
 
-		colorImp(value_type _r, value_type _g, value_type _b)
+		constexpr colorImp(value_type _r, value_type _g, value_type _b) noexcept
 			:r(_r), g(_g), b(_b)
 		{}
 
 		/**
-		*\brief Convert the color to another color of type _To
+		*\brief Convert the color to another color of type To
 		*
-		*\tparam _To Type of the converted color
+		*\tparam To Type of the converted color
 		*\return colorImp<_To> 
 		*/
 		template<typename To>
-		colorImp<To> to() const noexcept;
+		constexpr colorImp<To> to() const noexcept;
 		
 		/**
 		*\brief Convert the color to a pointer-to-red. For functions that need colors as arrays
 		*
-		*\return const value_type*
+		*\return const value_type* the value array in RGB order
 		*/
-		explicit operator const value_type* () const;
+		constexpr explicit operator const value_type* () const noexcept;
 
-		explicit colorImp(const vec3&);
-		explicit colorImp(const vec2&);
+		constexpr explicit colorImp(const vec3&) noexcept;
+		constexpr explicit colorImp(const vec2&) noexcept;
 
-		colorImp& operator=(const vec3&);
-		colorImp& operator=(const vec2&);
+		constexpr colorImp& operator=(const vec3&) noexcept;
+		constexpr colorImp& operator=(const vec2&) noexcept;
 
-		colorImp& operator+=(const colorImp&);
-		colorImp& operator-=(const colorImp&);
-		colorImp& operator*=(value_type);
-		colorImp& operator*=(const colorImp&);
-		colorImp& operator/=(value_type);
+		constexpr colorImp& operator+=(const colorImp&) noexcept;
+		constexpr colorImp& operator-=(const colorImp&) noexcept;
+		constexpr colorImp& operator*=(value_type) noexcept;
+		constexpr colorImp& operator*=(const colorImp&) noexcept;
+		constexpr colorImp& operator/=(value_type) noexcept;
 
 		value_type r{0}, g{0}, b{0};
 	};
@@ -100,64 +98,61 @@ namespace Raychel {
 	std::ostream& operator<<(std::ostream& os, const colorImp<T>& c);
 
 	template<typename T>
-	colorImp<T> operator-(const colorImp<T>&);
+	constexpr colorImp<T> operator-(const colorImp<T>&) noexcept;
 
 	template<typename T>
-	colorImp<T> operator+(const colorImp<T>&, const colorImp<T>&);
+	constexpr colorImp<T> operator+(const colorImp<T>&, const colorImp<T>&) noexcept;
 
 	template<typename T>
-	colorImp<T> operator-(const colorImp<T>&, const colorImp<T>&);
+	constexpr colorImp<T> operator-(const colorImp<T>&, const colorImp<T>&) noexcept;
 
 	template<typename T>
-	colorImp<T> operator*(const colorImp<T>&, const colorImp<T>&);
+	constexpr colorImp<T> operator*(const colorImp<T>&, const colorImp<T>&) noexcept;
 
 	template<typename T>
-	colorImp<T> operator*(const colorImp<T>&, T);
+	constexpr colorImp<T> operator*(const colorImp<T>&, T) noexcept;
 
 	template<typename T>
-	inline colorImp<T> operator*(T s, const colorImp<T>& v)
+	constexpr colorImp<T> operator*(T s, const colorImp<T>& v) noexcept
 	{
 		return v * s;
 	}
 
 	template<typename T>
-	colorImp<T> operator/(const colorImp<T>&, T);
+	constexpr colorImp<T> operator/(const colorImp<T>&, T) noexcept;
 
 	template<typename T>
-	bool operator==(const colorImp<T>&, const colorImp<T>&);
+	constexpr bool operator==(const colorImp<T>&, const colorImp<T>&) noexcept;
 
 	template<typename T>
-	bool operator!=(const colorImp<T>& a, const colorImp<T>& b)
+	constexpr bool operator!=(const colorImp<T>& a, const colorImp<T>& b) noexcept
 	{
 		return !(a == b);
 	}
 
 	template<typename T>
-	colorImp<bool> operator<(const colorImp<T>&, const colorImp<T>&);
+	constexpr colorImp<bool> operator<(const colorImp<T>&, const colorImp<T>&) noexcept;
 
 	template<typename T>
-	colorImp<bool> operator<=(const colorImp<T>&, const colorImp<T>&);
+	constexpr colorImp<bool> operator<=(const colorImp<T>&, const colorImp<T>&) noexcept;
 
 	template<typename T>
-	colorImp<bool> operator>(const colorImp<T>&, const colorImp<T>&);
+	constexpr colorImp<bool> operator>(const colorImp<T>&, const colorImp<T>&) noexcept;
 
 	template<typename T>
-	colorImp<bool> operator>=(const colorImp<T>&, const colorImp<T>&);
+	constexpr colorImp<bool> operator>=(const colorImp<T>&, const colorImp<T>&) noexcept;
 
 	template<typename T>
-	colorImp<T> abs(const colorImp<T>&);
+	constexpr colorImp<T> abs(const colorImp<T>&) noexcept;
 
 	template<typename T>
-	colorImp<T> max(const colorImp<T>&, const colorImp<T>&);
+	constexpr colorImp<T> max(const colorImp<T>&, const colorImp<T>&) noexcept;
 
 	template<typename T>
-	colorImp<T> min(const colorImp<T>&, const colorImp<T>&);
+	constexpr colorImp<T> min(const colorImp<T>&, const colorImp<T>&) noexcept;
 
 	template<typename T>
-	T brightness(const colorImp<T>&);
-
-	template<typename T>
-	inline colorImp<T> _ensureValid(const colorImp<T>& c);
+	constexpr T brightness(const colorImp<T>&) noexcept;
 }
 
 #endif /*!RAYCHEL_COLOR_H*/

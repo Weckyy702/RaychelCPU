@@ -37,19 +37,26 @@
 namespace Raychel {
 
 	template<typename T>
-	inline colorImp<T> _ensureValid(const colorImp<T>& c) {
-		using std::max;
-		return { max<T>(c.r, 0), max<T>(c.g, 0), max<T>(c.b, 0) };
+	constexpr inline colorImp<T> ensureValidColor(const colorImp<T>& c)  noexcept
+	{
+		using std::clamp;
+		using vt = typename colorImp<T>::value_type;
+
+		if constexpr (std::is_floating_point_v<vt>)
+			return { clamp<vt>(c.r, 0, 1.0), clamp<vt>(c.g, 0, 1.0), clamp<vt>(c.b, 0, 1.0) };
+
+		constexpr auto max = std::numeric_limits<vt>::max();
+		return { clamp<vt>(c.r, 0, max), clamp<vt>(c.g, 0, max), clamp<vt>(c.b, 0, max) };
 	}
 
 	template<typename T>
-	colorImp<T>::operator const value_type* () const
+	constexpr colorImp<T>::operator const value_type* () const noexcept
 	{
 		return &r;
 	}
 
 	template<typename T>
-	colorImp<T>::colorImp(const vec3& v)
+	constexpr colorImp<T>::colorImp(const vec3& v) noexcept
 	{
 		using std::abs;
 		r = abs(v.x);
@@ -58,7 +65,7 @@ namespace Raychel {
 	}
 
 	template<typename T>
-	colorImp<T>::colorImp(const vec2& v)
+	constexpr colorImp<T>::colorImp(const vec2& v) noexcept
 	{
 		using std::abs;
 		r = abs(v.x);
@@ -68,34 +75,38 @@ namespace Raychel {
 
 	template<typename T>
 	template<typename To>
-	colorImp<To> colorImp<T>::to() const noexcept
+	constexpr colorImp<To> colorImp<T>::to() const noexcept
 	{
 		using vt = typename colorImp<To>::value_type;
 		static_assert(std::is_convertible_v<value_type, To>, "ColorImp<T>::to<To> requires T to be convertible to To!");
-		
 		constexpr vt max = std::numeric_limits<vt>::max()-1;
 
 		if constexpr (std::is_integral_v<vt> && std::is_floating_point_v<value_type>) {
-
-			//if the internal representatino is in 0...1 range, convert to 0...max
-			return _ensureValid<vt>({ static_cast<vt>(r*max), static_cast<vt>(g*max), static_cast<vt>(b*max) });
-		} else {
-			
-			return _ensureValid<vt>({ static_cast<vt>(r), static_cast<vt>(g), static_cast<vt>(b) });
+			//if the internal representation is in 0...1 range, convert to 0...max
+			const auto c = ensureValidColor(*this);
+			return { static_cast<vt>(c.r*max), static_cast<vt>(c.g*max), static_cast<vt>(c.b*max) };
+		} else if constexpr(std::is_floating_point_v<vt> && std::is_integral_v<value_type>) {
+			//if the internal representation is in 0...max range, convert it to 0...1
+			const auto c = ensureValidColor(*this);
+			return { static_cast<vt>(c.r)/max, static_cast<vt>(c.g)/max, static_cast<vt>(c.b)/max };
+		}else {
+			//the two representations are in the same range, just static_cast them
+			return { static_cast<vt>(r), static_cast<vt>(g), static_cast<vt>(b) };
 		}
 	}
 
 	template<typename T>
-	colorImp<T>& colorImp<T>::operator=(const vec3& v)
+	constexpr colorImp<T>& colorImp<T>::operator=(const vec3& v) noexcept
 	{
 		r = abs(v.x);
 		g = abs(v.y);
 		b = abs(v.z);
+
 		return *this;
 	}
 
 	template<typename T>
-	colorImp<T>& colorImp<T>::operator=(const vec2& v)
+	constexpr colorImp<T>& colorImp<T>::operator=(const vec2& v) noexcept
 	{
 		r = abs(v.x);
 		g = abs(v.y);
@@ -104,7 +115,7 @@ namespace Raychel {
 	}
 
 	template<typename T>
-	colorImp<T>& colorImp<T>::operator+=(const colorImp& c)
+	constexpr colorImp<T>& colorImp<T>::operator+=(const colorImp& c) noexcept
 	{
 		r += c.r;
 		g += c.g;
@@ -113,7 +124,7 @@ namespace Raychel {
 	}
 
 	template<typename T>
-	colorImp<T>& colorImp<T>::operator-=(const colorImp& c)
+	constexpr colorImp<T>& colorImp<T>::operator-=(const colorImp& c) noexcept
 	{
 		r -= c.r;
 		g -= c.g;
@@ -122,7 +133,7 @@ namespace Raychel {
 	}
 
 	template<typename T>
-	colorImp<T>& colorImp<T>::operator*=(value_type s)
+	constexpr colorImp<T>& colorImp<T>::operator*=(value_type s) noexcept
 	{
 		r *= s;
 		g *= s;
@@ -131,7 +142,7 @@ namespace Raychel {
 	}
 
 	template<typename T>
-	colorImp<T>& colorImp<T>::operator*=(const colorImp& c)
+	constexpr colorImp<T>& colorImp<T>::operator*=(const colorImp& c) noexcept
 	{
 		r *= c.r;
 		g *= c.g;
@@ -140,7 +151,7 @@ namespace Raychel {
 	}
 
 	template<typename T>
-	colorImp<T>& colorImp<T>::operator/=(value_type s)
+	constexpr colorImp<T>& colorImp<T>::operator/=(value_type s) noexcept
 	{
 		r /= s;
 		g /= s;
@@ -155,93 +166,97 @@ namespace Raychel {
 	}
 
 	template<typename T>
-	colorImp<T> operator-(const colorImp<T>& c)
+	constexpr colorImp<T> operator-(const colorImp<T>& c) noexcept
 	{
-		return _ensureValid({ 1.0 - c.r, 1.0 - c.g, 1.0 - c.b});
+		return ensureValidColor({ 1.0 - c.r, 1.0 - c.g, 1.0 - c.b});
 	}
 
 	template<typename T>
-	colorImp<T> operator+(const colorImp<T>& a, const colorImp<T>& b)
+	constexpr colorImp<T> operator+(const colorImp<T>& a, const colorImp<T>& b) noexcept
 	{
 		return { a.r + b.r, a.g + b.g, a.b + b.b };
 	}
 
 	template<typename T>
-	colorImp<T> operator-(const colorImp<T>& a, const colorImp<T>& b)
+	constexpr colorImp<T> operator-(const colorImp<T>& a, const colorImp<T>& b) noexcept
 	{
-		return _ensureValid({ a.r + b.r, a.g + b.g, a.b + b.b });
+		return ensureValidColor({ a.r + b.r, a.g + b.g, a.b + b.b });
 	}
 
 	template<typename T>
-	colorImp<T> operator*(const colorImp<T>& a, const colorImp<T>& b)
+	constexpr colorImp<T> operator*(const colorImp<T>& a, const colorImp<T>& b) noexcept
 	{
 		return { a.r * b.r, a.g * b.g, a.b * b.b };
 	}
 
 	template<typename T>
-	colorImp<T> operator*(const colorImp<T>& c, T s)
+	constexpr colorImp<T> operator*(const colorImp<T>& c, T s) noexcept
 	{
 		return  { c.r * s, c.g * s, c.b * s };
 	}
 
 	template<typename T>
-	colorImp<T> operator/(const colorImp<T>& c, T s)
+	constexpr colorImp<T> operator/(const colorImp<T>& c, T s) noexcept
 	{
 		return { c.r / s, c.g / s, c.b / s };
 	}
 
 	template<typename T>
-	bool operator==(const colorImp<T>& a, const colorImp<T>& b)
+	constexpr bool operator==(const colorImp<T>& a, const colorImp<T>& b) noexcept
 	{
+	#ifdef RAYCHEL_LOGICALLY_EQUAL
+		return equivalent(a.r, b.r) && equivalent(a.g, b.g) && equivalent(a.b, b.b);
+	#else
 		return ( a.r == b.r ) && ( a.g == b.g ) && ( a.b == b.b );
+	#endif
 	}
 
 	template<typename T>
-	colorImp<bool> operator<(const colorImp<T>& a, const colorImp<T>& b)
+	constexpr colorImp<bool> operator<(const colorImp<T>& a, const colorImp<T>& b) noexcept
 	{
 		return { a.r < b.r, a.g < b.g, a.b < b.b };
 	}
 
 	template<typename T>
-	colorImp<bool> operator<=(const colorImp<T>& a, const colorImp<T>& b)
+	constexpr colorImp<bool> operator<=(const colorImp<T>& a, const colorImp<T>& b) noexcept
 	{
 		return { a.r <= b.r, a.g <= b.g, a.b <= b.b };
 	}
 
 	template<typename T>
-	colorImp<bool> operator>(const colorImp<T>& a, const colorImp<T>& b)
+	constexpr colorImp<bool> operator>(const colorImp<T>& a, const colorImp<T>& b) noexcept
 	{
 		return { a.r > b.r, a.g > b.g, a.b > b.b };
 	}
 
 	template<typename T>
-	colorImp<bool> operator>=(const colorImp<T>& a, const colorImp<T>& b)
+	constexpr colorImp<bool> operator>=(const colorImp<T>& a, const colorImp<T>& b) noexcept
 	{
 		return { a.r >= b.r, a.g >= b.g, a.b >= b.b };
 	}
 
 	template<typename T>
-	colorImp<T> abs(const colorImp<T>& c)
+	constexpr colorImp<T> abs(const colorImp<T>& c) noexcept
 	{
 		using std::abs;
 		return { abs(c.r), abs(c.g), abs(c.b) };
 	}
 
 	template<typename T>
-	colorImp<T> max(const colorImp<T>& a, const colorImp<T>& b)
+	constexpr colorImp<T> max(const colorImp<T>& a, const colorImp<T>& b) noexcept
 	{
 		return { max(a.r, b.r), max(a.g, b.g), max(a.b, b.b) };
 	}
 
 	template<typename T>
-	colorImp<T> min(const colorImp<T>& a, const colorImp<T>& b)
+	constexpr colorImp<T> min(const colorImp<T>& a, const colorImp<T>& b) noexcept
 	{
 		return { min(a.r, b.r), min(a.g, b.g), min(a.b, b.b) };
 	}
 
 	template<typename T>
-	T brightness(const colorImp<T>& _c) {
-		auto c = _ensureValid(_c);
+	constexpr T brightness(const colorImp<T>& c) noexcept
+	{
 		return (c.r + c.g + c.b) / T(3.0);
 	}
 }
