@@ -45,8 +45,13 @@
 #include <optional>
 
 #include "CMakeSettings.h"
-#include "Logger.h"
 #include "RaychelMath/constants.h"
+
+#ifndef RAYCHEL_NO_LOGGER
+	#include "Logger.h"
+#else
+	#include <iostream>
+#endif
 
 #if defined(__clang__) || defined(__GNUC__)
 	#define RAYCHEL_FUNC_NAME __PRETTY_FUNCTION__
@@ -63,8 +68,12 @@
 #endif
 
 //terminate the application with the provided message
+#ifndef RAYCHEL_NO_LOGGER
 #define RAYCHEL_TERMINATE(...) Logger::fatal( RAYCHEL_FUNC_NAME, " at (", __FILE__, ":", __LINE__, "): ", __VA_ARGS__, '\n');	\
 								std::exit(0x41);
+#else
+#define RAYCHEL_TERMINATE(...) std::exit(0x41);
+#endif
 
 #if defined(RAYCHEL_DEBUG) || !defined(NDEBUG)
 	#define RAYCHEL_ASSERT(exp) if(!(exp)) { \
