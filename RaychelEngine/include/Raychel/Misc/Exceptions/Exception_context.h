@@ -40,16 +40,16 @@ namespace Raychel {
     class exception_context : public std::exception {
     
     public:
-        exception_context(gsl::czstring<> what, gsl::czstring<> origin, bool fatal)
+        exception_context(std::string_view what, std::string_view origin, bool fatal)
             :what_{what}, origin_{origin}, fatal_{fatal}
         {}
 
         const char* what() const noexcept override {
-            return what_;
+            return what_.data();
         }
 
         const char* origin() const noexcept {
-            return origin_;
+            return origin_.data();
         }
 
         bool fatal() const noexcept {
@@ -57,8 +57,8 @@ namespace Raychel {
         }
 
     private:
-        gsl::czstring<> what_{""};
-        gsl::czstring<> origin_{""};
+        std::string_view what_;
+        std::string_view origin_;
         const bool fatal_{false};
     };
 
