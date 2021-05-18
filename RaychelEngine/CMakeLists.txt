@@ -28,6 +28,14 @@ add_executable(RaychelCPU_test
     ${SOURCES}
 )
 
+add_executable(RaychelMath_color_test
+    ${PROJECT_SOURCE_DIR}/src/test/RaychelMath/color.cpp
+)
+
+target_include_directories(RaychelMath_color_test PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
+)
+
 
 
 #this assumes that zlib has been installed via zlib.install at https://github.com/horta/zlib.install
