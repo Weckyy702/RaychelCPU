@@ -51,6 +51,8 @@ namespace Raychel {
 
 	public:
 
+		constexpr color() noexcept =default;
+
 		constexpr explicit colorImp(value_type _b) noexcept
 			:r(_b), g(_b), b(_b)
 		{}
