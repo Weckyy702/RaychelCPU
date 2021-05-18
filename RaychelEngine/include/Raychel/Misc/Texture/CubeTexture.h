@@ -84,7 +84,7 @@ namespace Raychel {
             }
         }
 
-        CubeTexture(CubeTexture&& rhs)
+        CubeTexture(CubeTexture&& rhs) noexcept
             :type_{rhs.type_}
         {
             switch (type_)

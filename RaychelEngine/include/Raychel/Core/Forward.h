@@ -47,7 +47,7 @@ namespace Raychel {
     class Camera;
 
     struct IRaymarchable;
-    struct IMaterial;
+    class IMaterial;
 
     class Material;
 

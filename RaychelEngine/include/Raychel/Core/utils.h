@@ -137,7 +137,7 @@ namespace Raychel {
 	template<typename _integral>
 	constexpr _integral bit(size_t shift) {
 		static_assert(std::is_integral_v<_integral>, "Raychel::bit<T> requires T to be of integral type!");
-		return static_cast<_integral>( 1 << shift);
+		return static_cast<_integral>( 1U << shift);
 	}
 
 	/**
@@ -146,7 +146,7 @@ namespace Raychel {
 	*\param num The number with its digits
 	*\return constexpr int 
 	*/
-	constexpr int numDigits(unsigned long long num, unsigned int base = 10)
+	constexpr int numDigits(unsigned long long num, unsigned int base = 10U)
 	{
 		int digits = 0;
 

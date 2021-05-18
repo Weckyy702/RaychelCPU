@@ -2,8 +2,9 @@
 #include "Raychel/Core/RaychelMath/color.h"
 #include "Raychel/Core/RaychelMath/Impl/colorImpl.inl"
 
-using color = Raychel::colorImp<double>;
-using namespace Raychel;
+using Raychel::colorImp, Raychel::brightness;
+using color = colorImp<double>;
+
 
 constexpr colorImp<float> get_color() noexcept
 {
@@ -27,7 +28,7 @@ int main(int /*unused*/, char** /*unused*/) {
     //all of these would be ill-formed without constexpr colors :^)
     constexpr auto c = get_color();
     constexpr size_t l = brightness(c);
-    std::array<char, l> arr;
+    std::array<char, l> arr{};
 
     std::cout << c << ", " << arr.size() << '\n';
 

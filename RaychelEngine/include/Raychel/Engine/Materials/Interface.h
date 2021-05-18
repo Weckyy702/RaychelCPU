@@ -42,16 +42,15 @@ namespace Raychel {
 
     protected:
         IMaterial()=default;
+        virtual void initializeTextureProviders(const vec3& parent_position, const vec3& parent_size)=0;
+
+    public:
 
         IMaterial(const IMaterial&)=delete;
         IMaterial& operator=(const IMaterial&)=delete;
         IMaterial(IMaterial&&)=delete;
         IMaterial& operator=(IMaterial&&)=delete;
 
-        virtual void initializeTextureProviders(const vec3& parent_position, const vec3& parent_size)=0;
-
-    public:
-        
         /**
         *\brief Get the surface color of the Material with the parameters given in data
         *

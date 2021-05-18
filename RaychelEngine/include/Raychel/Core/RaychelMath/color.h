@@ -93,7 +93,7 @@ namespace Raychel {
 		constexpr colorImp& operator*=(const colorImp&) noexcept;
 		constexpr colorImp& operator/=(value_type) noexcept;
 
-		value_type r{0}, g{0}, b{0};
+		value_type r{0}, g{0}, b{0}; //NOLINT(misc-non-private-member-variables-in-classes): because of our private static_assert, clang-tidy thinks this is a class
 	};
 
 	template<typename T>

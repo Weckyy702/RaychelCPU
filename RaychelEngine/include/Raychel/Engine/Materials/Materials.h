@@ -46,7 +46,7 @@ namespace Raychel {
             :albedo_{albedo}
         {}
 
-        DiffuseMaterial(DiffuseMaterial&& rhs)
+        DiffuseMaterial(DiffuseMaterial&& rhs) noexcept
             :albedo_{std::move(rhs.albedo_)}
         {}
 

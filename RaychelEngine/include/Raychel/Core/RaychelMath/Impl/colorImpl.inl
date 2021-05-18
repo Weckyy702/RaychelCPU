@@ -257,7 +257,7 @@ namespace Raychel {
 	template<typename T>
 	constexpr T brightness(const colorImp<T>& c) noexcept
 	{
-		return (c.r + c.g + c.b) / T(3.0);
+		return (c.r + c.g + c.b) / 3.0;
 	}
 }
 
