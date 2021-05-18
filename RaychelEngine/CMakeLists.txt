@@ -122,7 +122,7 @@ endif()
 
 #Gimme that C++17 goodness
 target_compile_features(RaychelCPU_test PUBLIC cxx_std_17)
-
+target_compile_features(RaychelMath_color_test PUBLIC cxx_std_17)
 
 
 #link the correct libraries
