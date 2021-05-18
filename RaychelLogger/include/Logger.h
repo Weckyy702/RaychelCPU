@@ -26,8 +26,8 @@ namespace Logger {
 
 	using namespace std::string_literals;
 
-	typedef std::chrono::time_point<std::chrono::high_resolution_clock> timePoint_t;
-	typedef std::chrono::milliseconds duration_t;
+	using timePoint_t = std::chrono::time_point<std::chrono::high_resolution_clock>;
+	using duration_t = std::chrono::milliseconds ;
 
 	namespace _ {
 
@@ -82,7 +82,7 @@ namespace Logger {
 		template<typename = void>
 		[[nodiscard]] std::string getRepStreamable(const char* obj) noexcept
 		{
-			return std::string(obj);
+			return {obj};
 		}
 
 		//internal function. Not to be used directly
