@@ -14,6 +14,9 @@ Makefile
 **/.vscode
 **/.vs
 **/.cache/
+compile_commands.json
+.clang-format
+.clang-tidy
 
 #log files
 *.log
