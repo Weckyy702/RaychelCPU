@@ -28,7 +28,9 @@
 #ifndef RAYCHEL_COLOR_IMP
 #define RAYCHEL_COLOR_IMP
 
+#include <catch2/catch.hpp>
 #include <limits>
+#include <type_traits>
 
 #include "../color.h"
 #include "../vec2.h"
@@ -168,19 +170,26 @@ namespace Raychel {
 	template<typename T>
 	constexpr colorImp<T> operator-(const colorImp<T>& c) noexcept
 	{
-		return ensureValidColor({ 1.0 - c.r, 1.0 - c.g, 1.0 - c.b});
+		using value_type = typename colorImp<T>::value_type;
+
+		if constexpr(std::is_floating_point_v<value_type>)
+			return ensureValidColor({ 1.0 - c.r, 1.0 - c.g, 1.0 - c.b});
+		else {
+			constexpr auto max = std::numeric_limits<value_type>::max();
+			return ensureValidColor({max - c.r, max - c.g, max - c.b});
+		}
 	}
 
 	template<typename T>
 	constexpr colorImp<T> operator+(const colorImp<T>& a, const colorImp<T>& b) noexcept
 	{
-		return { a.r + b.r, a.g + b.g, a.b + b.b };
+		return colorImp<T>( a.r + b.r, a.g + b.g, a.b + b.b );
 	}
 
 	template<typename T>
 	constexpr colorImp<T> operator-(const colorImp<T>& a, const colorImp<T>& b) noexcept
 	{
-		return ensureValidColor({ a.r + b.r, a.g + b.g, a.b + b.b });
+		return colorImp<T>( a.r - b.r, a.g - b.g, a.b - b.b );
 	}
 
 	template<typename T>

@@ -7,6 +7,7 @@ include(FindRequiredLibraries.cmake)
 #set all sources for the main testing file
 
 set(RAYCHEL_SOURCE_DIR ${PROJECT_SOURCE_DIR}/src/Raychel)
+set(RAYCHEL_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 
 set(SOURCES 
     ${RAYCHEL_SOURCE_DIR}/Engine/Objects/Interface.cpp
@@ -28,14 +29,6 @@ add_executable(RaychelCPU_test
     ${SOURCES}
 )
 
-add_executable(RaychelMath_color_test
-    ${PROJECT_SOURCE_DIR}/src/test/RaychelMath/color.cpp
-)
-
-target_include_directories(RaychelMath_color_test PUBLIC
-    ${PROJECT_SOURCE_DIR}/include
-)
-
 
 
 #this assumes that zlib has been installed via zlib.install at https://github.com/horta/zlib.install
@@ -48,19 +41,19 @@ if(WIN32)
     file(COPY ${ZLIB_DLL_LOCATION} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
     add_custom_command(TARGET RaychelCPU_test POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/zlib.dll $<TARGET_FILE_DIR:RaychelCPU_test>    
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/zlib.dll $<TARGET_FILE_DIR:RaychelCPU_test>
     )   
 endif()
 
 
 
 #set the needed include directories
-configure_file( ${PROJECT_SOURCE_DIR}/include/CMakeSettings.h.in
-                ${PROJECT_SOURCE_DIR}/include/CMakeSettings.h
+configure_file( ${RAYCHEL_INCLUDE_DIR}/CMakeSettings.h.in
+                ${RAYCHEL_INCLUDE_DIR}/CMakeSettings.h
 )
 
 target_include_directories(RaychelCPU_test PUBLIC
-    ${PROJECT_SOURCE_DIR}/include
+    ${RAYCHEL_INCLUDE_DIR}
     ${pngpp_SOURCE_DIR}/include
 )
 
@@ -69,7 +62,9 @@ target_include_directories(RaychelCPU_test PUBLIC
 if(${USE_ASAN})
     message(STATUS "Enabled ASAN support")
 
-    target_compile_options(RaychelCPU_test PUBLIC -fsanitize=address)
+    list(APPEND RAYCHEL_COMPILER_FLAGS
+        -fsanitize=address
+    )
 
     if(NOT MSVC)
         target_compile_options(RaychelCPU_test PUBLIC -fno-omit-frame-pointer)
@@ -84,7 +79,7 @@ endif()
 if(${USE_UBSAN} AND NOT MSVC)
     message(STATUS "EnabledUbSAN support")
 
-    target_compile_options(RaychelCPU_test PUBLIC
+    list(APPEND RAYCHEL_COMPILER_FLAGS
         -fsanitize=undefined
         -fsanitize=float-divide-by-zero
         -fno-sanitize-recover
@@ -95,18 +90,22 @@ endif()
 
 #General compiler flags
 if(${MSVC})
-    target_compile_options(RaychelCPU_test PUBLIC 
+    list(APPEND RAYCHEL_COMPILER_FLAGS
         /W4 
         /wd4068 #unknown pragma
     )
 else()
-    target_compile_options(RaychelCPU_test PUBLIC
+    list(APPEND RAYCHEL_COMPILER_FLAGS
         -Wall
         -Wextra
         -Wshadow 
         -Wno-unknown-pragmas
     )
 endif()
+
+target_compile_options(RaychelCPU_test PUBLIC
+    ${RAYCHEL_COMPILER_FLAGS}
+)
 
 include(CheckIPOSupported)
 check_ipo_supported(RESULT IPO_SUPPORTED OUTPUT ERROR)
@@ -122,7 +121,6 @@ endif()
 
 #Gimme that C++17 goodness
 target_compile_features(RaychelCPU_test PUBLIC cxx_std_17)
-target_compile_features(RaychelMath_color_test PUBLIC cxx_std_17)
 
 
 #link the correct libraries
@@ -142,4 +140,9 @@ if(NOT MSVC)
     target_link_libraries(RaychelCPU_test PUBLIC
         tbb
     )
+endif()
+
+#Unit tests
+if(${RAYCHEL_DO_TESTING})
+    add_subdirectory(src/test)
 endif()

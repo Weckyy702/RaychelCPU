@@ -46,12 +46,7 @@
 
 #include "CMakeSettings.h"
 #include "RaychelMath/constants.h"
-
-#ifndef RAYCHEL_NO_LOGGER
-	#include "Logger.h"
-#else
-	#include <iostream>
-#endif
+#include "Logger.h"
 
 #if defined(__clang__) || defined(__GNUC__)
 	#define RAYCHEL_FUNC_NAME __PRETTY_FUNCTION__
@@ -83,7 +78,7 @@
 	#define RAYCHEL_ASSERT(exp) Expects(exp)
 #endif
 
-#define RAYCHEL_ASSERT_NOT_REACHED RAYCHEL_TERMINATE("Assertion failed! Expected to not execute ", __LINE__)
+#define RAYCHEL_ASSERT_NOT_REACHED RAYCHEL_TERMINATE("Assertion failed! Expected to not execute ", __FILE__, ":", __LINE__)
 
 //#define RAYCHEL_LOGICALLY_EQUAL //<-- activates logical equivalency for vector-like types
 

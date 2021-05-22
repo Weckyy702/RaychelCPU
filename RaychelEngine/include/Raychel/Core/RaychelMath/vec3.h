@@ -51,17 +51,17 @@ namespace Raychel {
 
 	public:
 
-		constexpr vec3Imp() = default;
+		constexpr vec3Imp() noexcept=default;
 
-		explicit constexpr vec3Imp(value_type _x)
+		explicit constexpr vec3Imp(value_type _x) noexcept
 			:x(_x)
 		{}
 
-		constexpr vec3Imp(value_type _x, value_type _y)
+		constexpr vec3Imp(value_type _x, value_type _y) noexcept
 			: x(_x), y(_y)
 		{}
 
-		constexpr vec3Imp(value_type _x, value_type _y, value_type _z)
+		constexpr vec3Imp(value_type _x, value_type _y, value_type _z) noexcept
 			: x(_x), y(_y), z(_z)
 		{}
 
@@ -72,120 +72,120 @@ namespace Raychel {
 		*\return vec3Imp<To> 
 		*/
 		template<typename To>
-		vec3Imp<To> to() const noexcept;
+		constexpr vec3Imp<To> to() const noexcept;
 
-		explicit vec3Imp(const vec2&);
-		explicit vec3Imp(const color&);
+		constexpr explicit vec3Imp(const vec2&) noexcept;
+		constexpr explicit vec3Imp(const color&) noexcept;
 
-		vec3Imp& operator=(const vec2&);
-		vec3Imp& operator=(const color&);
+		constexpr vec3Imp& operator=(const vec2&) noexcept;
+		constexpr vec3Imp& operator=(const color&) noexcept;
 
-		vec3Imp& operator+=(const vec3Imp&);
-		vec3Imp& operator-=(const vec3Imp&);
-		vec3Imp& operator*=(value_type);
-		vec3Imp& operator*=(const vec3Imp&);
-		vec3Imp& operator/=(value_type);
-		vec3Imp& operator/=(const vec3Imp&);
-		vec3Imp& operator%=(const vec3Imp&);
+		constexpr vec3Imp& operator+=(const vec3Imp&) noexcept;
+		constexpr vec3Imp& operator-=(const vec3Imp&) noexcept;
+		constexpr vec3Imp& operator*=(value_type) noexcept;
+		constexpr vec3Imp& operator*=(const vec3Imp&) noexcept;
+		constexpr vec3Imp& operator/=(value_type) noexcept;
+		constexpr vec3Imp& operator/=(const vec3Imp&) noexcept;
+		constexpr vec3Imp& operator%=(const vec3Imp&) noexcept;
 
-		value_type x= value_type(0), y= value_type(0), z= value_type(0);
+		value_type x{0}, y{0}, z{0}; //NOLINT(misc-non-private-member-variables-in-classes) because of our private statc_assert, this has just become a class
 	};
 
 	template<typename T>
 	std::ostream& operator<<(std::ostream&, const vec3Imp<T>&);
 
 	template<typename T>
-	vec3Imp<T> operator-(const vec3Imp<T>&);
+	constexpr vec3Imp<T> operator-(const vec3Imp<T>&) noexcept;
 
 	template<typename T>
-	vec3Imp<T> operator+(const vec3Imp<T>&, const vec3Imp<T>&);
+	constexpr vec3Imp<T> operator+(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
 
 	template<typename T>
-	vec3Imp<T> operator-(const vec3Imp<T>&, const vec3Imp<T>&);
+	constexpr vec3Imp<T> operator-(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
 
 	template<typename T>
-	vec3Imp<T> operator*(const vec3Imp<T>&, const vec3Imp<T>&);
+	constexpr vec3Imp<T> operator*(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
 
 	template<typename T>
-	vec3Imp<T> operator*(const vec3Imp<T>&, T);
+	constexpr vec3Imp<T> operator*(const vec3Imp<T>&, T) noexcept;
 
 	template<typename T>
-	inline vec3Imp<T> operator*(T s, const vec3Imp<T>& v)
+	constexpr vec3Imp<T> operator*(T s, const vec3Imp<T>& v) noexcept
 	{
 		return v * s;
 	}
 
 	template<typename T>
-	vec3Imp<T> operator/(const vec3Imp<T>&, const vec3Imp<T>&);
+	constexpr vec3Imp<T> operator/(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
 
 	template<typename T>
-	vec3Imp<T> operator/(const vec3Imp<T>&, T);
+	constexpr vec3Imp<T> operator/(const vec3Imp<T>&, T) noexcept;
 
 	template<typename T>
-	vec3Imp<T> operator%(const vec3Imp<T>&, const vec3Imp<T>&);
+	constexpr vec3Imp<T> operator%(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
 
 	template<typename T>
-	bool operator==(const vec3Imp<T>&, const vec3Imp<T>&);
+	constexpr bool operator==(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
 
 	template<typename T>
-	bool operator!=(const vec3Imp<T>& a, const vec3Imp<T>& b)
+	constexpr bool operator!=(const vec3Imp<T>& a, const vec3Imp<T>& b) noexcept
 	{
 		return !(a == b);
 	}
 
 	template<typename T>
-	vec3Imp<bool> operator<(const vec3Imp<T>&, const vec3Imp<T>&);
+	constexpr vec3Imp<bool> operator<(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
 
 	template<typename T>
-	vec3Imp<bool> operator<=(const vec3Imp<T>&, const vec3Imp<T>&);
+	constexpr vec3Imp<bool> operator<=(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
 
 	template<typename T>
-	vec3Imp<bool> operator>(const vec3Imp<T>&, const vec3Imp<T>&);
+	constexpr vec3Imp<bool> operator>(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
 
 	template<typename T>
-	vec3Imp<bool> operator>=(const vec3Imp<T>&, const vec3Imp<T>&);
+	constexpr vec3Imp<bool> operator>=(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
 
 	template<typename T>
-	T dot(const vec3Imp<T>&, const vec3Imp<T>&);
+	constexpr T dot(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
 
 	template<typename T>
-	T mag(const vec3Imp<T>&);
+	constexpr T mag(const vec3Imp<T>&) noexcept;
 
 	template<typename T>
-	T magSq(const vec3Imp<T>&);
+	constexpr T magSq(const vec3Imp<T>&) noexcept;
 
 	template<typename T>
-	vec3Imp<T> normalize(const vec3Imp<T>&);
+	constexpr vec3Imp<T> normalize(const vec3Imp<T>&) noexcept;
 
 	template<typename T>
-	vec3Imp<T> abs(const vec3Imp<T>&);
+	constexpr vec3Imp<T> abs(const vec3Imp<T>&) noexcept;
 
 	template<typename T>
-	vec3Imp<T> max(const vec3Imp<T>&, const vec3Imp<T>&);
+	constexpr vec3Imp<T> max(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
 
 	template<typename T>
-	vec3Imp<T> min(const vec3Imp<T>&, const vec3Imp<T>&);
+	constexpr vec3Imp<T> min(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
 
 	template<typename T>
-	vec3Imp<T> sin(const vec3Imp<T>&);
+	constexpr vec3Imp<T> sin(const vec3Imp<T>&) noexcept;
 
 	template<typename T>
-	vec3Imp<T> cos(const vec3Imp<T>&);
+	constexpr vec3Imp<T> cos(const vec3Imp<T>&) noexcept;
 
 	template<typename T>
-	vec3Imp<T> pow(const vec3Imp<T>&, T);
+	constexpr vec3Imp<T> pow(const vec3Imp<T>&, T) noexcept;
 
 	template<typename T>
-	vec3Imp<T> pow(const vec3Imp<T>&, const vec3Imp<T>&);
+	constexpr vec3Imp<T> pow(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
 
 	template<typename T>
-	T dist(const vec3Imp<T>&, const vec3Imp<T>&);
+	constexpr T dist(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
 
 	template<typename T>
-	T distSq(const vec3Imp<T>&, const vec3Imp<T>&);
+	constexpr T distSq(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
 
 	template<typename T>
-	vec3Imp<T> cross(const vec3Imp<T>&, const vec3Imp<T>&);
+	constexpr vec3Imp<T> cross(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
 
 	/**
 	*\brief Rotate the vector theta radians around positive X
@@ -196,7 +196,7 @@ namespace Raychel {
 	*\return vec3Imp<T> 
 	*/
 	template<typename T>
-	vec3Imp<T> rotateX(const vec3Imp<T>& v, long double theta);
+	constexpr vec3Imp<T> rotateX(const vec3Imp<T>& v, long double theta) noexcept;
 
 	/**
 	*\brief Rotate the vector theta radians around positive Y
@@ -207,7 +207,7 @@ namespace Raychel {
 	*\return vec3Imp<T> 
 	*/
 	template<typename T>
-	vec3Imp<T> rotateY(const vec3Imp<T>& v, long double theta);
+	constexpr vec3Imp<T> rotateY(const vec3Imp<T>& v, long double theta) noexcept;
 
 	/**
 	*\brief Rotate the vector theta radians around positive Z
@@ -218,7 +218,7 @@ namespace Raychel {
 	*\return vec3Imp<T> 
 	*/
 	template<typename T>
-	vec3Imp<T> rotateZ(const vec3Imp<T>& v, long double theta);
+	constexpr vec3Imp<T> rotateZ(const vec3Imp<T>& v, long double theta) noexcept;
 
 	/**
 	*\brief Linearly interpolate two vectors
@@ -230,10 +230,10 @@ namespace Raychel {
 	*\return constexpr vec2Imp<T> 
 	*/
 	template<typename T>
-	constexpr vec3Imp<T> lerp(const vec3Imp<T>& a, const vec3Imp<T>& b, long double x);
+	constexpr vec3Imp<T> lerp(const vec3Imp<T>& a, const vec3Imp<T>& b, long double x) noexcept;
 
 	/**
-	*\brief Reflect dir along normal
+	*\brief Reflect vector along normal
 	*
 	*\tparam T Type of the ve
 	*\param dir direction to be reflected
@@ -241,7 +241,7 @@ namespace Raychel {
 	*\return vec3 the reflected vector
 	*/
 	template<typename T>
-	vec3Imp<T> reflect(const vec3Imp<T>& dir, const vec3Imp<T>& normal);
+	constexpr vec3Imp<T> reflect(const vec3Imp<T>& dir, const vec3Imp<T>& normal) noexcept;
 }
 
 #endif /*!RAYCHEL_VEC3_H*/
