@@ -29,7 +29,6 @@
 #define RAYCHEL_COLOR_IMP
 
 #include <limits>
-#include <type_traits>
 
 #include "../color.h"
 #include "../vec2.h"
@@ -37,21 +36,54 @@
 
 namespace Raychel {
 
-    template <typename T>
-    constexpr inline colorImp<T> ensureValidColor(const colorImp<T>& c) noexcept
-    {
-        using std::clamp;
-        using vt = typename colorImp<T>::value_type;
+    namespace details {
 
-        if constexpr (std::is_floating_point_v<vt>)
+        template <typename T>
+        constexpr colorImp<T> ensureValidColor(const colorImp<T>& c) noexcept
+        {
+            using std::clamp, std::max;
+            using vt = typename colorImp<T>::value_type;
+
+            if constexpr (std::is_floating_point_v<vt>) {
+                return {
+                    clamp<vt>(c.r, 0, 1.0), clamp<vt>(c.g, 0, 1.0),
+                    clamp<vt>(c.b, 0, 1.0)};
+            }
+
+            //all integral types wrap around on overflow, so we don't need to clamp off anything larger than std::numeric_limits<T>::max()
             return {
-                clamp<vt>(c.r, 0, 1.0), clamp<vt>(c.g, 0, 1.0),
-                clamp<vt>(c.b, 0, 1.0)};
+                max<vt>(c.r, 0), max<vt>(c.g, 0),
+                max<vt>(c.b, 0)};
+        }
 
-        constexpr auto max = std::numeric_limits<vt>::max();
-        return {
-            clamp<vt>(c.r, 0, max), clamp<vt>(c.g, 0, max),
-            clamp<vt>(c.b, 0, max)};
+        template<typename T, typename To>
+        constexpr colorImp<To> convert_float(const colorImp<T>& _c) noexcept
+        {
+            const auto c = ensureValidColor(_c);
+            if constexpr(std::is_integral_v<To>) {
+                constexpr auto max = std::numeric_limits<To>::max();
+
+                return colorImp<To>(c.r * max, c.g * max, c.b * max);
+            } 
+            return colorImp<To>(c.r, c.g, c.b);
+        }
+    
+        template<typename T, typename To>
+        constexpr colorImp<To> convert_integral(const colorImp<T>& _c) noexcept
+        {
+            const auto c = ensureValidColor(_c);
+
+            if constexpr(std::is_floating_point_v<To>) {
+                constexpr To max = std::numeric_limits<T>::max();
+
+                return colorImp<To>(
+                    c.r / max,
+                    c.g / max,
+                    c.b / max
+                );
+            }
+            return colorImp<To>(c.r, c.g, c.b);
+        }
     }
 
     template <typename T>
@@ -86,25 +118,11 @@ namespace Raychel {
         static_assert(
             std::is_convertible_v<value_type, To>,
             "ColorImp<T>::to<To> requires T to be convertible to To!");
-        constexpr vt max = std::numeric_limits<vt>::max() - 1;
 
-        if constexpr (
-            std::is_integral_v<vt> && std::is_floating_point_v<value_type>) {
-            //if the internal representation is in 0...1 range, convert to 0...max
-            const auto c = ensureValidColor(*this);
-            return {
-                static_cast<vt>(c.r * max), static_cast<vt>(c.g * max),
-                static_cast<vt>(c.b * max)};
-        } else if constexpr (
-            std::is_floating_point_v<vt> && std::is_integral_v<value_type>) {
-            //if the internal representation is in 0...max range, convert it to 0...1
-            const auto c = ensureValidColor(*this);
-            return {
-                static_cast<vt>(c.r) / max, static_cast<vt>(c.g) / max,
-                static_cast<vt>(c.b) / max};
+        if constexpr(std::is_floating_point_v<value_type>) {
+            return details::convert_float<value_type, vt>(*this);
         } else {
-            //the two representations are in the same range, just static_cast them
-            return {static_cast<vt>(r), static_cast<vt>(g), static_cast<vt>(b)};
+            return details::convert_integral<value_type, vt>(*this);
         }
     }
 
@@ -193,10 +211,10 @@ namespace Raychel {
         using value_type = typename colorImp<T>::value_type;
 
         if constexpr (std::is_floating_point_v<value_type>)
-            return ensureValidColor({1.0 - c.r, 1.0 - c.g, 1.0 - c.b});
+            return details::ensureValidColor({1.0 - c.r, 1.0 - c.g, 1.0 - c.b});
         else {
             constexpr auto max = std::numeric_limits<value_type>::max();
-            return ensureValidColor({max - c.r, max - c.g, max - c.b});
+            return details::ensureValidColor({max - c.r, max - c.g, max - c.b});
         }
     }
 

@@ -67,7 +67,7 @@ namespace Raychel {
         {}
 
         /**
-		*\brief Convert the color to another color of type To
+		*\brief Convert the color to another color of type To. The color will be clamped before conversion
 		*
 		*\tparam To Type of the converted color
 		*\return colorImp<_To> 

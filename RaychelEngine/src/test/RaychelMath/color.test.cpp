@@ -1,10 +1,10 @@
+#include <catch2/catch.hpp>
+#include <type_traits>
+
 #include "Raychel/Core/RaychelMath/Impl/colorImpl.inl"
 #include "Raychel/Core/RaychelMath/color.h"
 #include "Raychel/Core/utils.h"
 
-#include <catch2/catch.hpp>
-#include <cstddef>
-#include <type_traits>
 
 // these are common types for colors
 #define RAYCHEL_TEST_TYPES unsigned char, size_t, float, double
@@ -18,7 +18,7 @@
 #define RAYCHEL_END_TEST }
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-RAYCHEL_BEGIN_TEST("Creating colors", "[RaychelMath]")
+RAYCHEL_BEGIN_TEST("Creating colors", "[RaychelMath][Color]")
     const color c{1, 0, 124};
     REQUIRE(c.r == 1);
     REQUIRE(c.g == 0);
@@ -41,7 +41,7 @@ RAYCHEL_BEGIN_TEST("Creating colors", "[RaychelMath]")
 RAYCHEL_END_TEST
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-RAYCHEL_BEGIN_TEST("Color addition", "[RaychelMath]")
+RAYCHEL_BEGIN_TEST("Color addition", "[RaychelMath][Color]")
     const color c{1, 1, 1};
 
     const color c2 = c + color{0, 1, 5};
@@ -59,7 +59,7 @@ RAYCHEL_BEGIN_TEST("Color addition", "[RaychelMath]")
 RAYCHEL_END_TEST
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-RAYCHEL_BEGIN_TEST("Color subtraction", "[RaychelMath]")
+RAYCHEL_BEGIN_TEST("Color subtraction", "[RaychelMath][Color]")
     const color c{128};
 
     const auto res = c - color{64, 128, 5};
@@ -77,7 +77,7 @@ RAYCHEL_BEGIN_TEST("Color subtraction", "[RaychelMath]")
 RAYCHEL_END_TEST
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-RAYCHEL_BEGIN_TEST("Color multiplication", "[RaychelMath]")
+RAYCHEL_BEGIN_TEST("Color multiplication", "[RaychelMath][Color]")
     const color c{12};
 
     color res = c * color{5, 0, 2};
@@ -111,7 +111,7 @@ RAYCHEL_BEGIN_TEST("Color multiplication", "[RaychelMath]")
 RAYCHEL_END_TEST
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-RAYCHEL_BEGIN_TEST("Color Division", "[RaychelMath]")
+RAYCHEL_BEGIN_TEST("Color Division", "[RaychelMath][Color]")
 
     color c{12, 246, 18};
 
@@ -145,7 +145,7 @@ RAYCHEL_BEGIN_TEST("Color Division", "[RaychelMath]")
 RAYCHEL_END_TEST
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-RAYCHEL_BEGIN_TEST("Color comparison: equality", "[RaychelMath]")
+RAYCHEL_BEGIN_TEST("Color comparison: equality", "[RaychelMath][Color]")
 
     const color c{1, 12, 5};
 
@@ -157,7 +157,7 @@ RAYCHEL_BEGIN_TEST("Color comparison: equality", "[RaychelMath]")
 RAYCHEL_END_TEST
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-RAYCHEL_BEGIN_TEST("Color comparison: greater than", "[RaychelMath]")
+RAYCHEL_BEGIN_TEST("Color comparison: greater than", "[RaychelMath][Color]")
 
     const color c{0, 12, 3};
     const color comp{1, 7, 3};
@@ -177,7 +177,7 @@ RAYCHEL_BEGIN_TEST("Color comparison: greater than", "[RaychelMath]")
 RAYCHEL_END_TEST
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-RAYCHEL_BEGIN_TEST("Color comparison: less than", "[RaychelMath]")
+RAYCHEL_BEGIN_TEST("Color comparison: less than", "[RaychelMath][Color]")
 
     const color c{0, 12, 3};
     const color comp{1, 7, 3};
@@ -197,7 +197,7 @@ RAYCHEL_BEGIN_TEST("Color comparison: less than", "[RaychelMath]")
 RAYCHEL_END_TEST
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-RAYCHEL_BEGIN_TEST("Color max/min", "[RaychelMath]")
+RAYCHEL_BEGIN_TEST("Color max/min", "[RaychelMath][Color]")
 
     const color c1{1, 7, 12};
     const color c2{0, 42, 9};
@@ -217,7 +217,7 @@ RAYCHEL_BEGIN_TEST("Color max/min", "[RaychelMath]")
 RAYCHEL_END_TEST
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-RAYCHEL_BEGIN_TEST("Color brightness", "[RaychelMath]")
+RAYCHEL_BEGIN_TEST("Color brightness", "[RaychelMath][Color]")
 
     const color c{3, 4, 5};
     const auto b = brightness(c);
@@ -225,3 +225,24 @@ RAYCHEL_BEGIN_TEST("Color brightness", "[RaychelMath]")
     REQUIRE(b == 4);
 
 RAYCHEL_END_TEST
+
+// NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
+TEST_CASE("Color conversion", "[RaychelMath][Color]")
+{
+    using namespace Raychel;
+
+    const colorImp<double> c{0.25, 1.5, -0.25}; //RGB-8: 127, 255, 0
+
+    const auto c_u8 = c.to<unsigned char>();
+
+    REQUIRE(c_u8.r == 63);
+    REQUIRE(c_u8.g == 255);
+    REQUIRE(c_u8.b == 0);
+
+    const auto c_float = c_u8.to<float>();
+
+    REQUIRE(c_float.r == 63/255.0F); //We all have to sacrifice some precision in the name of storage space, right?
+    REQUIRE(c_float.g == 1.0F);
+    REQUIRE(c_float.b == 0.0F);
+
+}
