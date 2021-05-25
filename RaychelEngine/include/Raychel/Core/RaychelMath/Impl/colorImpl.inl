@@ -155,6 +155,15 @@ namespace Raychel {
     }
 
     template <typename T>
+    constexpr colorImp<T>& colorImp<T>::operator/=(const colorImp& c) noexcept
+    {
+        r /= c.r;
+        g /= c.g;
+        b /= c.b;
+        return *this;
+    }
+
+    template <typename T>
     constexpr colorImp<T>& colorImp<T>::operator*=(const colorImp& c) noexcept
     {
         r *= c.r;
@@ -219,9 +228,16 @@ namespace Raychel {
     }
 
     template <typename T>
+    constexpr colorImp<T>
+    operator/(const colorImp<T>& a, const colorImp<T>& b) noexcept
+    {
+        return colorImp<T>(a.r / b.r, a.g / b.g, a.b / b.b);
+    }
+
+    template <typename T>
     constexpr colorImp<T> operator/(const colorImp<T>& c, T s) noexcept
     {
-        return {c.r / s, c.g / s, c.b / s};
+        return colorImp<T>(c.r / s, c.g / s, c.b / s);
     }
 
     template <typename T>

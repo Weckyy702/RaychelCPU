@@ -111,6 +111,40 @@ RAYCHEL_BEGIN_TEST("Color multiplication", "[RaychelMath]")
 RAYCHEL_END_TEST
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
+RAYCHEL_BEGIN_TEST("Color Division", "[RaychelMath]")
+
+    color c{12, 246, 18};
+
+    color res = c / color{2, 3, 1};
+
+    REQUIRE(res.r == 6);
+    REQUIRE(res.g == 82);
+    REQUIRE(res.b == 18);
+
+    res = c / TestType{2};
+
+    REQUIRE(res.r == 6);
+    REQUIRE(res.g == 123);
+    REQUIRE(res.b == 9);
+
+
+    c /= color{2, 3, 1};
+
+    REQUIRE(c.r == 6);
+    REQUIRE(c.g == 82);
+    REQUIRE(c.b == 18);
+
+    c = color{12, 246, 18};
+
+    c /= TestType{2};
+
+    REQUIRE(c.r == 6);
+    REQUIRE(c.g == 123);
+    REQUIRE(c.b == 9);
+
+RAYCHEL_END_TEST
+
+// NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
 RAYCHEL_BEGIN_TEST("Color comparison: equality", "[RaychelMath]")
 
     const color c{1, 12, 5};

@@ -92,10 +92,10 @@ namespace Raychel {
         constexpr colorImp& operator-=(const colorImp&) noexcept;
         constexpr colorImp& operator*=(value_type) noexcept;
         constexpr colorImp& operator*=(const colorImp&) noexcept;
+        constexpr colorImp& operator/=(const colorImp&) noexcept;
         constexpr colorImp& operator/=(value_type) noexcept;
 
-        value_type r{0}, g{0},
-            b{0}; //NOLINT(misc-non-private-member-variables-in-classes): because of our private static_assert, clang-tidy thinks this is a class
+        value_type r{0}, g{0}, b{0}; //NOLINT(misc-non-private-member-variables-in-classes): because of our private static_assert, clang-tidy thinks this is a class
     };
 
     template <typename T>
@@ -124,6 +124,9 @@ namespace Raychel {
     {
         return v * s;
     }
+
+    template <typename T>
+    constexpr colorImp<T> operator/(const colorImp<T>&, const colorImp<T>&) noexcept;
 
     template <typename T>
     constexpr colorImp<T> operator/(const colorImp<T>&, T) noexcept;
