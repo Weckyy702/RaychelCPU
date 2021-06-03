@@ -1,4 +1,5 @@
 #include <catch2/catch.hpp>
+#include <limits>
 #include <type_traits>
 
 #include "Raychel/Core/RaychelMath/Impl/colorImpl.inl"
@@ -18,7 +19,7 @@
 #define RAYCHEL_END_TEST }
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-RAYCHEL_BEGIN_TEST("Creating colors", "[RaychelMath][Color]")
+RAYCHEL_BEGIN_TEST("Creating colors", "[RaychelMath][ColorRGB]")
     const color c{1, 0, 124};
     REQUIRE(c.r == 1);
     REQUIRE(c.g == 0);
@@ -41,7 +42,7 @@ RAYCHEL_BEGIN_TEST("Creating colors", "[RaychelMath][Color]")
 RAYCHEL_END_TEST
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-RAYCHEL_BEGIN_TEST("Color addition", "[RaychelMath][Color]")
+RAYCHEL_BEGIN_TEST("Color addition", "[RaychelMath][ColorRGB]")
     const color c{1, 1, 1};
 
     const color c2 = c + color{0, 1, 5};
@@ -59,7 +60,7 @@ RAYCHEL_BEGIN_TEST("Color addition", "[RaychelMath][Color]")
 RAYCHEL_END_TEST
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-RAYCHEL_BEGIN_TEST("Color subtraction", "[RaychelMath][Color]")
+RAYCHEL_BEGIN_TEST("Color subtraction", "[RaychelMath][ColorRGB]")
     const color c{128};
 
     const auto res = c - color{64, 128, 5};
@@ -77,14 +78,37 @@ RAYCHEL_BEGIN_TEST("Color subtraction", "[RaychelMath][Color]")
 RAYCHEL_END_TEST
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-RAYCHEL_BEGIN_TEST("Color multiplication", "[RaychelMath][Color]")
+TEST_CASE("Inverting colors", "[RaychelMath][ColorRGB]")
+{
+    {
+        const Raychel::colorImp<float> c{0.0F, 0.35F, 1.0F};
+
+        const auto res = -c;
+
+        REQUIRE(res.r == 1.0F);
+        REQUIRE(res.g == 0.65F);
+        REQUIRE(res.b == 0.0F);
+    }
+
+    {
+        const Raychel::colorImp<unsigned char> c{0, 91, 255};
+
+        const auto res = -c;
+
+        REQUIRE(res.r == 255);
+        REQUIRE(res.g == 164);
+        REQUIRE(res.b == 0);
+    }
+}
+
+// NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
+RAYCHEL_BEGIN_TEST("Color multiplication", "[RaychelMath][ColorRGB]")
     const color c{12};
 
     color res = c * color{5, 0, 2};
     REQUIRE(res.r == 60);
     REQUIRE(res.g == 0);
     REQUIRE(res.b == 24);
-
 
     res = c * TestType{2};
     REQUIRE(res.r == 24);
@@ -111,7 +135,7 @@ RAYCHEL_BEGIN_TEST("Color multiplication", "[RaychelMath][Color]")
 RAYCHEL_END_TEST
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-RAYCHEL_BEGIN_TEST("Color Division", "[RaychelMath][Color]")
+RAYCHEL_BEGIN_TEST("Color Division", "[RaychelMath][ColorRGB]")
 
     color c{12, 246, 18};
 
@@ -145,7 +169,7 @@ RAYCHEL_BEGIN_TEST("Color Division", "[RaychelMath][Color]")
 RAYCHEL_END_TEST
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-RAYCHEL_BEGIN_TEST("Color comparison: equality", "[RaychelMath][Color]")
+RAYCHEL_BEGIN_TEST("Color comparison: equality", "[RaychelMath][ColorRGB]")
 
     const color c{1, 12, 5};
 
@@ -157,27 +181,27 @@ RAYCHEL_BEGIN_TEST("Color comparison: equality", "[RaychelMath][Color]")
 RAYCHEL_END_TEST
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-RAYCHEL_BEGIN_TEST("Color comparison: greater than", "[RaychelMath][Color]")
+RAYCHEL_BEGIN_TEST("Color comparison: greater than", "[RaychelMath][ColorRGB]")
 
     const color c{0, 12, 3};
     const color comp{1, 7, 3};
 
-    const auto greater_than = c > comp;
+    const auto gt = c > comp;
 
-    REQUIRE(greater_than.r == false);
-    REQUIRE(greater_than.g == true);
-    REQUIRE(greater_than.b == false);
+    REQUIRE(gt.r == false);
+    REQUIRE(gt.g == true);
+    REQUIRE(gt.b == false);
 
-    const auto greater_than_or_equal = c >= comp;
+    const auto gt_e = c >= comp;
 
-    REQUIRE(greater_than_or_equal.r == false);
-    REQUIRE(greater_than_or_equal.g == true);
-    REQUIRE(greater_than_or_equal.b == true);
+    REQUIRE(gt_e.r == false);
+    REQUIRE(gt_e.g == true);
+    REQUIRE(gt_e.b == true);
 
 RAYCHEL_END_TEST
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-RAYCHEL_BEGIN_TEST("Color comparison: less than", "[RaychelMath][Color]")
+RAYCHEL_BEGIN_TEST("Color comparison: less than", "[RaychelMath][ColorRGB]")
 
     const color c{0, 12, 3};
     const color comp{1, 7, 3};
@@ -197,7 +221,7 @@ RAYCHEL_BEGIN_TEST("Color comparison: less than", "[RaychelMath][Color]")
 RAYCHEL_END_TEST
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-RAYCHEL_BEGIN_TEST("Color max/min", "[RaychelMath][Color]")
+RAYCHEL_BEGIN_TEST("Color max/min", "[RaychelMath][ColorRGB]")
 
     const color c1{1, 7, 12};
     const color c2{0, 42, 9};
@@ -217,7 +241,7 @@ RAYCHEL_BEGIN_TEST("Color max/min", "[RaychelMath][Color]")
 RAYCHEL_END_TEST
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-RAYCHEL_BEGIN_TEST("Color brightness", "[RaychelMath][Color]")
+RAYCHEL_BEGIN_TEST("Color brightness", "[RaychelMath][ColorRGB]")
 
     const color c{3, 4, 5};
     const auto b = brightness(c);
@@ -227,7 +251,7 @@ RAYCHEL_BEGIN_TEST("Color brightness", "[RaychelMath][Color]")
 RAYCHEL_END_TEST
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-TEST_CASE("Color conversion", "[RaychelMath][Color]")
+TEST_CASE("Color conversion", "[RaychelMath][ColorRGB]")
 {
     using namespace Raychel;
 
