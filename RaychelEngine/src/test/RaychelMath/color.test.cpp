@@ -6,6 +6,8 @@
 #include "Raychel/Core/RaychelMath/color.h"
 #include "Raychel/Core/utils.h"
 
+//clang-format doesn't like these macros
+// clang-format off
 
 // these are common types for colors
 #define RAYCHEL_TEST_TYPES unsigned char, size_t, float, double
