@@ -190,10 +190,10 @@ namespace Raychel {
         return sq(q.r) + sq(q.i) + sq(q.j) + sq(q.k);
 	}
 
-    template<typename T>
+    template<typename T, typename>
 	QuaternionImp<T> normalize(const QuaternionImp<T>& q)
 	{
-	    return q / mag(q);
+        return q / mag(q);
 	}
 
     template<typename T>
