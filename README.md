@@ -75,10 +75,12 @@ Credit where credit is due. I am using the following libraries:
   https://github.com/mecwerks/png-plusplus
 * libPNG is the official library to create PNG images: 
   https://github.com/glennrp/libpng  
-* zlib is a general purpose data compression library: 
+* zlib is a general purpose data compression library:
   https://github.com/madler/zlib  *required*
-* ncurses is an API allowing for GUI-like programs in the terminal
+* ncurses is an API allowing for GUI-like programs in the terminal:
   https://github.com/mirror/ncurses *optional*
+* Catch2 is an unit testing framework for C++:
+  https://github.com/catchorg/Catch2
 
 I found a bug!!!
 -
