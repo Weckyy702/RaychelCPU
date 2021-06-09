@@ -15,7 +15,6 @@ Makefile
 **/.vs
 **/.cache/
 compile_commands.json
-.clang-format
 .clang-tidy
 
 #log files
