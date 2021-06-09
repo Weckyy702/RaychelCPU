@@ -30,18 +30,18 @@
 
 #include <vector>
 
-#include "Raychel/Core/utils.h"
 #include "Raychel/Core/Types.h"
+#include "Raychel/Core/utils.h"
 
-namespace Raychel
-{
+namespace Raychel {
     /**
     *\brief An image texture of the specified pixel type. Supports uv indexing
     *
     *\tparam Pixel_t 
     */
-    template<typename Pixel_t>
-    class Texture {
+    template <typename Pixel_t>
+    class Texture
+    {
 
         using value_type_ = std::remove_cv_t<std::remove_reference_t<Pixel_t>>;
         using iterator_ = typename std::vector<value_type_>::iterator;
@@ -50,14 +50,12 @@ namespace Raychel
     public:
         using value_type = value_type_;
 
-        Texture()=default;
+        Texture() = default;
 
-        explicit Texture(const vec2i& size)
-            :size_(size), pixel_buffer_{size_.x*size_.y}
+        explicit Texture(const vec2i& size) : size_(size), pixel_buffer_{size_.x * size_.y}
         {}
 
-        Texture(size_t x, size_t y)
-            :Texture(vec2i{x, y})
+        Texture(size_t x, size_t y) : Texture(vec2i{x, y})
         {}
 
         /**
@@ -71,29 +69,33 @@ namespace Raychel
         const value_type& at(const vec2i&) const;
         const value_type& at(const vec2&) const;
 
-        vec2i size() const {
+        vec2i size() const
+        {
             return size_;
         }
 
-        iterator_ begin() {
+        iterator_ begin()
+        {
             return pixel_buffer_.begin();
         }
 
-        iterator_ end() {
+        iterator_ end()
+        {
             return pixel_buffer_.end();
         }
 
-        const_iterator_ begin() const {
+        const_iterator_ begin() const
+        {
             return pixel_buffer_.cbegin();
         }
 
-        const_iterator_ end() const {
+        const_iterator_ end() const
+        {
             return pixel_buffer_.cend();
         }
 
     private:
-
-        value_type& read(size_t idx) 
+        value_type& read(size_t idx)
         {
             RAYCHEL_ASSERT(idx < pixel_buffer_.size());
             return pixel_buffer_.at(idx);
@@ -105,13 +107,15 @@ namespace Raychel
             return pixel_buffer_.at(idx);
         }
 
-        size_t vecToIndex(const vec2i& _uv) const noexcept {
+        size_t vecToIndex(const vec2i& _uv) const noexcept
+        {
             const vec2i uv = min(max(_uv, vec2i{0, 0}), size_); //clamp the vector
             return (uv.y * size_.x) + uv.x;
         }
 
-        size_t vecToIndex(const vec2& _uv) const noexcept {
-            const vec2 pixel_uv = _uv*(size_.to<number_t>());
+        size_t vecToIndex(const vec2& _uv) const noexcept
+        {
+            const vec2 pixel_uv = _uv * (size_.to<number_t>());
             return vecToIndex(pixel_uv.to<size_t>());
         }
 
@@ -119,32 +123,30 @@ namespace Raychel
         std::vector<value_type> pixel_buffer_;
     };
 
-    template<typename T>
+    template <typename T>
     auto Texture<T>::at(const vec2i& _uv) -> value_type&
     {
         return read(vecToIndex(_uv));
     }
 
-    template<typename T>
+    template <typename T>
     auto Texture<T>::at(const vec2& _uv) -> value_type&
     {
         return read(vecToIndex(_uv));
     }
 
-    template<typename T>
+    template <typename T>
     auto Texture<T>::at(const vec2i& _uv) const -> const value_type&
     {
         return read(vecToIndex(_uv));
     }
 
-    template<typename T>
+    template <typename T>
     auto Texture<T>::at(const vec2& _uv) const -> const value_type&
     {
         return read(vecToIndex(_uv));
     }
 
-}
-
-
+} // namespace Raychel
 
 #endif //!RAYCHEL_TEXTURE_H

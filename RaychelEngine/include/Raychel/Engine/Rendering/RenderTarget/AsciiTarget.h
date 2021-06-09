@@ -33,26 +33,26 @@
 
 namespace Raychel {
 
-    class AsciiTarget : public RenderTarget {
+    class AsciiTarget : public RenderTarget
+    {
 
-        public:
-            AsciiTarget(const vec2i& size, bool use_color);
-            AsciiTarget(const vec2i& size, bool use_color, const std::vector<char>& char_set);
+    public:
+        AsciiTarget(const vec2i& size, bool use_color);
+        AsciiTarget(const vec2i& size, bool use_color, const std::vector<char>& char_set);
 
-            void writeFramebuffer(const Texture<RenderResult>& framebuffer) override;
+        void writeFramebuffer(const Texture<RenderResult>& framebuffer) override;
 
-            void finishFramebufferWrite() override;
+        void finishFramebufferWrite() override;
 
-            ~AsciiTarget() override;
+        ~AsciiTarget() override;
 
-        private:
+    private:
+        void _init_ncurses() const;
 
-            void _init_ncurses() const;
-
-            const std::vector<char> character_set_ = {'.', ':', ';', '~', '=', '#', '0', 'B', '8', '%', '&'};
-            bool use_color_=false;
+        const std::vector<char> character_set_ = {'.', ':', ';', '~', '=', '#', '0', 'B', '8', '%', '&'};
+        bool use_color_ = false;
     };
 
-}
+} // namespace Raychel
 
 #endif //!RAYCHEL_ASCII_TARGET_H

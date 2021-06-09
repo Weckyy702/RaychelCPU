@@ -12,14 +12,11 @@ namespace Raychel {
         return output_size_;
     }
 
-
-
-    void RenderController::setCurrentScene(const not_null<Scene*> new_scene) 
+    void RenderController::setCurrentScene(const not_null<Scene*> new_scene)
     {
         current_scene_ = new_scene;
         renderer_.setSceneData(&current_scene_->objects_, &current_scene_->background_texture_);
     }
-
 
     std::optional<Texture<RenderResult>> RenderController::getImageRendered()
     {
@@ -27,4 +24,4 @@ namespace Raychel {
         return renderer_.renderImage(current_scene_->cam_);
     }
 
-}
+} // namespace Raychel

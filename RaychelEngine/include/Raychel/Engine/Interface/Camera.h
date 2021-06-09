@@ -37,14 +37,13 @@ namespace Raychel {
     *\brief Freely orientable Camera used for rendering.
     *
     */
-    class Camera {
+    class Camera
+    {
 
     public:
+        Camera() = default;
 
-        Camera()=default;
-
-        Camera(const Transform& t, float zoom)
-            :transform_{t}, zoom_{zoom}
+        Camera(const Transform& t, float zoom) : transform_{t}, zoom_{zoom}
         {}
 
         vec3 forward() const noexcept;
@@ -58,7 +57,6 @@ namespace Raychel {
             return zoom_;
         }
 
-
         void setRoll(float angle) noexcept;
 
         void setPitch(float angle) noexcept;
@@ -70,24 +68,19 @@ namespace Raychel {
         Quaternion updatePitch(float da) noexcept;
 
         Quaternion updateYaw(float da) noexcept;
-        
+
         friend class RaymarchRenderer;
 
     private:
+        Transform transform_;
+        float zoom_ = 1.0;
 
-            Transform transform_;
-            float zoom_=1.0;
+        //float exposure;
 
-            //float exposure;
-
-            //colors that each channel reacts to. Essential for color bleed etc.
-            std::array<color, 3> color_channels_ = {
-                color(1, 0, 0),
-                color(0, 1, 0),
-                color(0, 0, 1)
-            };
+        //colors that each channel reacts to. Essential for color bleed etc.
+        std::array<color, 3> color_channels_ = {color(1, 0, 0), color(0, 1, 0), color(0, 0, 1)};
     };
 
-}
+} // namespace Raychel
 
 #endif //RAYCHEL_CAMERA_H

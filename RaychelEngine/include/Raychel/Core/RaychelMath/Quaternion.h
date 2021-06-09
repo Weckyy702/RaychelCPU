@@ -48,14 +48,12 @@ namespace Raychel {
         using vec3 = vec3Imp<value_type>;
 
     public:
-        // clang-format off
-
         /**
 		*\brief Construct a new QuaternionImp object. Will rotate 0° around positive y
 		*
 		*/
-        QuaternionImp()
-            : QuaternionImp(vec3{0, 1, 0}, 0) {}
+        QuaternionImp() : QuaternionImp(vec3{0, 1, 0}, 0)
+        {}
 
         /**
 		*\brief Construct a new QuaternionImp object
@@ -67,25 +65,30 @@ namespace Raychel {
 		*
 		*\note Constructing quaternions from raw data is not recommended
 		*/
-        QuaternionImp(value_type _r, value_type _i, value_type _j, value_type _k)
-            : r{_r}, i{_i}, j{_j}, k{_k} {}
+        QuaternionImp(value_type _r, value_type _i, value_type _j, value_type _k) : r{_r}, i{_i}, j{_j}, k{_k}
+        {}
 
         QuaternionImp(const vec3&, value_type);
-        // clang-format on
 
         /**
 		*\brief Return the vector part of the quaternion
 		*
 		*\return vec3 
 		*/
-        inline vec3 v() const noexcept { return {i, j, k}; }
+        inline vec3 v() const noexcept
+        {
+            return {i, j, k};
+        }
 
         /**
 		*\brief Return the scalar part of the quaternion
 		*
 		*\return value_type 
 		*/
-        inline value_type s() const noexcept { return r; }
+        inline value_type s() const noexcept
+        {
+            return r;
+        }
 
         /**
 		*\brief Convert the quaternion to another quaternion of type To

@@ -12,4 +12,4 @@ namespace Raychel {
         return albedo_(data.surface_point, data.hit_normal);
     }
 
-}
+} // namespace Raychel

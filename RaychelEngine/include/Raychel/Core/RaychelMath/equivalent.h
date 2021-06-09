@@ -69,8 +69,6 @@ namespace Raychel {
         {};
     } // namespace details
 
-
-
     template <typename _float>
     [[nodiscard]] constexpr bool equivalent(_float a, _float b) noexcept
     {

@@ -28,8 +28,8 @@
 #ifndef RAYCHEL_RENDER_TARGET_H
 #define RAYCHEL_RENDER_TARGET_H
 
-#include "Raychel/Core/Types.h"
 #include "Raychel/Core/LinkTypes.h"
+#include "Raychel/Core/Types.h"
 #include "Raychel/Misc/Texture/Texture.h"
 
 namespace Raychel {
@@ -38,18 +38,17 @@ namespace Raychel {
     *\brief Abstract base for render targets. The rendered image will be written in here as a texture of colors
     *
     */
-    class RenderTarget {
+    class RenderTarget
+    {
 
     protected:
-
-        RenderTarget(const vec2i& size)
-            :output_size_{size}
+        RenderTarget(const vec2i& size) : output_size_{size}
         {}
 
-        RenderTarget(const RenderTarget&)=delete;
-        RenderTarget& operator=(const RenderTarget&)=delete;
-        RenderTarget(RenderTarget&&)=delete;
-        RenderTarget& operator=(RenderTarget&&)=delete;
+        RenderTarget(const RenderTarget&) = delete;
+        RenderTarget& operator=(const RenderTarget&) = delete;
+        RenderTarget(RenderTarget&&) = delete;
+        RenderTarget& operator=(RenderTarget&&) = delete;
 
     public:
         inline vec2i size() const noexcept
@@ -62,33 +61,35 @@ namespace Raychel {
         *
         *\note Implementation is optional
         */
-        virtual void prepareFramebufferWrite(){}
+        virtual void prepareFramebufferWrite()
+        {}
 
         /**
         *\brief Write the provided framebuffer into the target
         *
         *\param framebuffer Framebuffer to write
         */
-        virtual void writeFramebuffer(const Texture<RenderResult>& framebuffer)=0;
+        virtual void writeFramebuffer(const Texture<RenderResult>& framebuffer) = 0;
 
         /**
         *\brief Finish up writing the framebuffer. Called right after writeFramebuffer()
         *
         *\note Implementation is optional
         */
-        virtual void finishFramebufferWrite(){}
+        virtual void finishFramebufferWrite()
+        {}
 
-        virtual ~RenderTarget()=default;
-    
+        virtual ~RenderTarget() = default;
+
     private:
         vec2i output_size_;
-
     };
 
-    inline void operator<<(RenderTarget& t, const Texture<RenderResult>& framebuffer) {
+    inline void operator<<(RenderTarget& t, const Texture<RenderResult>& framebuffer)
+    {
         t.writeFramebuffer(framebuffer);
     }
 
-}
+} // namespace Raychel
 
 #endif //RAYCHEL_RENDER_TARGET_H

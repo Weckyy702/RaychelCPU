@@ -1,5 +1,5 @@
-#include "Raychel/Raychel.h"
 #include "Raychel/Engine/Objects/sdObjects.h"
+#include "Raychel/Raychel.h"
 
 float Raychel::SdSphere::eval(const vec3& _p) const
 {

@@ -44,9 +44,7 @@ namespace Raychel {
         using value_type = std::remove_reference_t<std::remove_cv_t<_number>>;
 
     private:
-        static_assert(
-            std::is_arithmetic_v<value_type>,
-            "Raychel::color<T> requires T to be of arithmetic type!");
+        static_assert(std::is_arithmetic_v<value_type>, "Raychel::color<T> requires T to be of arithmetic type!");
 
         using vec3 = vec3Imp<value_type>;
         using vec2 = vec2Imp<value_type>;
@@ -54,16 +52,13 @@ namespace Raychel {
     public:
         constexpr colorImp() noexcept = default;
 
-        constexpr explicit colorImp(value_type _b) noexcept
-            : r(_b), g(_b), b(_b)
+        constexpr explicit colorImp(value_type _b) noexcept : r(_b), g(_b), b(_b)
         {}
 
-        constexpr colorImp(value_type _r, value_type _g) noexcept
-            : r(_r), g(_g), b(0)
+        constexpr colorImp(value_type _r, value_type _g) noexcept : r(_r), g(_g), b(0)
         {}
 
-        constexpr colorImp(value_type _r, value_type _g, value_type _b) noexcept
-            : r(_r), g(_g), b(_b)
+        constexpr colorImp(value_type _r, value_type _g, value_type _b) noexcept : r(_r), g(_g), b(_b)
         {}
 
         /**
@@ -95,7 +90,8 @@ namespace Raychel {
         constexpr colorImp& operator/=(const colorImp&) noexcept;
         constexpr colorImp& operator/=(value_type) noexcept;
 
-        value_type r{0}, g{0}, b{0}; //NOLINT(misc-non-private-member-variables-in-classes): because of our private static_assert, clang-tidy thinks this is a class
+        //NOLINTNEXTLINE (misc-non-private-member-variables-in-classes): because of our private static_assert, clang-tidy thinks this is a class
+        value_type r{0}, g{0},b{0};
     };
 
     template <typename T>
@@ -105,16 +101,13 @@ namespace Raychel {
     constexpr colorImp<T> operator-(const colorImp<T>&) noexcept;
 
     template <typename T>
-    constexpr colorImp<T>
-    operator+(const colorImp<T>&, const colorImp<T>&) noexcept;
+    constexpr colorImp<T> operator+(const colorImp<T>&, const colorImp<T>&) noexcept;
 
     template <typename T>
-    constexpr colorImp<T>
-    operator-(const colorImp<T>&, const colorImp<T>&) noexcept;
+    constexpr colorImp<T> operator-(const colorImp<T>&, const colorImp<T>&) noexcept;
 
     template <typename T>
-    constexpr colorImp<T>
-    operator*(const colorImp<T>&, const colorImp<T>&) noexcept;
+    constexpr colorImp<T> operator*(const colorImp<T>&, const colorImp<T>&) noexcept;
 
     template <typename T>
     constexpr colorImp<T> operator*(const colorImp<T>&, T) noexcept;
@@ -135,27 +128,22 @@ namespace Raychel {
     constexpr bool operator==(const colorImp<T>&, const colorImp<T>&) noexcept;
 
     template <typename T>
-    constexpr bool
-    operator!=(const colorImp<T>& a, const colorImp<T>& b) noexcept
+    constexpr bool operator!=(const colorImp<T>& a, const colorImp<T>& b) noexcept
     {
         return !(a == b);
     }
 
     template <typename T>
-    constexpr colorImp<bool>
-    operator<(const colorImp<T>&, const colorImp<T>&) noexcept;
+    constexpr colorImp<bool> operator<(const colorImp<T>&, const colorImp<T>&) noexcept;
 
     template <typename T>
-    constexpr colorImp<bool>
-    operator<=(const colorImp<T>&, const colorImp<T>&) noexcept;
+    constexpr colorImp<bool> operator<=(const colorImp<T>&, const colorImp<T>&) noexcept;
 
     template <typename T>
-    constexpr colorImp<bool>
-    operator>(const colorImp<T>&, const colorImp<T>&) noexcept;
+    constexpr colorImp<bool> operator>(const colorImp<T>&, const colorImp<T>&) noexcept;
 
     template <typename T>
-    constexpr colorImp<bool>
-    operator>=(const colorImp<T>&, const colorImp<T>&) noexcept;
+    constexpr colorImp<bool> operator>=(const colorImp<T>&, const colorImp<T>&) noexcept;
 
     template <typename T>
     constexpr colorImp<T> max(const colorImp<T>&, const colorImp<T>&) noexcept;

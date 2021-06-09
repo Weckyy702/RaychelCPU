@@ -31,28 +31,32 @@
 #include <exception>
 
 #include "Raychel/Core/utils.h"
-    
+
 namespace Raychel {
 
     /**
     *\brief Base class for all Exceptions in Raychel. Contains additional information compared to std::exception
     */
-    class exception_context : public std::exception {
-    
+    class exception_context : public std::exception
+    {
+
     public:
         exception_context(std::string_view what, std::string_view origin, bool fatal)
-            :what_{what}, origin_{origin}, fatal_{fatal}
+            : what_{what}, origin_{origin}, fatal_{fatal}
         {}
 
-        const char* what() const noexcept override {
+        const char* what() const noexcept override
+        {
             return what_.data();
         }
 
-        const char* origin() const noexcept {
+        const char* origin() const noexcept
+        {
             return origin_.data();
         }
 
-        bool fatal() const noexcept {
+        bool fatal() const noexcept
+        {
             return fatal_;
         }
 
@@ -62,7 +66,6 @@ namespace Raychel {
         const bool fatal_{false};
     };
 
-}
-
+} // namespace Raychel
 
 #endif //!RAYCHEL_EXCEPTION_CONTEXT_H

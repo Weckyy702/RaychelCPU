@@ -52,18 +52,15 @@ namespace Raychel {
     public:
         constexpr vec3Imp() noexcept = default;
 
-        // clang-format off
+        explicit constexpr vec3Imp(value_type _x) noexcept : x(_x)
+        {}
 
-        explicit constexpr vec3Imp(value_type _x) noexcept 
-            : x(_x) {}
+        constexpr vec3Imp(value_type _x, value_type _y) noexcept : x(_x), y(_y)
+        {}
 
-        constexpr vec3Imp(value_type _x, value_type _y) noexcept 
-            : x(_x), y(_y) {}
+        constexpr vec3Imp(value_type _x, value_type _y, value_type _z) noexcept : x(_x), y(_y), z(_z)
+        {}
 
-        constexpr vec3Imp(value_type _x, value_type _y, value_type _z) noexcept 
-            : x(_x), y(_y), z(_z) {}
-
-        // clang-format on
         /**
 		*\brief Convert the vector to the same vector of another type
 		*
@@ -88,7 +85,7 @@ namespace Raychel {
         constexpr vec3Imp& operator%=(const vec3Imp&) noexcept;
 
         //NOLINTNEXTLINE(misc-non-private-member-variables-in-classes): because of our private statc_assert, this has just become a class
-        value_type x{0}, y{0},z{0}; 
+        value_type x{0}, y{0}, z{0};
     };
 
     template <typename T>

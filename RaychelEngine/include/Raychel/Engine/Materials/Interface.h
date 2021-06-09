@@ -28,9 +28,9 @@
 #ifndef RAYCHEL_IMATERIAL_H
 #define RAYCHEL_IMATERIAL_H
 
+#include "Raychel/Core/Forward.h"
 #include "Raychel/Core/LinkTypes.h"
 #include "Raychel/Core/Types.h"
-#include "Raychel/Core/Forward.h"
 
 namespace Raychel {
 
@@ -38,18 +38,18 @@ namespace Raychel {
     *\brief Abstract interface for Materials
     *
     */
-    class IMaterial {
+    class IMaterial
+    {
 
     protected:
-        IMaterial()=default;
-        virtual void initializeTextureProviders(const vec3& parent_position, const vec3& parent_size)=0;
+        IMaterial() = default;
+        virtual void initializeTextureProviders(const vec3& parent_position, const vec3& parent_size) = 0;
 
     public:
-
-        IMaterial(const IMaterial&)=delete;
-        IMaterial& operator=(const IMaterial&)=delete;
-        IMaterial(IMaterial&&)=delete;
-        IMaterial& operator=(IMaterial&&)=delete;
+        IMaterial(const IMaterial&) = delete;
+        IMaterial& operator=(const IMaterial&) = delete;
+        IMaterial(IMaterial&&) = delete;
+        IMaterial& operator=(IMaterial&&) = delete;
 
         /**
         *\brief Get the surface color of the Material with the parameters given in data
@@ -57,38 +57,41 @@ namespace Raychel {
         *\param data parameters for the Materials surface color equation
         *\return color 
         */
-        virtual color getSurfaceColor(const ShadingData& data)const =0;
+        virtual color getSurfaceColor(const ShadingData& data) const = 0;
 
         /**
         *\brief Set the parent Renderer used for rendering callbacks
         *
         *\param new_renderer The new parent renderer
         */
-        virtual void setParentRenderer(not_null<RaymarchRenderer*> new_renderer)=0;
+        virtual void setParentRenderer(const RaymarchRenderer& new_renderer) = 0;
 
-        virtual ~IMaterial()=default;
+        virtual ~IMaterial() = default;
     };
 
     /**
     *\brief Base class for all Materials
     *
     */
-    class Material : public IMaterial {
+    class Material : public IMaterial
+    {
 
-    public: 
+    public:
+        void setParentRenderer(const RaymarchRenderer& new_renderer) override;
 
-    void setParentRenderer(not_null<RaymarchRenderer*> new_renderer) override;
-    
     protected:
-        Material()=default;
+        Material() = default;
 
-        RaymarchRenderer const* parent_renderer() const noexcept { return parent_renderer_; }
+        RaymarchRenderer const* parent_renderer() const noexcept
+        {
+            return parent_renderer_;
+        }
 
     private:
         //Reference to renderer that renders this materials scene
-        RaymarchRenderer const* parent_renderer_=nullptr;
+        RaymarchRenderer const* parent_renderer_ = nullptr;
     };
-    
-}
+
+} // namespace Raychel
 
 #endif //RAYCHEL_IMATERIAL_H

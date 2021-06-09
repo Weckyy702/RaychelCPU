@@ -29,44 +29,38 @@
 #define RAYCHEL_TRANSFORM_H
 
 #include "../utils.h"
-#include "vec3.h"
 #include "Quaternion.h"
+#include "vec3.h"
 
-namespace Raychel
-{
-    
+namespace Raychel {
+
     /**
     *\brief An (almost) mathematical transform (scale is missing)
     *
     *\tparam _number Type of the Transform. Must be arithmetic
     */
-    template<typename _number>
+    template <typename _number>
     struct TransformImp
     {
 
         //this ugly mess will have to stay until C++20
-		using value_type = std::remove_reference_t<std::remove_cv_t<_number>>;
+        using value_type = std::remove_reference_t<std::remove_cv_t<_number>>;
 
     private:
-
         static_assert(std::is_arithmetic_v<value_type>, "Raychel::vec3<T> requires T to be of arithmetic type!");
         using vec3 = vec3Imp<value_type>;
         using Quaternion = QuaternionImp<value_type>;
-    
+
     public:
+        TransformImp() = default;
 
-        TransformImp()=default;
-
-        TransformImp(const vec3& pos)
-            :position{ pos }, rotation{}
+        TransformImp(const vec3& pos) : position{pos}, rotation{}
         {}
 
-        TransformImp(const Quaternion& rot)
-            :position{}, rotation{ rot }
+        TransformImp(const Quaternion& rot) : position{}, rotation{rot}
         {}
 
-        TransformImp(const vec3& pos, const Quaternion& rot)
-            :position{ pos }, rotation( rot )
+        TransformImp(const vec3& pos, const Quaternion& rot) : position{pos}, rotation(rot)
         {}
 
         vec3 apply(const vec3&) const;
@@ -77,15 +71,13 @@ namespace Raychel
         *\tparam To Type of the converted Transform
         *\return TransformImp<T> 
         */
-        template<typename To>
+        template <typename To>
         TransformImp<To> to() const noexcept;
 
         vec3 position;
         Quaternion rotation;
-
     };
 
-}
-
+} // namespace Raychel
 
 #endif //RAYCHEL_TRANSFORM_H

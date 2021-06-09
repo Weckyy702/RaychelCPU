@@ -28,8 +28,7 @@
 #ifndef RAYCHEL_TEXTURE_TYPE_H
 #define RAYCHEL_TEXTURE_TYPE_H
 
-namespace Raychel
-{
+namespace Raychel {
     enum class TextureType {
         function,
         image,
@@ -37,6 +36,5 @@ namespace Raychel
         //TODO: implement more types
     };
 }
-
 
 #endif //!RAYCHEL_TEXTURE_TYPE_H

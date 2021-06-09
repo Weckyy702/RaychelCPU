@@ -2,8 +2,8 @@
 #include <cmath>
 #include <type_traits>
 
-#include "Raychel/Core/RaychelMath/vec3.h"
 #include "Raychel/Core/RaychelMath/Impl/vec3Impl.inl"
+#include "Raychel/Core/RaychelMath/vec3.h"
 
 //clang-format doesn't like these macros
 // clang-format off

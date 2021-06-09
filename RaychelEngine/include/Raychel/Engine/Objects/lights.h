@@ -8,14 +8,13 @@ namespace Raychel {
     class PointLight : public SdLamp
     {
     public:
-        PointLight(const Transform& t, const LampData& data)
-            :SdLamp(data), transform_{t}
+        PointLight(const Transform& t, const LampData& data) : SdLamp(data), transform_{t}
         {}
 
     private:
         Transform transform_;
     };
 
-}
+} // namespace Raychel
 
 #endif //RAYCHEL_LIGHTS_H

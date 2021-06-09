@@ -13,4 +13,4 @@ namespace Raychel {
         cam_ = cam;
         return cam_;
     }
-}
+} // namespace Raychel

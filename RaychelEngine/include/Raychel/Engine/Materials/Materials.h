@@ -38,28 +38,26 @@ namespace Raychel {
     *\brief Perfectly rough Material
     *
     */
-    class DiffuseMaterial final : public Material {
+    class DiffuseMaterial final : public Material
+    {
 
     public:
-
-        DiffuseMaterial(const TextureProvider<color>& albedo)
-            :albedo_{albedo}
+        DiffuseMaterial(const TextureProvider<color>& albedo) : albedo_{albedo}
         {}
 
-        DiffuseMaterial(DiffuseMaterial&& rhs) noexcept
-            :albedo_{std::move(rhs.albedo_)}
+        DiffuseMaterial(DiffuseMaterial&& rhs) noexcept : albedo_{std::move(rhs.albedo_)}
         {}
 
         void initializeTextureProviders(const vec3& parent_position, const vec3& parent_bounding_box) override;
 
         color getSurfaceColor(const ShadingData& data) const override;
 
-        ~DiffuseMaterial() override=default;
+        ~DiffuseMaterial() override = default;
 
     private:
         TextureProvider<color> albedo_;
     };
 
-}
+} // namespace Raychel
 
 #endif //!RAYCHEL_MATERIALS_H

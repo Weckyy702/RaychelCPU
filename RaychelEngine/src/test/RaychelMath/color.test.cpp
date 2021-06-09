@@ -2,8 +2,8 @@
 #include <limits>
 #include <type_traits>
 
-#include "Raychel/Core/RaychelMath/color.h"
 #include "Raychel/Core/RaychelMath/Impl/colorImpl.inl"
+#include "Raychel/Core/RaychelMath/color.h"
 
 //clang-format doesn't like these macros
 // clang-format off

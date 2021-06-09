@@ -29,36 +29,37 @@
 #define RAYCHEL_SCENE_H
 
 #include "Raychel/Core/utils.h"
-#include "Raychel/Engine/Objects/Interface.h"
 #include "Raychel/Engine/Interface/Camera.h"
+#include "Raychel/Engine/Objects/Interface.h"
 #include "Raychel/Misc/Texture/CubeTexture.h"
 
 namespace Raychel {
-
 
     /**
     *\brief Unique owner for Objects, a camera and a background texture
     *
     */
-    class Scene {
+    class Scene
+    {
 
     public:
+        Scene() = default;
 
-        Scene()=default;
+        Scene(const Scene&) = delete;
+        Scene& operator=(const Scene&) = delete;
+        Scene(Scene&&) = default;
+        Scene& operator=(Scene&&) = default;
 
-        Scene(const Scene&)=delete;
-        Scene& operator=(const Scene&)=delete;
-        Scene(Scene&&)=default;
-        Scene& operator=(Scene&&)=default;
-
-
-
-        template<typename T, typename... Args>
+        template <typename T, typename... Args>
         void addObject(Args&&... args)
         {
-            static_assert(std::is_base_of_v<IRaymarchable, T>, "Only Objects that derive from Raychel::IRaymarchable can be added to a scene!");
-            static_assert(std::is_constructible_v<T, Args...>, "Raychel::Scene::addObject<T, Args...> requires T to be constructible from Args...!");
-            
+            static_assert(
+                std::is_base_of_v<IRaymarchable, T>,
+                "Only Objects that derive from Raychel::IRaymarchable can be added to a scene!");
+            static_assert(
+                std::is_constructible_v<T, Args...>,
+                "Raychel::Scene::addObject<T, Args...> requires T to be constructible from Args...!");
+
             objects_.push_back(new T(std::forward<Args>(args)...));
         }
 
@@ -81,12 +82,12 @@ namespace Raychel {
         ~Scene()
         {
             //TODO: turn IRaymarchable_p into a smart pointer
-            for(auto ptr : objects_) {
+            for (auto ptr : objects_) {
                 delete ptr;
             }
         }
 
-    friend class RenderController;
+        friend class RenderController;
 
     private:
         Camera cam_;
@@ -96,6 +97,6 @@ namespace Raychel {
         //std::vector<Camera> cams_;
     };
 
-}
+} // namespace Raychel
 
 #endif //RAYCHEL_SCENE_H

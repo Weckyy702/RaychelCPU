@@ -31,15 +31,15 @@
 namespace Raychel {
 
     //Image Texture
-    template<typename T>
+    template <typename T>
     class Texture;
 
     //Wrapper for either an Image or procedural Texture
-    template<typename T>
+    template <typename T>
     class TextureProvider;
 
     //Wrapper for either a Cube Map or a procedural Texture
-    template<typename T>
+    template <typename T>
     class CubeTexture;
 
     class Scene;
@@ -52,6 +52,6 @@ namespace Raychel {
     class Material;
 
     class RaymarchRenderer;
-}
+} // namespace Raychel
 
 #endif //RAYCHEL_FORWARD_H

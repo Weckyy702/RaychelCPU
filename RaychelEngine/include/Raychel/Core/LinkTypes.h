@@ -55,7 +55,6 @@ namespace Raychel {
         color c;
         float b{0.0F};
         float sz{0.0F};
-
     };
 
 #pragma endregion
@@ -68,7 +67,8 @@ namespace Raychel {
      * \note The values in this struct can produce weird rendering results and
      *       should be left on default
      */
-    struct RaymarchOptions {
+    struct RaymarchOptions
+    {
         //maximum distance a ray can travel in the scene [m]
         float max_ray_distance = 50.0F;
 
@@ -80,7 +80,8 @@ namespace Raychel {
     *\brief Options for Postprocessing of rendered images
     *
     */
-    struct PostprocessingOptions {
+    struct PostprocessingOptions
+    {
         bool do_postprocessing = false;
         bool do_denoising = false;
     };
@@ -93,8 +94,6 @@ namespace Raychel {
     {
         bool doAA = false;
     };
-
-
 
     /**
     *\brief Precomputed data to accelerate raymarching
@@ -129,7 +128,6 @@ namespace Raychel {
         ShadingData shading_data;
         const IRaymarchable* hit_object{nullptr};
     };
-    
 
     /**
     *\brief Data that leaves the rendering step. Can be used in Postprocessing
@@ -143,6 +141,6 @@ namespace Raychel {
 
 #pragma endregion
 
-}
+} // namespace Raychel
 
 #endif // RAYCHEL_LINKERTYPES_H

@@ -34,8 +34,6 @@
 
 namespace Raychel {
 
-    // clang-format off
-
     template <typename T>
     constexpr vec3Imp<T>::vec3Imp(const vec2& v) noexcept
         : x(v.x), y(v.y), z(0)
@@ -45,8 +43,6 @@ namespace Raychel {
     constexpr vec3Imp<T>::vec3Imp(const color& c) noexcept
         : x(c.r), y(c.g), z(c.b)
     {}
-
-    // clang-format on
 
     template <typename T>
     template <typename To>

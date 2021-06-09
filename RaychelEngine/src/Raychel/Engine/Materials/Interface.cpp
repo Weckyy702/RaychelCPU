@@ -2,9 +2,9 @@
 
 namespace Raychel {
 
-    void Material::setParentRenderer(not_null<RaymarchRenderer*> new_renderer)
+    void Material::setParentRenderer(const RaymarchRenderer& new_renderer)
     {
-            parent_renderer_ = new_renderer;
+        parent_renderer_ = &new_renderer;
     }
 
-}
+} // namespace Raychel

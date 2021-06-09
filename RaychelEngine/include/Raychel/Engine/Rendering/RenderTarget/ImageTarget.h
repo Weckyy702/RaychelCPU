@@ -38,18 +38,17 @@ namespace Raychel {
     *\brief Render target that will output the provided framebuffer(s) as a png image(/sequence)
     *
     */
-    class ImageTargetPng : public RenderTarget {
+    class ImageTargetPng : public RenderTarget
+    {
 
     public:
-
         /**
         *\brief Construct a new Image Target object
         *
         *\param size Nize of the image(s)
         *\param file_name Name of the image(s)
         */
-        ImageTargetPng(const vec2i& size, std::string_view file_name)
-            :RenderTarget{size}, file_name_{file_name}
+        ImageTargetPng(const vec2i& size, std::string_view file_name) : RenderTarget{size}, file_name_{file_name}
         {}
 
         /**
@@ -60,7 +59,7 @@ namespace Raychel {
         *\param padding_width If multiple images are written, pad each file name to file_name('#'*padding_width).png
         */
         ImageTargetPng(const vec2i size, std::string_view file_name, std::uint8_t padding_width)
-            :RenderTarget(size), file_name_{file_name}, padding_width_{padding_width}
+            : RenderTarget(size), file_name_{file_name}, padding_width_{padding_width}
         {}
 
         /**
@@ -71,15 +70,13 @@ namespace Raychel {
         void writeFramebuffer(const Texture<RenderResult>& framebuffer) override;
 
     private:
-
         std::string _getFullFileName() const;
 
         std::string file_name_;
-        size_t file_number=0;
-        const std::uint8_t padding_width_=3;
-
+        size_t file_number = 0;
+        const std::uint8_t padding_width_ = 3;
     };
 
-}
+} // namespace Raychel
 
 #endif //RAYCHEL_IMAGE_TARGET_H

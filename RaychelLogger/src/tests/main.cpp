@@ -2,15 +2,18 @@
 
 using namespace Logger;
 
-struct Streamable {};
+struct Streamable
+{};
 
-std::ostream& operator<<(std::ostream& os, const Streamable&) {
+std::ostream& operator<<(std::ostream& os, const Streamable& /*unused*/)
+{
     return os << "Streamable";
 }
 
-struct NonStreamable {};
+struct NonStreamable
+{};
 
-int main(int,const char**)
+int main(int, const char**)
 {
     setMinimumLogLevel(LogLevel::debug);
 

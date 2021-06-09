@@ -17,8 +17,6 @@ namespace Raychel {
         return normalize(g_right * transform_.rotation);
     }
 
-
-
     void Camera::setRoll(float a) noexcept
     {
         transform_.rotation = Quaternion(forward(), a);
@@ -52,4 +50,4 @@ namespace Raychel {
         return transform_.rotation;
     }
 
-}
+} // namespace Raychel
