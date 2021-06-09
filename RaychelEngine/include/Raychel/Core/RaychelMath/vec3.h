@@ -30,7 +30,7 @@
 
 #include "../utils.h"
 
-//FIXME: make all non-constexpr functions constexpr again once the compiler finds an answer to sqrt(x) at compile time
+//TODO: make all non-constexpr functions constexpr again once the compiler finds an answer to sqrt(x) at compile time
 
 namespace Raychel {
 

@@ -69,14 +69,14 @@ namespace Raychel {
         //Buffer of all UVs for which to raymarch
         std::vector<RaymarchData> requests_;
 
-        //size of this struct should be less than a cache line
+        //size of this struct should be less than a cache line.
         //buffer forward, right and up vectors here
         struct {
             vec3 position, forward, right, up;
             float zoom{0.0};
         } cam_data_;
 
-        //size of this struct should be less than a cache line
+        //size of this struct should be less than a cache line.
         //these values are dependent on RaymarchOptions::_epsilon
         struct {
             size_t max_recursion_depth{5};
