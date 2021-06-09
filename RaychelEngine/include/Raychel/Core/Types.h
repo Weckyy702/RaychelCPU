@@ -86,4 +86,12 @@ namespace Raychel {
     extern const vec3 g_right;
 } // namespace Raychel
 
+//Implementations
+#include "RaychelMath/Impl/QuaternionImpl.inl"
+#include "RaychelMath/Impl/TransformImpl.inl"
+#include "RaychelMath/Impl/colorImpl.inl"
+#include "RaychelMath/Impl/vec2Impl.inl"
+#include "RaychelMath/Impl/vec3Impl.inl"
+
+
 #endif /*!RAYCHEL_TYPES_H*/
