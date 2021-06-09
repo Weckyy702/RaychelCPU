@@ -80,7 +80,7 @@ RAYCHEL_BEGIN_TEST("Floating point equality: very tiny values", "[RaychelMath][F
         a += f;
     }
 
-    constexpr TestType b = f * 10;
+    const TestType b = f * 10;
 
     REQUIRE(equivalent<TestType>(a, 1.234e-6));
     REQUIRE(equivalent<TestType>(b, 1.234e-6));
