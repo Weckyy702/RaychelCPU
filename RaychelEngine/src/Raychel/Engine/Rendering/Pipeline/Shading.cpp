@@ -129,9 +129,9 @@ namespace Raychel {
             actual_uv.y *= aspect_ratio;
         }
 
-        actual_uv += vec2{0.5, 0.5};
+        actual_uv += vec2{0.5f, 0.5f};
 
-        actual_uv.y = 1.0 - actual_uv.y;
+        actual_uv.y = 1.0f - actual_uv.y;
 
         return actual_uv;
     }

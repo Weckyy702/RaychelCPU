@@ -2,15 +2,14 @@
 #include <limits>
 #include <type_traits>
 
-#include "Raychel/Core/RaychelMath/Impl/colorImpl.inl"
 #include "Raychel/Core/RaychelMath/color.h"
-#include "Raychel/Core/utils.h"
+#include "Raychel/Core/RaychelMath/Impl/colorImpl.inl"
 
 //clang-format doesn't like these macros
 // clang-format off
 
 // these are common types for colors
-#define RAYCHEL_TEST_TYPES unsigned char, size_t, float, double
+#define RAYCHEL_TEST_TYPES unsigned char, size_t, float, double, long double
 
 #define RAYCHEL_BEGIN_TEST(name, tag)                                          \
     TEMPLATE_TEST_CASE(name, tag, RAYCHEL_TEST_TYPES)                          \

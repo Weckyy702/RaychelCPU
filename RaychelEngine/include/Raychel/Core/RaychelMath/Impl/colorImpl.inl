@@ -59,9 +59,13 @@ namespace Raychel {
             if constexpr (std::is_integral_v<To>) {
                 constexpr auto max = std::numeric_limits<To>::max();
 
-                return colorImp<To>(c.r * max, c.g * max, c.b * max);
+                return colorImp<To>{
+                    static_cast<To>(c.r* max),
+                    static_cast<To>(c.g* max),
+                    static_cast<To>(c.b* max)};
+            } else {
+                return colorImp<To>(c.r, c.g, c.b);
             }
-            return colorImp<To>(c.r, c.g, c.b);
         }
 
         template <typename T, typename To>
@@ -201,7 +205,7 @@ namespace Raychel {
         using value_type = typename colorImp<T>::value_type;
 
         if constexpr (std::is_floating_point_v<value_type>) {
-            return details::ensureValidColor(colorImp<value_type>(1.0 - c.r, 1.0 - c.g, 1.0 - c.b));
+            return details::ensureValidColor(colorImp<value_type>(1.0f - c.r, 1.0f - c.g, 1.0f - c.b));
         } else {
             constexpr auto max = std::numeric_limits<value_type>::max();
             return details::ensureValidColor(colorImp<value_type>(max - c.r, max - c.g, max - c.b));
@@ -295,7 +299,7 @@ namespace Raychel {
     template <typename T>
     constexpr T brightness(const colorImp<T>& c) noexcept
     {
-        return (c.r + c.g + c.b) / 3.0;
+        return (c.r + c.g + c.b) / T(3.0);
     }
 } // namespace Raychel
 

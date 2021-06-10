@@ -1,16 +1,17 @@
 #include <catch2/catch.hpp>
 #include <cmath>
-#include <cstddef>
 #include <type_traits>
-#include "Raychel/Core/RaychelMath/Impl/vec3Impl.inl"
-#include "Raychel/Core/RaychelMath/constants.h"
-#include "Raychel/Core/RaychelMath/equivalent.h"
+
 #include "Raychel/Core/RaychelMath/vec3.h"
-#include "Raychel/Core/Types.h"
-#include "Raychel/Core/utils.h"
+#include "Raychel/Core/RaychelMath/Impl/vec3Impl.inl"
 
 //clang-format doesn't like these macros
 // clang-format off
+
+#ifdef _MSC_VER
+    #pragma warning( push )
+    #pragma warning (disable : 4244 4305) //MSVC's warnings about narrowing conversion are nice to have, but not this time
+#endif
 
 #define RAYCHEL_VEC3_TEST_TYPES int, size_t, float, double, long double
 #define RAYCHEL_VEC3_FLOATING_TYPES float, double, long double
@@ -86,11 +87,15 @@ RAYCHEL_BEGIN_TEST("Vector subtraction", "[RaychelMath][Vector3]")
     REQUIRE(v.y == 12);
     REQUIRE(v.z == 8);
 
-    const vec3 v2 = -v;
+    if constexpr (std::is_signed_v<TestType>) {
 
-    REQUIRE(v2.x == -7);
-    REQUIRE(v2.y == -12);
-    REQUIRE(v2.z == -8);
+        const vec3 v2 = -v;
+
+        REQUIRE(v2.x == -7);
+        REQUIRE(v2.y == -12);
+        REQUIRE(v2.z == -8);
+
+    }
 
 RAYCHEL_END_TEST
 
@@ -332,12 +337,10 @@ TEMPLATE_TEST_CASE("Vector normalization", "[RaychelMath][Vector3]", RAYCHEL_VEC
     using namespace Raychel;
     using vec3 = vec3Imp<TestType>;
 
-    const TestType inv_sqrt_2 = 1.0L / std::sqrt(2.0L);
+    const TestType inv_sqrt_2 = 1.0 / std::sqrt(2.0);
 
     {
         const vec3 v = normalize(vec3{1, 0, 1});
-
-        //____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____F_U_N_C____33<long double>
 
         REQUIRE(equivalent<TestType>(v.x, inv_sqrt_2));
         REQUIRE(equivalent<TestType>(v.y, 0));
@@ -413,14 +416,14 @@ TEMPLATE_TEST_CASE("Vector sin/cos", "[RaychelMath][Vector3]", RAYCHEL_VEC3_FLOA
 
     REQUIRE(equivalent<TestType>(res_sin.x, 0));
     REQUIRE(equivalent<TestType>(res_sin.y, 1));
-    REQUIRE(equivalent<TestType>(res_sin.z, std::sin(-1.0L)));
+    REQUIRE(equivalent<TestType>(res_sin.z, std::sin(-1.0)));
 
 
     const vec3 res_cos = cos(v);
 
     REQUIRE(res_cos.x == 1);
     REQUIRE(equivalent(res_cos.y, std::cos(halfPi<TestType>)));
-    REQUIRE(equivalent<TestType>(res_cos.z, std::cos(-1.0L)));
+    REQUIRE(equivalent<TestType>(res_cos.z, std::cos(-1.0)));
 
 }
 
@@ -460,7 +463,7 @@ RAYCHEL_BEGIN_TEST("Vector distance", "[RaychelMath][Vector3]")
 
         const auto d = dist(a, b);
 
-        REQUIRE(equivalent<TestType>(d, std::sqrt(229.0L)));
+        REQUIRE(equivalent<TestType>(d, std::sqrt(TestType(229))));
     }
 
 RAYCHEL_END_TEST
@@ -606,7 +609,7 @@ TEMPLATE_TEST_CASE("Vector rotation: x", "[RaychelMath][Vector3]", RAYCHEL_VEC3_
 
 
     const vec3 v3{12, 7, 9};
-    const TestType theta = 1.2L;
+    const TestType theta = 1.2;
     const vec3 r_pos = rotateX(v3, theta);
     const vec3 r_neg = rotateX(v3, theta - 10*pi<TestType>);
 
@@ -636,7 +639,7 @@ TEMPLATE_TEST_CASE("Vector rotation: y", "[RaychelMath][Vector3]", RAYCHEL_VEC3_
 
 
     const vec3 v3{12, 7, 9};
-    const TestType theta = 1.2L;
+    const TestType theta = 1.2;
     const vec3 r_pos = rotateY(v3, theta);
     const vec3 r_neg = rotateY(v3, theta - 10*pi<TestType>);
 
@@ -665,17 +668,21 @@ TEMPLATE_TEST_CASE("Vector rotation: z", "[RaychelMath][Vector3]", RAYCHEL_VEC3_
     REQUIRE(equivalent<TestType>(r.y, 4));
     REQUIRE(equivalent<TestType>(r.z, 2));
 
-    Logger::log(__FUNCTION__, '\n');
+    
 
 
     const vec3 v3{12, 7, 9};
-    const TestType theta = 1.2L;
+    const TestType theta = 1.2;
     const vec3 r_pos = rotateZ(v3, theta);
     const vec3 r_neg = rotateZ(v3, theta - 10*pi<TestType>);
 
-    Logger::log(r_pos.x, " == ", r_neg.x, equivalent(r_pos.x, r_neg.x), "?\n");
+    
 
     REQUIRE(equivalent<TestType>(r_pos.x, r_neg.x));
     REQUIRE(equivalent<TestType>(r_pos.y, r_neg.y));
     REQUIRE(equivalent<TestType>(r_pos.z, r_neg.z));
 }
+
+#ifdef _MSC_VER
+    #pragma warning ( pop )
+#endif

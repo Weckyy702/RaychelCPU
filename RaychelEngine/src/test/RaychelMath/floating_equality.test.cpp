@@ -1,14 +1,16 @@
 #include <catch2/catch.hpp>
 #include <cmath>
-#include <iomanip>
-#include <iostream>
 #include <limits>
 
-#include "Logger.h"
 #include "Raychel/Core/RaychelMath/equivalent.h"
 
 //clang-format doesn't like these macros
 // clang-format off
+
+#ifdef _MSC_VER
+    #pragma warning( push )
+    #pragma warning (disable : 4305) //MSVC's warnings about narrowing conversion are nice to have, but not this time
+#endif
 
 #define RAYCHEL_BEGIN_TEST(test_name, test_tag) TEMPLATE_TEST_CASE(test_name, test_tag, float, double, long double) \
 {   \
@@ -26,19 +28,11 @@ RAYCHEL_BEGIN_TEST("Floating point equality: 'normal' values", "[RaychelMath][Fl
         a += f;
     }
 
-    Logger::log(__FUNCTION__, '\n');
-
     TestType b = f * 10;
 
-    std::cout << std::setprecision(100) 
-    << a << '\n'
-    << b << '\n'
-    << 10*f << '\n'
-    << TestType(1.0) << '\n';
-
-    REQUIRE(equivalent<TestType>(a, 1.0L));
-    REQUIRE(equivalent<TestType>(b, 1.0L));
-    REQUIRE(equivalent<TestType>(10*f, 1.0L));
+    REQUIRE(equivalent<TestType>(a, 1.0));
+    REQUIRE(equivalent<TestType>(b, 1.0));
+    REQUIRE(equivalent<TestType>(10*f, 1.0));
     REQUIRE(equivalent(a, b)); //this is technically wrong, but if equivalency is arithmetic, so a = c  b = c => a = b
 
     f = 100;
@@ -50,12 +44,12 @@ RAYCHEL_BEGIN_TEST("Floating point equality: 'normal' values", "[RaychelMath][Fl
 
     b = f * 10;
 
-    REQUIRE(equivalent<TestType>(a, 1000));
-    REQUIRE(equivalent<TestType>(b, 1000));
+    REQUIRE(equivalent<TestType>(a, 1000.0));
+    REQUIRE(equivalent<TestType>(b, 1000.0));
 
     REQUIRE(equivalent<TestType>(a, b));
 
-RAYCHEL_END_TEST
+RAYCHEL_END_TEST;
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
 RAYCHEL_BEGIN_TEST("Floating point equality: very huge values", "[RaychelMath][Float]")
@@ -69,17 +63,9 @@ RAYCHEL_BEGIN_TEST("Floating point equality: very huge values", "[RaychelMath][F
 
     const TestType b = f * 10;
 
-    std::cout << std::setprecision(100) 
-    << a << '\n'
-    << b << '\n'
-    << 10*f << '\n'
-    << TestType(1.234e36L) << '\n';
-
-    Logger::log(__FUNCTION__, '\n');
-
-    REQUIRE(equivalent<TestType>(a, 1.234e36L));
-    REQUIRE(equivalent<TestType>(b, 1.234e36L));
-    REQUIRE(equivalent<TestType>(10*f, 1.234e36L));
+    REQUIRE(equivalent<TestType>(a, 1.234e36));
+    REQUIRE(equivalent<TestType>(b, 1.234e36));
+    REQUIRE(equivalent<TestType>(10*f, 1.234e36));
     REQUIRE(equivalent(a, b)); //this is technically wrong, but if equivalency is arithmetic, so a = c  b = c => a = b
 
 RAYCHEL_END_TEST
@@ -94,9 +80,7 @@ RAYCHEL_BEGIN_TEST("Floating point equality: very tiny values", "[RaychelMath][F
         a += f;
     }
 
-    Logger::log(__FUNCTION__, '\n');
-
-    const TestType b = f * 10;
+    constexpr TestType b = f * 10;
 
     REQUIRE(equivalent<TestType>(a, 1.234e-6));
     REQUIRE(equivalent<TestType>(b, 1.234e-6));
@@ -106,7 +90,7 @@ RAYCHEL_BEGIN_TEST("Floating point equality: very tiny values", "[RaychelMath][F
     REQUIRE(equivalent<TestType>(1e-30, 0.0));
     REQUIRE(equivalent<TestType>(1e-30, -0.0));
     REQUIRE(equivalent<TestType>(-1e-30, 0.0));
-    REQUIRE(equivalent<TestType>(-1e-30, -0.0L));
+    REQUIRE(equivalent<TestType>(-1e-30, -0.0));
 
 RAYCHEL_END_TEST
 
@@ -149,19 +133,27 @@ RAYCHEL_BEGIN_TEST("Floating point equality: infinities", "[RaychelMath][Float]"
 
     REQUIRE(equivalent<TestType>(infinity, infinity));
 
-    REQUIRE(equivalent<TestType>(infinity, 1 / TestType(0)));
-    REQUIRE(equivalent<TestType>(neg_infinity, 1 / TestType(-0.0)));
+    //IEEE 754 defines log(0) = -inf and log(inf) = inf
+    if constexpr(std::numeric_limits<TestType>::is_iec559) {
+        REQUIRE(equivalent<TestType>(std::log(TestType(0)), neg_infinity));
+        REQUIRE(equivalent<TestType>(std::log(infinity), infinity));
 
-    REQUIRE(equivalent<TestType>(std::log(TestType(0)), neg_infinity));
+    }
 
 RAYCHEL_END_TEST
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
 RAYCHEL_BEGIN_TEST("Floating point equality: NaN", "[RaychelMath][Float]")
 
+    //NaNs are not equivalent to anything, not even themselves
+
     REQUIRE(!equivalent<TestType>(std::numeric_limits<TestType>::quiet_NaN(), 0));
-    REQUIRE(!equivalent<TestType>(std::numeric_limits<TestType>::quiet_NaN(), std::numeric_limits<TestType>::quiet_NaN())); //NaN != NaN, yes this is right
+    REQUIRE(!equivalent<TestType>(std::numeric_limits<TestType>::quiet_NaN(), std::numeric_limits<TestType>::quiet_NaN()));
     REQUIRE(!equivalent<TestType>(std::numeric_limits<TestType>::quiet_NaN(), std::numeric_limits<TestType>::infinity()));
     REQUIRE(!equivalent<TestType>(std::numeric_limits<TestType>::quiet_NaN(), std::numeric_limits<TestType>::signaling_NaN()));
 
 RAYCHEL_END_TEST
+
+#ifdef _MSC_VER
+    #pragma warning ( pop )
+#endif
