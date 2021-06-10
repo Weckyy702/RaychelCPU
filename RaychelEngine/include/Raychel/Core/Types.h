@@ -93,5 +93,4 @@ namespace Raychel {
 #include "RaychelMath/Impl/vec2Impl.inl"
 #include "RaychelMath/Impl/vec3Impl.inl"
 
-
 #endif /*!RAYCHEL_TYPES_H*/

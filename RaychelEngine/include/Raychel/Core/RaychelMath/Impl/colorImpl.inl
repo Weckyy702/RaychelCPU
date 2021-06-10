@@ -59,10 +59,7 @@ namespace Raychel {
             if constexpr (std::is_integral_v<To>) {
                 constexpr auto max = std::numeric_limits<To>::max();
 
-                return colorImp<To>{
-                    static_cast<To>(c.r* max),
-                    static_cast<To>(c.g* max),
-                    static_cast<To>(c.b* max)};
+                return colorImp<To>{static_cast<To>(c.r * max), static_cast<To>(c.g * max), static_cast<To>(c.b * max)};
             } else {
                 return colorImp<To>(c.r, c.g, c.b);
             }

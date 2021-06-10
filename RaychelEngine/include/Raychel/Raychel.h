@@ -29,6 +29,5 @@
 #define RAYCHEL_MAIN_H
 
 #include "CMakeSettings.h"
-#include "Raychel/Core/utils.h"
 
 #endif //!RAYCHEL_MAIN_H

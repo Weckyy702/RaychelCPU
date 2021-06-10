@@ -54,16 +54,16 @@ namespace Raychel {
     public:
         TransformImp() = default;
 
-        TransformImp(const vec3& pos) : position{pos}, rotation{}
+        explicit TransformImp(const vec3& pos) : position{pos}, rotation{}
         {}
 
-        TransformImp(const Quaternion& rot) : position{}, rotation{rot}
+        explicit TransformImp(const Quaternion& rot) : position{}, rotation{rot}
         {}
 
         TransformImp(const vec3& pos, const Quaternion& rot) : position{pos}, rotation(rot)
         {}
 
-        vec3 apply(const vec3&) const;
+        [[nodiscard]] vec3 apply(const vec3&) const noexcept;
 
         /**
         *\brief Convert the transform to another transform of type To

@@ -35,13 +35,11 @@
 namespace Raychel {
 
     template <typename T>
-    constexpr vec3Imp<T>::vec3Imp(const vec2& v) noexcept
-        : x(v.x), y(v.y), z(0)
+    constexpr vec3Imp<T>::vec3Imp(const vec2& v) noexcept : x(v.x), y(v.y), z(0)
     {}
 
     template <typename T>
-    constexpr vec3Imp<T>::vec3Imp(const color& c) noexcept
-        : x(c.r), y(c.g), z(c.b)
+    constexpr vec3Imp<T>::vec3Imp(const color& c) noexcept : x(c.r), y(c.g), z(c.b)
     {}
 
     template <typename T>
