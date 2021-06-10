@@ -40,7 +40,7 @@ namespace Raychel {
         template <typename T, std::size_t fac>
         struct _epsilon_helper_base
         {
-            static_assert(std::is_floating_point_v<T>);
+            static_assert(std::is_floating_point_v<T>, "Raychel::details::_epsilon_helper_base: Bad typename argument!");
             static constexpr T value = fac * std::numeric_limits<T>::epsilon();
         };
 
@@ -52,6 +52,9 @@ namespace Raychel {
         template <typename T>
         struct epsilon_helper
         {};
+
+        //the following values have been chosen pretty much at random and then adjusted until all the tests pass.
+        //(floating-point) math is hard
 
         template <>
         struct epsilon_helper<float> : _epsilon_helper_base<float, 50>
@@ -65,6 +68,8 @@ namespace Raychel {
         struct epsilon_helper<long double> : _epsilon_helper_base<long double, 80'000> //why has this value got to be so large?
         {};
     } // namespace details
+
+
 
     template <typename _float>
     [[nodiscard]] constexpr bool equivalent(_float a, _float b) noexcept
@@ -80,7 +85,7 @@ namespace Raychel {
         if (std::abs(a - b) < epsilon)
             return true;
 
-        //Use a relative margin for larger numbers and NaNs
+        //use a relative margin for larger numbers and NaNs
         const auto diff = std::abs(a - b);
         const auto largest = std::max(std::abs(a), std::abs(b));
 
