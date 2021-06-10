@@ -84,7 +84,6 @@ namespace Raychel {
         constexpr vec3Imp& operator/=(const vec3Imp&) noexcept;
         constexpr vec3Imp& operator%=(const vec3Imp&) noexcept;
 
-        //NOLINTNEXTLINE(misc-non-private-member-variables-in-classes): because of our private statc_assert, this has just become a class
         value_type x{0}, y{0}, z{0};
     };
 

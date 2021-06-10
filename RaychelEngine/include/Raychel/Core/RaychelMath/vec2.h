@@ -85,7 +85,7 @@ namespace Raychel {
         vec2Imp& operator/=(const vec2Imp&);
         vec2Imp& operator%=(const vec2Imp&);
 
-        value_type x{0}, y{0}; //NOLINT: because of our private static_assert this just became a class
+        value_type x{0}, y{0};
     };
 
     template <typename T>

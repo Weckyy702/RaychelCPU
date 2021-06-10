@@ -105,7 +105,7 @@ namespace Raychel {
         QuaternionImp& operator*=(const QuaternionImp&);
         QuaternionImp& operator/=(value_type);
 
-        value_type r{0}, i{0}, j{0}, k{0}; //NOLINT: because of our private static_assert this just became a class
+        value_type r{0}, i{0}, j{0}, k{0};
     };
 
     template <typename T>
