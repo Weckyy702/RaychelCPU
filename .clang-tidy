@@ -1,0 +1,17 @@
+Checks: "*,
+        -android-*,
+        -boost-*,
+        -google-*,
+        -llvmlibc-*, 
+        fuchsia-*,
+        -*-braces-around-statements,
+        -modernize-use-trailing-return-type,
+        -misc-unused-using-decls,
+        -*-magic-numbers
+        -altera-struct-pack-align"
+
+WarningsAsErrors: "*"
+
+CheckOptions:
+  - key:             misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic
+    value:           '1'
