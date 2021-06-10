@@ -28,7 +28,6 @@
 #ifndef RAYCHEL_CORE_H
 #define RAYCHEL_CORE_H
 
-#include <bits/c++config.h>
 #include <cstdint>
 #include <limits>
 #if !((defined(__cplusplus) && __cplusplus >= 201703L) || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L))
