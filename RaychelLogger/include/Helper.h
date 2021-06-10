@@ -63,7 +63,7 @@ namespace Logger {
 #elif defined(_MSC_VER)
 			name = __FUNCSIG__;
 			prefix = "class std::basic_string_view<char,struct std::char_traits<char> > __cdecl Logger::details::type_name<";
-			suffix = ">(void)";
+			suffix = ">(void) noexcept";
 #endif
 			name.remove_prefix(prefix.size());
 			name.remove_suffix(suffix.size());
