@@ -68,7 +68,7 @@ namespace Logger {
             return interpreter.str();
         }
 
-        template <typename T, typename = std::enable_if_t<!std::is_same_v<T, const char*>>>
+        template <typename T, typename = std::enable_if_t<!std::is_same_v<T, const char>>>
         [[nodiscard]] std::string getRepStreamable(T* obj) noexcept
         {
             std::ostringstream interpreter;
@@ -79,8 +79,14 @@ namespace Logger {
         }
 
         //overload getRepStreamable so C-style strings don't get logged as pointers
-        template <typename = void>
-        [[nodiscard]] std::string getRepStreamable(const char* obj) noexcept
+        template <>
+        [[nodiscard]] inline std::string getRepStreamable<const char, void>(const char* obj) noexcept
+        {
+            return {obj};
+        }
+
+        template <>
+        [[nodiscard]] inline std::string getRepStreamable<char, void>(char* obj) noexcept
         {
             return {obj};
         }
