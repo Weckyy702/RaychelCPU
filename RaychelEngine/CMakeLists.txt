@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(RaychelCPU_test VERSION 0.0.1)
+project(RaychelCPU_test LANGUAGES CXX VERSION 0.0.1)
 
 include(FindRequiredLibraries.cmake)
 

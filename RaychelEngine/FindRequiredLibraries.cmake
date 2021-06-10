@@ -38,6 +38,7 @@ if(NOT LIB_PNG)
 
     include_directories(SYSTEM "${libpng_SOURCE_DIR}")
 
+    set(PNG_TESTS OFF) #we don't want libpng to make our tests noisy
     file(READ  "${libpng_SOURCE_DIR}/scripts/pnglibconf.h.prebuilt" PNGLIBCONF_H_CONTENT)
     file(WRITE "${libpng_SOURCE_DIR}/pnglibconf.h" ${PNGLIBCONF_H_CONTENT})
 
@@ -65,6 +66,28 @@ if(NOT PNGPP_MAIN_INCLUDE)
 endif()
 
 
+#Catch2 is only required if we build the unit tests
+if(${RAYCHEL_DO_TESTING})
+
+    find_package(Catch2 QUIET)
+
+    if(NOT Catch2_FOUND)
+
+        message(STATUS "Could not find a local installation of Catch2, downloading one off github...")
+
+        FetchContent_Declare(CATCH_2
+            GIT_REPOSITORY "https://github.com/catchorg/Catch2"
+            GIT_TAG "v2.13.6"
+        )
+
+        FetchContent_MakeAvailable(CATCH_2)
+
+        set(CATCH_2_EXTERNAL true)
+        set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${Catch2_SOURCE_DIR}/contrib)
+
+    endif()
+
+endif()
 
 find_library(LIB_NCURSES ncurses curses)
 
