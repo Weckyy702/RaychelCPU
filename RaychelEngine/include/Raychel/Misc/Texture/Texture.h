@@ -93,6 +93,18 @@ namespace Raychel
 
     private:
 
+        value_type& read(size_t idx) 
+        {
+            RAYCHEL_ASSERT(idx < pixel_buffer_.size());
+            return pixel_buffer_.at(idx);
+        }
+
+        const value_type& read(size_t idx) const
+        {
+            RAYCHEL_ASSERT(idx < pixel_buffer_.size());
+            return pixel_buffer_.at(idx);
+        }
+
         size_t vecToIndex(const vec2i& _uv) const noexcept {
             const vec2i uv = min(max(_uv, vec2i{0, 0}), size_); //clamp the vector
             return (uv.y * size_.x) + uv.x;
@@ -110,25 +122,25 @@ namespace Raychel
     template<typename T>
     auto Texture<T>::at(const vec2i& _uv) -> value_type&
     {
-        return pixel_buffer_.at(vecToIndex(_uv));
+        return read(vecToIndex(_uv));
     }
 
     template<typename T>
     auto Texture<T>::at(const vec2& _uv) -> value_type&
     {
-        return pixel_buffer_.at(vecToIndex(_uv));
+        return read(vecToIndex(_uv));
     }
 
     template<typename T>
     auto Texture<T>::at(const vec2i& _uv) const -> const value_type&
     {
-        return pixel_buffer_.at(vecToIndex(_uv));
+        return read(vecToIndex(_uv));
     }
 
     template<typename T>
     auto Texture<T>::at(const vec2& _uv) const -> const value_type&
     {
-        return pixel_buffer_.at(vecToIndex(_uv));
+        return read(vecToIndex(_uv));
     }
 
 }
