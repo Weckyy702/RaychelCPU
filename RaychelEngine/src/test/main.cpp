@@ -14,11 +14,11 @@
 
 using namespace Raychel;
 
-int main(int /*unused*/, char** /*unused*/)
+int main(int /*unused*/, char** argv)
 {
-    Logger::setMinimumLogLevel(Logger::LogLevel::log);
+    Logger::setMinimumLogLevel(Logger::LogLevel::debug);
 
-    Logger::log("Welcome to Raychel Version ", RAYCHEL_VERSION_TAG, '\n');
+    Logger::log("Welcome to Raychel Version ", RAYCHEL_VERSION_TAG, " at ", argv[0], '\n');
 
     Scene scene;
 
