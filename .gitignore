@@ -17,6 +17,7 @@ Makefile
 compile_commands.json
 .clang-tidy
 apply_clang-tidy.sh
+*.fix
 
 #log files
 *.log
