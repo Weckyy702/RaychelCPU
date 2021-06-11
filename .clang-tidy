@@ -1,16 +1,27 @@
-Checks: "*,
-        -android-*,
-        -boost-*,
-        -google-*,
-        -llvmlibc-*, 
-        fuchsia-*,
-        -*-braces-around-statements,
-        -modernize-use-trailing-return-type,
-        -misc-unused-using-decls,
-        -*-magic-numbers
-        -altera-struct-pack-align"
-
-WarningsAsErrors: "*"
+Checks: " clang*,
+          bugprone-*,
+          concurrency-mt-unsafe,
+          cppcoreguidelines-*,
+          -cppcoreguidelines-avoid-magic-numbers,
+          google-build-explicit-make-pair,
+          google-build-namespaces,
+          google-build-using-namespace,
+          google-default-arguments,
+          google-explicit-constructor,
+          google-global-names-in-headers,
+          hicpp-*,
+          llvm-else-after-return,
+          llvm-include-order,
+          llvm-namespace-comment,
+          llvm-qualified-auto,
+          misc-*,
+          modernize-*,
+          -modernize-use-trailing-return-type,
+          mpi-type-mismatch,
+          performance-*,
+          readability-*,
+          -readability-magic-numbers
+"
 
 CheckOptions:
   - key:             misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic
