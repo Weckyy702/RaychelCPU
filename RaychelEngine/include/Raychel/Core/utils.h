@@ -91,6 +91,45 @@
 
 #define RAYCHEL_ASSERT_NORMALIZED(vec) RAYCHEL_ASSERT(equivalent(magSq(vec), 1.0f));
 
+#define RAYCHEL_DELETE_COPY_CTOR(type_name) type_name(const type_name&) = delete;
+
+#define RAYCHEL_DELETE_COPY_OP(type_name) type_name& operator=(const type_name&) = delete;
+
+//NOLINTNEXTLINE: the type name must not be enclosed in parantheses
+#define RAYCHEL_DELETE_MOVE_CTOR(type_name) type_name(type_name&&) = delete;
+
+//NOLINTNEXTLINE: the type name must not be enclosed in parantheses
+#define RAYCHEL_DELETE_MOVE_OP(type_name) type_name& operator=(type_name&&) = delete;
+
+#define RAYCHEL_MAKE_NONCOPY(type_name)                                                                                          \
+    RAYCHEL_DELETE_COPY_CTOR(type_name)                                                                                          \
+    RAYCHEL_DELETE_COPY_OP(type_name)
+
+#define RAYCHEL_MAKE_NONMOVE(type_name)                                                                                          \
+    RAYCHEL_DELETE_MOVE_CTOR(type_name)                                                                                          \
+    RAYCHEL_DELETE_MOVE_OP(type_name)
+
+#define RAYCHEL_MAKE_NONCOPY_NONMOVE(type_name)                                                                                  \
+    RAYCHEL_MAKE_NONCOPY(type_name)                                                                                              \
+    RAYCHEL_MAKE_NONMOVE(type_name)
+
+#define RAYCHEL_DEFAULT_COPY_CTOR(type_name) type_name(const type_name&) = default;
+
+#define RAYCHEL_DEFAULT_COPY_OP(type_name) type_name& operator=(const type_name&) = default;
+
+//NOLINTNEXTLINE: the type name must not be enclosed in parantheses
+#define RAYCHEL_DEFAULT_MOVE_CTOR(type_name) type_name(type_name&&) = default;
+
+//NOLINTNEXTLINE: the type name must not be enclosed in parantheses
+#define RAYCHEL_DEFAULT_MOVE_OP(type_name) type_name& operator=(type_name&&) = default;
+
+#define RAYCHEL_MAKE_DEFAULT_COPY(type_name)                                                                                     \
+    RAYCHEL_DEFAULT_COPY_CTOR(type_name)                                                                                         \
+    RAYCHEL_DEFAULT_COPY_OP(type_name)
+
+#define RAYCHEL_MAKE_DEFAULT_MOVE(type_name)                                                                                     \
+    RAYCHEL_DEFAULT_MOVE_CTOR(type_name)                                                                                         \
+    RAYCHEL_DEFAULT_MOVE_OP(type_name)
 namespace Raychel {
 
     using gsl::byte, gsl::not_null;

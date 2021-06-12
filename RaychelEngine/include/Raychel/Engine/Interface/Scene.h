@@ -45,10 +45,8 @@ namespace Raychel {
     public:
         Scene() = default;
 
-        Scene(const Scene&) = delete;
-        Scene& operator=(const Scene&) = delete;
-        Scene(Scene&&) = default;
-        Scene& operator=(Scene&&) = default;
+        RAYCHEL_MAKE_NONCOPY(Scene);
+        RAYCHEL_MAKE_DEFAULT_MOVE(Scene);
 
         template <typename T, typename... Args>
         void addObject(Args&&... args)

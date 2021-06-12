@@ -46,10 +46,7 @@ namespace Raychel {
         virtual void initializeTextureProviders(const vec3& parent_position, const vec3& parent_size) = 0;
 
     public:
-        IMaterial(const IMaterial&) = delete;
-        IMaterial& operator=(const IMaterial&) = delete;
-        IMaterial(IMaterial&&) = delete;
-        IMaterial& operator=(IMaterial&&) = delete;
+        RAYCHEL_MAKE_NONCOPY_NONMOVE(IMaterial);
 
         /**
         *\brief Get the surface color of the Material with the parameters given in data

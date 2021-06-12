@@ -48,6 +48,8 @@ namespace Raychel {
         DiffuseMaterial(DiffuseMaterial&& rhs) noexcept : albedo_{std::move(rhs.albedo_)}
         {}
 
+        RAYCHEL_MAKE_NONCOPY(DiffuseMaterial);
+        RAYCHEL_DELETE_MOVE_OP(DiffuseMaterial);
         void initializeTextureProviders(const vec3& parent_position, const vec3& parent_bounding_box) override;
 
         color getSurfaceColor(const ShadingData& data) const override;

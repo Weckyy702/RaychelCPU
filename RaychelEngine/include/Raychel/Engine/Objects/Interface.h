@@ -10,6 +10,7 @@ namespace Raychel {
     //Interface for Raymarchable Objects
     struct IRaymarchable
     {
+        RAYCHEL_MAKE_NONCOPY_NONMOVE(IRaymarchable);
     protected:
         IRaymarchable() = default;
 
@@ -40,7 +41,7 @@ namespace Raychel {
         SdObject& operator=(SdObject&&) = delete;
 
     public:
-        vec3 getDirectionToObject(const vec3& p) const override;
+        RAYCHEL_MAKE_NONCOPY_NONMOVE(SdObject);
 
         color getSurfaceColor(const ShadingData& data) const override;
 
@@ -74,10 +75,8 @@ namespace Raychel {
 
     class SdLamp : public IRaymarchable
     {
-        SdLamp(const SdLamp&) = delete;
-        SdLamp& operator=(const SdLamp&) = delete;
-        SdLamp(SdLamp&&) = delete;
-        SdLamp& operator=(SdLamp&&) = delete;
+    public:
+        RAYCHEL_MAKE_NONCOPY_NONMOVE(SdLamp);
 
     protected:
         SdLamp(const LampData& _data) : color_{_data.c}, brightness_{_data.b}, size_{_data.sz}

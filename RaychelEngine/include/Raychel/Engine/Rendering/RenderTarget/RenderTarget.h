@@ -41,6 +41,9 @@ namespace Raychel {
     class RenderTarget
     {
 
+    public:
+        RAYCHEL_MAKE_NONCOPY_NONMOVE(RenderTarget);
+
     protected:
         RenderTarget(const vec2i& size) : output_size_{size}
         {}
