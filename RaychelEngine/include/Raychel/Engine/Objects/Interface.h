@@ -11,13 +11,9 @@ namespace Raychel {
     struct IRaymarchable
     {
         RAYCHEL_MAKE_NONCOPY_NONMOVE(IRaymarchable);
+
     protected:
         IRaymarchable() = default;
-
-        IRaymarchable(const IRaymarchable&) = delete;
-        IRaymarchable(IRaymarchable&&) = delete;
-        IRaymarchable& operator=(const IRaymarchable&) = delete;
-        IRaymarchable& operator=(IRaymarchable&&) = delete;
 
     public:
         virtual float eval(const vec3&) const = 0;
@@ -34,18 +30,14 @@ namespace Raychel {
     //Base class for Objects
     class SdObject : public IRaymarchable
     {
-
-        SdObject(const SdObject&) = delete;
-        SdObject& operator=(const SdObject&) = delete;
-        SdObject(SdObject&&) = delete;
-        SdObject& operator=(SdObject&&) = delete;
-
     public:
         RAYCHEL_MAKE_NONCOPY_NONMOVE(SdObject);
 
         color getSurfaceColor(const ShadingData& data) const override;
 
         void onRendererAttached(const RaymarchRenderer& new_renderer) override;
+
+        vec3 getDirectionToObject(const vec3& p) const override;
 
         virtual ~SdObject() = default;
 

@@ -37,13 +37,17 @@ namespace Raychel {
     {
 
     public:
+        AsciiTarget(const vec2i& size, bool use_color);
+
+        AsciiTarget(const vec2i& size, bool use_color, const std::vector<char>& char_set);
+
         RAYCHEL_MAKE_NONCOPY_NONMOVE(AsciiTarget);
 
         void writeFramebuffer(const Texture<RenderResult>& framebuffer) override;
 
         void finishFramebufferWrite() override;
 
-        ~AsciiTarget() override = default;
+        ~AsciiTarget() override;
 
     private:
         void _init_ncurses() const;
