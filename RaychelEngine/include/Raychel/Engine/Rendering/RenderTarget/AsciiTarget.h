@@ -58,9 +58,14 @@ namespace Raychel {
     {
 
     public:
-        AsciiTarget(const vec2i& size, bool use_color);
+        AsciiTarget(const vec2i& size, bool use_color)
+            :RenderTarget{size}, use_color_{use_color}, manager_{this}
+        {}
 
-        AsciiTarget(const vec2i& size, bool use_color, const std::vector<char>& char_set);
+        AsciiTarget(const vec2i& size, bool use_color, const std::vector<char>& char_set)
+            :RenderTarget{size}, use_color_{use_color}, character_set_{char_set}, manager_{this}
+        {}
+        
         RAYCHEL_MAKE_NONCOPY_NONMOVE(AsciiTarget);
 
         void writeFramebuffer(const Texture<RenderResult>& framebuffer) override;
