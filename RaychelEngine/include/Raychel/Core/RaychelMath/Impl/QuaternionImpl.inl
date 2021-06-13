@@ -93,7 +93,10 @@ namespace Raychel {
     template <typename T>
     QuaternionImp<T>& QuaternionImp<T>::operator*=(const QuaternionImp<T>& q)
     {
-        value_type _r = r, _i = i, _j = j, _k = k;
+        value_type _r = r;
+        value_type _i = i;
+        value_type _j = j;
+        value_type _k = k;
 
         r = _r * q.r - _i * q.i - _j * q.j - _k * q.k;
         i = _r * q.i + _i * q.r + _j * q.k - _k * q.j;

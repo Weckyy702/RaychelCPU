@@ -70,7 +70,7 @@ namespace Raychel {
         void writeFramebuffer(const Texture<RenderResult>& framebuffer) override;
 
     private:
-        std::string _getFullFileName() const;
+        [[nodiscard]] std::string _getFullFileName() const;
 
         std::string file_name_;
         size_t file_number = 0;

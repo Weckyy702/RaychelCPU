@@ -54,7 +54,7 @@ namespace Raychel {
         *\param data parameters for the Materials surface color equation
         *\return color 
         */
-        virtual color getSurfaceColor(const ShadingData& data) const = 0;
+        [[nodiscard]] virtual color getSurfaceColor(const ShadingData& data) const = 0;
 
         /**
         *\brief Set the parent Renderer used for rendering callbacks
@@ -79,14 +79,14 @@ namespace Raychel {
     protected:
         Material() = default;
 
-        RaymarchRenderer const* parent_renderer() const noexcept
+        [[nodiscard]] const RaymarchRenderer* parent_renderer() const noexcept
         {
             return parent_renderer_;
         }
 
     private:
         //Reference to renderer that renders this materials scene
-        RaymarchRenderer const* parent_renderer_ = nullptr;
+        const RaymarchRenderer* parent_renderer_ = nullptr;
     };
 
 } // namespace Raychel

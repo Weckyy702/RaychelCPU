@@ -76,12 +76,14 @@ namespace Raychel {
         constexpr _float epsilon = details::epsilon_helper<_float>::value;
 
         //handle signed zeroes and obviously correct cases such as infinity == infinity
-        if (a == b)
+        if (a == b) {
             return true;
+        }
 
         //use a constant margin for small numbers
-        if (std::abs(a - b) < epsilon)
+        if (std::abs(a - b) < epsilon) {
             return true;
+        }
 
         //use a relative margin for larger numbers and NaNs
         const auto diff = std::abs(a - b);

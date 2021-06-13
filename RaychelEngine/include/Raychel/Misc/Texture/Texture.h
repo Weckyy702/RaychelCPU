@@ -63,57 +63,57 @@ namespace Raychel {
         *
         *\return value_type& 
         */
-        value_type& at(const vec2i&);
-        value_type& at(const vec2&);
+        value_type& at(const vec2i& /*_uv*/);
+        value_type& at(const vec2& /*_uv*/);
 
-        const value_type& at(const vec2i&) const;
-        const value_type& at(const vec2&) const;
+        const value_type& at(const vec2i& /*_uv*/) const;
+        const value_type& at(const vec2& /*_uv*/) const;
 
-        vec2i size() const
+        [[nodiscard]] vec2i size() const
         {
             return size_;
         }
 
-        iterator_ begin()
+        [[nodiscard]] iterator_ begin() noexcept
         {
             return pixel_buffer_.begin();
         }
 
-        iterator_ end()
+        [[nodiscard]] iterator_ end() noexcept
         {
             return pixel_buffer_.end();
         }
 
-        const_iterator_ begin() const
+        [[nodiscard]] const_iterator_ begin() const noexcept
         {
             return pixel_buffer_.cbegin();
         }
 
-        const_iterator_ end() const
+        [[nodiscard]] const_iterator_ end() const noexcept
         {
             return pixel_buffer_.cend();
         }
 
     private:
-        value_type& read(size_t idx)
+        [[nodiscard]] value_type& read(size_t idx)
         {
             RAYCHEL_ASSERT(idx < pixel_buffer_.size());
             return pixel_buffer_.at(idx);
         }
 
-        const value_type& read(size_t idx) const
+        [[nodiscard]] const value_type& read(size_t idx) const
         {
             RAYCHEL_ASSERT(idx < pixel_buffer_.size());
             return pixel_buffer_.at(idx);
         }
 
-        size_t vecToIndex(const vec2i& _uv) const noexcept
+        [[nodiscard]] size_t vecToIndex(const vec2i& _uv) const noexcept
         {
             const vec2i uv = min(max(_uv, vec2i{0, 0}), size_); //clamp the vector
             return (uv.y * size_.x) + uv.x;
         }
 
-        size_t vecToIndex(const vec2& _uv) const noexcept
+        [[nodiscard]] size_t vecToIndex(const vec2& _uv) const noexcept
         {
             const vec2 pixel_uv = _uv * (size_.to<number_t>());
             return vecToIndex(pixel_uv.to<size_t>());

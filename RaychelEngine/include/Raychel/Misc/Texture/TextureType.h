@@ -35,6 +35,6 @@ namespace Raychel {
         constant
         //TODO: implement more types
     };
-}
+} // namespace Raychel
 
 #endif //!RAYCHEL_TEXTURE_TYPE_H

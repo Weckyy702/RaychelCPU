@@ -45,16 +45,11 @@ namespace Raychel {
         RAYCHEL_MAKE_NONCOPY_NONMOVE(RenderTarget);
 
     protected:
-        RenderTarget(const vec2i& size) : output_size_{size}
+        explicit RenderTarget(const vec2i& size) : output_size_{size}
         {}
 
-        RenderTarget(const RenderTarget&) = delete;
-        RenderTarget& operator=(const RenderTarget&) = delete;
-        RenderTarget(RenderTarget&&) = delete;
-        RenderTarget& operator=(RenderTarget&&) = delete;
-
     public:
-        inline vec2i size() const noexcept
+        [[nodiscard]] inline vec2i size() const noexcept
         {
             return output_size_;
         }
@@ -88,9 +83,12 @@ namespace Raychel {
         vec2i output_size_;
     };
 
-    inline void operator<<(RenderTarget& t, const Texture<RenderResult>& framebuffer)
+    inline RenderTarget& operator<<(RenderTarget& t, const Texture<RenderResult>& framebuffer)
     {
+        t.prepareFramebufferWrite();
         t.writeFramebuffer(framebuffer);
+        t.finishFramebufferWrite();
+        return t;
     }
 
 } // namespace Raychel

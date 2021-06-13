@@ -13,9 +13,9 @@ namespace Raychel {
     public:
         RenderController() = default;
 
-        vec2i setOutputSize(const vec2i& newSize);
+        vec2i setOutputSize(const vec2i& new_size);
 
-        void setCurrentScene(const not_null<Scene*> new_scene);
+        void setCurrentScene(not_null<Scene*> new_scene);
 
         //may become private later
         std::optional<Texture<RenderResult>> getImageRendered();

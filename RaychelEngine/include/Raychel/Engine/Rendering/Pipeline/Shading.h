@@ -15,8 +15,7 @@ namespace Raychel {
 
         void setRenderSize(const vec2i& new_size);
 
-        void setSceneData(
-            const not_null<std::vector<IRaymarchable_p>*> objects, const not_null<CubeTexture<color>*> background_texture);
+        void setSceneData(not_null<std::vector<IRaymarchable_p>*> objects, not_null<CubeTexture<color>*> background_texture);
 
         std::optional<Texture<RenderResult>> renderImage(const Camera& cam);
 
@@ -41,7 +40,7 @@ namespace Raychel {
         color getShadedColor(const vec3& origin, const vec3& direction, size_t recursion_depth) const;
 
         RaymarchHitInfo getHitInfo(
-            const vec3& origin, const vec3& direction, float depth, size_t num_ray_steps, size_t recusion_depth) const noexcept;
+            const vec3& origin, const vec3& direction, float depth, size_t num_ray_steps, size_t recursion_depth) const noexcept;
 
         vec3 getNormal(const vec3& p) const noexcept;
 

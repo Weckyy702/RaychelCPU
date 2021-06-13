@@ -2,7 +2,7 @@
 
 namespace Raychel {
 
-    void DiffuseMaterial::initializeTextureProviders(const vec3&, const vec3&)
+    void DiffuseMaterial::initializeTextureProviders(const vec3& /*parent_position*/, const vec3& /*parent_size*/)
     {
         RAYCHEL_LOG("Initializing texture providers");
     }

@@ -49,16 +49,19 @@ namespace Raychel {
     public:
         using value_type = value_type_;
 
-        CubeTexture() : type_{TextureType::constant}, constant_{}
+        CubeTexture() : constant_{}
         {}
 
+        //NOLINTNEXTLINE: these constructors are supposed to be implicit
         CubeTexture(const sample_func& func) : type_{TextureType::function}, func_{func}
         {}
 
+        //NOLINTNEXTLINE: these constructors are supposed to be implicit
         CubeTexture(const provider_list& providers) : type_{TextureType::image}, providers_{providers}
         {}
 
-        CubeTexture(const value_type& constant) : type_{TextureType::constant}, constant_{constant}
+        //NOLINTNEXTLINE: these constructors are supposed to be implicit
+        CubeTexture(const value_type& constant) : constant_{constant}
         {}
 
         CubeTexture(const CubeTexture& rhs) : type_{rhs.type_}
@@ -188,7 +191,7 @@ namespace Raychel {
             return value_type{};
         }
 
-        TextureType type_;
+        TextureType type_{TextureType::constant};
 
         /**
         *\brief Space-saving wrapper for CubeTexture members

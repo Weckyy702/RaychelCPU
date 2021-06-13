@@ -1,10 +1,11 @@
-#include <limits>
-#include "Raychel/Core/Types.h"
 #define TBB_SUPPRESS_DEPRECATED_MESSAGES 1
+
 #include <algorithm>
 #include <execution>
 #include <functional>
+#include <limits>
 
+#include "Raychel/Core/Types.h"
 #include "Raychel/Engine/Interface/Camera.h"
 #include "Raychel/Engine/Objects/Interface.h"
 #include "Raychel/Engine/Rendering/Pipeline/Shading.h"
@@ -142,9 +143,9 @@ namespace Raychel {
             actual_uv.y *= aspect_ratio;
         }
 
-        actual_uv += vec2{0.5f, 0.5f};
+        actual_uv += vec2{0.5F, 0.5F};
 
-        actual_uv.y = 1.0f - actual_uv.y;
+        actual_uv.y = 1.0F - actual_uv.y;
 
         return actual_uv;
     }

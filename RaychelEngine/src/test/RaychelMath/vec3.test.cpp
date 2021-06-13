@@ -457,6 +457,7 @@ RAYCHEL_BEGIN_TEST("Vector distance", "[RaychelMath][Vector3]")
         REQUIRE(d == 29);
     }
 
+    //NOLINTNEXTLINE: clang-tidy gets really confused by these ifs
     if constexpr(std::is_floating_point_v<TestType>)
     {
         const vec3 b{27, 4, 9};
@@ -498,6 +499,7 @@ RAYCHEL_BEGIN_TEST("Vector squared distance", "[RaychelMath][Vector3]")
         REQUIRE(d == 841);
     }
 
+    //NOLINTNEXTLINE: clang-tidy doesn't like this file :(
     {
         const vec3 b{27, 4, 9};
 

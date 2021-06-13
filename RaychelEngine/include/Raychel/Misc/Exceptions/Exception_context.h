@@ -45,17 +45,17 @@ namespace Raychel {
             : what_{what}, origin_{origin}, fatal_{fatal}
         {}
 
-        const char* what() const noexcept override
+        [[nodiscard]] const char* what() const noexcept override
         {
             return what_.data();
         }
 
-        const char* origin() const noexcept
+        [[nodiscard]] const char* origin() const noexcept
         {
             return origin_.data();
         }
 
-        bool fatal() const noexcept
+        [[nodiscard]] bool fatal() const noexcept
         {
             return fatal_;
         }

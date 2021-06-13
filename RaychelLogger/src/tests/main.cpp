@@ -13,7 +13,7 @@ std::ostream& operator<<(std::ostream& os, const Streamable& /*unused*/)
 struct NonStreamable
 {};
 
-int main(int, const char**)
+int main(int /*unused*/, const char** /*unused*/)
 {
     setMinimumLogLevel(LogLevel::debug);
 

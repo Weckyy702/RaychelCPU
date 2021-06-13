@@ -16,21 +16,25 @@ using namespace Raychel;
 
 int main(int /*unused*/, char** argv)
 {
-    Logger::setMinimumLogLevel(Logger::LogLevel::debug);
+    Logger::disableColor();
+    Logger::setMinimumLogLevel(Logger::LogLevel::log);
 
-    Logger::log("Welcome to Raychel Version ", RAYCHEL_VERSION_TAG, " at ", argv[0], '\n');
+    Logger::log("Welcome to Raychel Version ", RAYCHEL_VERSION_TAG, " at ", *argv, '\n');
 
     Scene scene;
 
-    scene.setBackgroundTexture({[](const vec3& dir) { return color{dir}; }});
+    scene.setBackgroundTexture({[](const vec3& dir) {
+        (void)dir;
+        return color{0};
+    }});
 
     Quaternion start_rotation = Quaternion{};
 
     auto& cam = scene.setCamera({Transform{vec3(0, 0, 0), start_rotation}, 0.25});
 
-    scene.addObject<SdSphere>(make_object_data({vec3{0, 0, 2.5}, Quaternion{}}, DiffuseMaterial(color(1, 0, 0))), 1.0F);
-    scene.addObject<SdSphere>(make_object_data({vec3{2.5, 0, 0}, Quaternion{}}, DiffuseMaterial(color(0, 1, 0))), 1.0F);
-    scene.addObject<SdSphere>(make_object_data({vec3{0, 0, -2.5}, Quaternion{}}, DiffuseMaterial(color(0, 0, 1))), 1.0F);
+    scene.addObject<SdSphere>(make_object_data({vec3{0, 0, 2.5}, Quaternion{}}, DiffuseMaterial{color{1, 0, 0}}), 1.0F);
+    scene.addObject<SdSphere>(make_object_data({vec3{2.5, 0, 0}, Quaternion{}}, DiffuseMaterial(color(0, 1, 1))), 1.0F);
+    scene.addObject<SdSphere>(make_object_data({vec3{0, 0, -2.5}, Quaternion{}}, DiffuseMaterial(color(0.5, 0, 1))), 1.0F);
     scene.addObject<SdSphere>(make_object_data({vec3{-2.5, 0, 0}, Quaternion{}}, DiffuseMaterial(color(1))), 1.0F);
 
     const vec2i size = {50, 25};

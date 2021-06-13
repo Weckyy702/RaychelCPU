@@ -202,7 +202,7 @@ namespace Raychel {
         using value_type = typename colorImp<T>::value_type;
 
         if constexpr (std::is_floating_point_v<value_type>) {
-            return details::ensureValidColor(colorImp<value_type>(1.0f - c.r, 1.0f - c.g, 1.0f - c.b));
+            return details::ensureValidColor(colorImp<value_type>(1.0F - c.r, 1.0F - c.g, 1.0F - c.b));
         } else {
             constexpr auto max = std::numeric_limits<value_type>::max();
             return details::ensureValidColor(colorImp<value_type>(max - c.r, max - c.g, max - c.b));

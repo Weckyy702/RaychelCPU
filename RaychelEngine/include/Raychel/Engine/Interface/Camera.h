@@ -46,13 +46,13 @@ namespace Raychel {
         Camera(const Transform& t, float zoom) : transform_{t}, zoom_{zoom}
         {}
 
-        vec3 forward() const noexcept;
+        [[nodiscard]] vec3 forward() const noexcept;
 
-        vec3 right() const noexcept;
+        [[nodiscard]] vec3 right() const noexcept;
 
-        vec3 up() const noexcept;
+        [[nodiscard]] vec3 up() const noexcept;
 
-        inline float zoom() const noexcept
+        [[nodiscard]] inline float zoom() const noexcept
         {
             return zoom_;
         }

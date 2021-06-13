@@ -120,7 +120,7 @@ namespace Raychel {
     float RaymarchRenderer::sdScene(const vec3& p) const
     {
         float min = 10.0;
-        for (const auto obj : *objects_) {
+        for (const auto* obj : *objects_) {
             min = std::min(min, obj->eval(p));
         }
         return min;
@@ -140,10 +140,12 @@ namespace Raychel {
             const float scene_dist = sdScene(p);
 
             if (scene_dist < raymarch_data_.distance_bias) {
-                if (out_depth != nullptr)
+                if (out_depth != nullptr) {
                     *out_depth = depth;
-                if (out_num_ray_steps != nullptr)
+                }
+                if (out_num_ray_steps != nullptr) {
                     *out_num_ray_steps = i;
+                }
                 return true;
             }
 

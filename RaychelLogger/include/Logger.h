@@ -97,10 +97,11 @@ namespace Logger {
         {
             std::string representation = getRepStreamable(std::forward<T>(obj));
 
-            if (log_with_label)
+            if (log_with_label) {
                 print(representation);
-            else
+            } else {
                 printWithoutLabel(representation);
+            }
         }
 
         //internal function. Not to be used directly
@@ -109,10 +110,11 @@ namespace Logger {
         {
             std::string representation = getRepNonStreamable(std::forward<T>(obj));
 
-            if (log_with_label)
+            if (log_with_label) {
                 print(representation);
-            else
+            } else {
                 printWithoutLabel(representation);
+            }
         }
 
         template <typename T, typename... Args>
@@ -121,8 +123,9 @@ namespace Logger {
             lockStream();
             [[maybe_unused]] const auto unlock_mutex_on_exit = details::Finally([]() { unlockStream(); });
 
-            if (lv < _::requiredLevel())
+            if (lv < _::requiredLevel()) {
                 return;
+            }
 
             setLogLevel(lv);
             logObj(log_with_label, std::forward<T>(obj));

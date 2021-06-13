@@ -10,21 +10,18 @@ namespace Raychel {
     //Interface for Raymarchable Objects
     struct IRaymarchable
     {
+
         RAYCHEL_MAKE_NONCOPY_NONMOVE(IRaymarchable);
+
     protected:
         IRaymarchable() = default;
 
-        IRaymarchable(const IRaymarchable&) = delete;
-        IRaymarchable(IRaymarchable&&) = delete;
-        IRaymarchable& operator=(const IRaymarchable&) = delete;
-        IRaymarchable& operator=(IRaymarchable&&) = delete;
-
     public:
-        virtual float eval(const vec3&) const = 0;
+        [[nodiscard]] virtual float eval(const vec3&) const = 0;
 
-        virtual vec3 getDirectionToObject(const vec3&) const = 0;
+        [[nodiscard]] virtual vec3 getDirectionToObject(const vec3&) const = 0;
 
-        virtual color getSurfaceColor(const ShadingData&) const = 0;
+        [[nodiscard]] virtual color getSurfaceColor(const ShadingData&) const = 0;
 
         virtual void onRendererAttached(const RaymarchRenderer&) = 0;
 
@@ -34,30 +31,26 @@ namespace Raychel {
     //Base class for Objects
     class SdObject : public IRaymarchable
     {
-
-        SdObject(const SdObject&) = delete;
-        SdObject& operator=(const SdObject&) = delete;
-        SdObject(SdObject&&) = delete;
-        SdObject& operator=(SdObject&&) = delete;
-
     public:
         RAYCHEL_MAKE_NONCOPY_NONMOVE(SdObject);
 
-        color getSurfaceColor(const ShadingData& data) const override;
+        [[nodiscard]] vec3 getDirectionToObject(const vec3& p) const override;
+
+        [[nodiscard]] color getSurfaceColor(const ShadingData& data) const override;
 
         void onRendererAttached(const RaymarchRenderer& new_renderer) override;
 
-        virtual ~SdObject() = default;
+        ~SdObject() override = default;
 
     protected:
-        SdObject(ObjectData&& _data) : transform_{_data.t}, material_{std::move(_data.mat)}
+        explicit SdObject(ObjectData&& _data) : transform_{_data.t}, material_{std::move(_data.mat)}
         {}
 
-        const Transform& transform() const
+        [[nodiscard]] const Transform& transform() const
         {
             return transform_;
         }
-        const IMaterial_p& material() const
+        [[nodiscard]] const IMaterial_p& material() const
         {
             return material_;
         }
@@ -79,23 +72,23 @@ namespace Raychel {
         RAYCHEL_MAKE_NONCOPY_NONMOVE(SdLamp);
 
     protected:
-        SdLamp(const LampData& _data) : color_{_data.c}, brightness_{_data.b}, size_{_data.sz}
+        explicit SdLamp(const LampData& _data) : color_{_data.c}, brightness_{_data.b}, size_{_data.sz}
         {}
 
-        color lampColor() const noexcept
+        [[nodiscard]] color lampColor() const noexcept
         {
             return color_;
         }
-        float brightness() const noexcept
+        [[nodiscard]] float brightness() const noexcept
         {
             return brightness_;
         }
-        float size() const noexcept
+        [[nodiscard]] float size() const noexcept
         {
             return size_;
         }
 
-        virtual ~SdLamp() = 0;
+        ~SdLamp() override = default;
 
     private:
         color color_;

@@ -11,7 +11,7 @@ namespace Raychel {
         SdSphere(ObjectData&& data, float _r) : SdObject{std::move(data)}, radius{_r}
         {}
 
-        float eval(const vec3& p) const override;
+        [[nodiscard]] float eval(const vec3& p) const override;
 
     private:
         float radius = 0;
