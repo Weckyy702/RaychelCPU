@@ -66,13 +66,9 @@
 #endif
 
 //terminate the application with the provided message
-#ifndef RAYCHEL_NO_LOGGER
-    #define RAYCHEL_TERMINATE(...)                                                                                               \
-        Logger::fatal(RAYCHEL_FUNC_NAME, " at (", __FILE__, ":", __LINE__, "): ", __VA_ARGS__, '\n');                            \
-        std::terminate();
-#else
-    #define RAYCHEL_TERMINATE(...) std::terminate();
-#endif
+#define RAYCHEL_TERMINATE(...)                                                                                                   \
+    Logger::fatal(RAYCHEL_FUNC_NAME, " at (", __FILE__, ":", __LINE__, "): ", __VA_ARGS__, '\n');                                \
+    std::terminate();
 
 #if defined(RAYCHEL_DEBUG) || !defined(NDEBUG)
     #define RAYCHEL_ASSERT(exp)                                                                                                  \

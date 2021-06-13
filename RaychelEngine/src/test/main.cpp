@@ -16,7 +16,6 @@ using namespace Raychel;
 
 int main(int /*unused*/, char** argv)
 {
-    Logger::disableColor();
     Logger::setMinimumLogLevel(Logger::LogLevel::log);
 
     Logger::log("Welcome to Raychel Version ", RAYCHEL_VERSION_TAG, " at ", *argv, '\n');
@@ -25,12 +24,12 @@ int main(int /*unused*/, char** argv)
 
     scene.setBackgroundTexture({[](const vec3& dir) {
         (void)dir;
-        return color{0};
+        return color{dir};
     }});
 
     Quaternion start_rotation = Quaternion{};
 
-    auto& cam = scene.setCamera({Transform{vec3(0, 0, 0), start_rotation}, 0.25});
+    auto& cam = scene.setCamera({Transform{vec3(0, 0, 0), start_rotation}, 0.75});
 
     scene.addObject<SdSphere>(make_object_data({vec3{0, 0, 2.5}, Quaternion{}}, DiffuseMaterial{color{1, 0, 0}}), 1.0F);
     scene.addObject<SdSphere>(make_object_data({vec3{2.5, 0, 0}, Quaternion{}}, DiffuseMaterial(color(0, 1, 1))), 1.0F);
