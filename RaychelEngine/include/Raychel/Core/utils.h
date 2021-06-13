@@ -56,7 +56,7 @@
 #elif defined(_MSC_VER)
     #define RAYCHEL_FUNC_NAME __FUNCSIG__
 #else
-    #error "Unknown compiler detected!"
+    #error "Unknown compiler!"
 #endif
 
 #ifdef RAYCHEL_DEBUG
@@ -69,9 +69,9 @@
 #ifndef RAYCHEL_NO_LOGGER
     #define RAYCHEL_TERMINATE(...)                                                                                               \
         Logger::fatal(RAYCHEL_FUNC_NAME, " at (", __FILE__, ":", __LINE__, "): ", __VA_ARGS__, '\n');                            \
-        std::exit(0x41);
+        std::terminate();
 #else
-    #define RAYCHEL_TERMINATE(...) std::exit(0x41);
+    #define RAYCHEL_TERMINATE(...) std::terminate();
 #endif
 
 #if defined(RAYCHEL_DEBUG) || !defined(NDEBUG)
@@ -132,6 +132,7 @@
     RAYCHEL_DEFAULT_MOVE_OP(type_name)
 namespace Raychel {
 
+    //NOLINTNEXTLINE(misc-unused-using-decls)
     using gsl::byte, gsl::not_null;
     using std::size_t;
 

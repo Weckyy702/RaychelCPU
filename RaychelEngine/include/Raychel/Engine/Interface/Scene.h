@@ -80,7 +80,7 @@ namespace Raychel {
         ~Scene()
         {
             //TODO: turn IRaymarchable_p into a smart pointer
-            for (auto ptr : objects_) {
+            for (IRaymarchable_p ptr : objects_) {
                 delete ptr;
             }
         }

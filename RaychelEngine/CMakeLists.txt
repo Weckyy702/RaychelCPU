@@ -19,6 +19,7 @@ set(SOURCES
     ${RAYCHEL_SOURCE_DIR}/Types.cpp
     ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/RenderTarget/ImageTarget.cpp
     ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/RenderTarget/AsciiTarget.cpp
+    ${RAYCHEL_SOURCE_DIR}/Engine/Rendering/RenderTarget/AsciiImpl.cpp
     ${RAYCHEL_SOURCE_DIR}/Engine/Materials/Interface.cpp
     ${RAYCHEL_SOURCE_DIR}/Engine/Materials/Materials.cpp
     ${RAYCHEL_SOURCE_DIR}/Engine/Interface/Scene.cpp
