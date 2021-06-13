@@ -47,7 +47,7 @@ namespace Raychel {
             ~ConsoleManager() noexcept;
 
         private:
-            struct Impl_; //OS-specific implementation
+            class Impl_; //OS-specific implementation
             gsl::owner<Impl_*> impl_;
 
             const AsciiTarget* owner_;
@@ -58,12 +58,11 @@ namespace Raychel {
     {
 
     public:
-        AsciiTarget(const vec2i& size, bool use_color)
-            :RenderTarget{size}, use_color_{use_color}, manager_{this}
+        AsciiTarget(const vec2i& size, bool use_color) : RenderTarget{size}, use_color_{use_color}, manager_{this}
         {}
 
         AsciiTarget(const vec2i& size, bool use_color, const std::vector<char>& char_set)
-            :RenderTarget{size}, use_color_{use_color}, character_set_{char_set}, manager_{this}
+            : RenderTarget{size}, use_color_{use_color}, character_set_{char_set}, manager_{this}
         {}
 
         RAYCHEL_MAKE_NONCOPY_NONMOVE(AsciiTarget);
@@ -72,7 +71,7 @@ namespace Raychel {
 
         void finishFramebufferWrite() override;
 
-        ~AsciiTarget() override=default;
+        ~AsciiTarget() override = default;
 
     private:
         friend class details::ConsoleManager;
