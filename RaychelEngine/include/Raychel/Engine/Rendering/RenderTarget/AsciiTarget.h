@@ -33,6 +33,27 @@
 
 namespace Raychel {
 
+    class AsciiTarget;
+
+    namespace details {
+        class ConsoleManager
+        {
+        public:
+            explicit ConsoleManager(const AsciiTarget* _owner);
+            RAYCHEL_MAKE_NONCOPY_NONMOVE(ConsoleManager);
+
+            void do_framebuffer_write(const Texture<RenderResult>& framebuffer) noexcept;
+
+            ~ConsoleManager() noexcept;
+
+        private:
+            struct Impl_; //OS-specific implementation
+            gsl::owner<Impl_*> impl_;
+
+            const AsciiTarget* owner_;
+        };
+    } // namespace details
+
     class AsciiTarget : public RenderTarget
     {
 
@@ -40,7 +61,6 @@ namespace Raychel {
         AsciiTarget(const vec2i& size, bool use_color);
 
         AsciiTarget(const vec2i& size, bool use_color, const std::vector<char>& char_set);
-
         RAYCHEL_MAKE_NONCOPY_NONMOVE(AsciiTarget);
 
         void writeFramebuffer(const Texture<RenderResult>& framebuffer) override;
@@ -50,10 +70,12 @@ namespace Raychel {
         ~AsciiTarget() override;
 
     private:
-        void _init_ncurses() const;
+        friend class details::ConsoleManager;
 
-        const std::vector<char> character_set_ = {'.', ':', ';', '~', '=', '#', '0', 'B', '8', '%', '&'};
         bool use_color_ = false;
+        const std::vector<char> character_set_ = {'.', ':', ';', '~', '=', '#', '0', 'B', '8', '%', '&'};
+
+        details::ConsoleManager manager_;
     };
 
 } // namespace Raychel
