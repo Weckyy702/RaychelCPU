@@ -65,14 +65,14 @@ namespace Raychel {
         AsciiTarget(const vec2i& size, bool use_color, const std::vector<char>& char_set)
             :RenderTarget{size}, use_color_{use_color}, character_set_{char_set}, manager_{this}
         {}
-        
+
         RAYCHEL_MAKE_NONCOPY_NONMOVE(AsciiTarget);
 
         void writeFramebuffer(const Texture<RenderResult>& framebuffer) override;
 
         void finishFramebufferWrite() override;
 
-        ~AsciiTarget() override;
+        ~AsciiTarget() override=default;
 
     private:
         friend class details::ConsoleManager;
