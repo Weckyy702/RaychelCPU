@@ -21,7 +21,7 @@ namespace Raychel::details {
             white = COLOR_WHITE,
         };
 
-        static constexpr std::array<color, 8> ncurses_colors {
+        static constexpr std::array<color, 8> ncurses_colors{
             color{0, 0, 0},
             color{1, 0, 0},
             color{0, 1, 0},
@@ -29,8 +29,7 @@ namespace Raychel::details {
             color{0, 0, 1},
             color{1, 0, 1},
             color{0, 1, 1},
-            color{1, 1, 1}
-        };
+            color{1, 1, 1}};
 
         static constexpr ncurses_color bg_color = black;
 
@@ -103,8 +102,8 @@ namespace Raychel::details {
         {
             ncurses_color res = black;
             float min_dist = 1000;
-            for(NCURSES_COLOR_T i = 0; i < 8; i++) {
-                if(distSq(vec3{col}, vec3{ncurses_colors.at(i)}) < min_dist) {
+            for (NCURSES_COLOR_T i = 0; i < 8; i++) {
+                if (distSq(vec3{col}, vec3{ncurses_colors.at(i)}) < min_dist) {
                     min_dist = distSq(vec3{col}, vec3{ncurses_colors.at(i)});
 
                     res = static_cast<ncurses_color>(i); //OOF, this hurts :( TODO: make this good
