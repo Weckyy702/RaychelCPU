@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(RaychelCPU_test LANGUAGES CXX VERSION 0.0.1)
+project(RaychelCPU LANGUAGES CXX VERSION 0.0.1)
 
 include(FindRequiredLibraries.cmake)
 
@@ -25,8 +25,7 @@ set(SOURCES
     ${RAYCHEL_SOURCE_DIR}/Engine/Interface/Scene.cpp
 )
 
-add_executable(RaychelCPU_test 
-    ${PROJECT_SOURCE_DIR}/src/test/main.cpp
+add_library(${PROJECT_NAME} SHARED
     ${SOURCES}
 )
 
@@ -41,8 +40,8 @@ if(WIN32)
 
     file(COPY ${ZLIB_DLL_LOCATION} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
-    add_custom_command(TARGET RaychelCPU_test POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/zlib.dll $<TARGET_FILE_DIR:RaychelCPU_test>
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/zlib.dll $<TARGET_FILE_DIR:${PROJECT_NAME}>
     )   
 endif()
 
@@ -53,9 +52,12 @@ configure_file( ${RAYCHEL_INCLUDE_DIR}/CMakeSettings.h.in
                 ${RAYCHEL_INCLUDE_DIR}/CMakeSettings.h
 )
 
-target_include_directories(RaychelCPU_test PUBLIC
+target_include_directories(${PROJECT_NAME} PUBLIC
     ${RAYCHEL_INCLUDE_DIR}
     ${pngpp_SOURCE_DIR}/include
+)
+
+set(RAYCHEL_COMPILER_FLAGS
 )
 
 #Set compiler flags
@@ -68,8 +70,8 @@ if(${USE_ASAN})
     )
 
     if(NOT MSVC)
-        target_compile_options(RaychelCPU_test PUBLIC -fno-omit-frame-pointer)
-        target_link_options(RaychelCPU_test PUBLIC -fsanitize=address)
+        target_compile_options(${PROJECT_NAME} PUBLIC -fno-omit-frame-pointer)
+        target_link_options(${PROJECT_NAME} PUBLIC -fsanitize=address)
     else()
         message(WARNING "It looks like you're using MSVC. On Visual Studio, please head into RaychelCPU properties and tick 'Enable Address Sanitizer'")
     endif()
@@ -86,7 +88,7 @@ if(${USE_UBSAN} AND NOT MSVC)
         -fno-sanitize-recover
         -fno-omit-frame-pointer
     )
-    target_link_options(RaychelCPU_test PUBLIC -fsanitize=undefined)
+    target_link_options(${PROJECT_NAME} PUBLIC -fsanitize=undefined)
 endif()
 
 #General compiler flags
@@ -104,7 +106,7 @@ else()
     )
 endif()
 
-target_compile_options(RaychelCPU_test PUBLIC
+target_compile_options(${PROJECT_NAME} PUBLIC
     ${RAYCHEL_COMPILER_FLAGS}
 )
 
@@ -113,7 +115,7 @@ check_ipo_supported(RESULT IPO_SUPPORTED OUTPUT ERROR)
 
 if(IPO_SUPPORTED)
     message(STATUS "IPO / LTO enabled")
-    set_target_properties(RaychelCPU_test PROPERTIES
+    set_target_properties(${PROJECT_NAME} PROPERTIES
         INTERPROCEDURAL_OPTIMIZATION true
     )
 else()
@@ -121,24 +123,24 @@ else()
 endif()
 
 #Gimme that C++17 goodness
-target_compile_features(RaychelCPU_test PUBLIC cxx_std_17)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
 
 #link the correct libraries
-target_link_libraries(RaychelCPU_test PRIVATE
-    RaychelLogger
-    png
-    ${LIB_NCURSES}
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC RaychelLogger
+    PRIVATE png
+            ${LIB_NCURSES}
 )
 
 if(LINK_GSL)
-    target_link_libraries(RaychelCPU_test PRIVATE
+    target_link_libraries(${PROJECT_NAME} PRIVATE
         GSL
     )
 endif()
 
 if(NOT MSVC)
-    target_link_libraries(RaychelCPU_test PUBLIC
+    target_link_libraries(${PROJECT_NAME} PUBLIC
         tbb
     )
 endif()

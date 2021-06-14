@@ -47,8 +47,18 @@ if(LINK_GSL)
     )
 endif()
 
-#TODO: remove this (add Catch into the module path)
-#if(NOT CATCH_2_EXTERNAL)
-    include(Catch)
-    catch_discover_tests(Unit_test)
-#endif()
+include(Catch)
+catch_discover_tests(Unit_test)
+
+add_executable(RaychelCPU_test
+    main.cpp
+)
+
+target_compile_options(RaychelCPU_test PUBLIC
+    ${RAYCHEL_COMPILE_FLAGS}
+)
+
+target_link_libraries(RaychelCPU_test PRIVATE
+    RaychelLogger
+    RaychelCPU
+)
