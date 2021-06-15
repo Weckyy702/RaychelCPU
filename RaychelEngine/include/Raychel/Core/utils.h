@@ -28,21 +28,13 @@
 #ifndef RAYCHEL_CORE_H
 #define RAYCHEL_CORE_H
 
-#include <cstdint>
-#include <limits>
-#if !((defined(__cplusplus) && __cplusplus >= 201703L) || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L))
-    #error "C++(17) compilation is required!"
-#endif
-
-#include <cassert>
-#include <cmath>
-#include <cstddef>
-#include <gsl/gsl>
-#include <type_traits>
-
 //convenience headers
+#include <cmath>
+#include <cstdint>
+#include <gsl/gsl>
 #include <memory>
 #include <optional>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -50,14 +42,9 @@
 #include "Logger.h"
 #include "RaychelMath/constants.h"
 #include "RaychelMath/equivalent.h"
-
-#if defined(__clang__) || defined(__GNUC__)
-    #define RAYCHEL_FUNC_NAME __PRETTY_FUNCTION__
-#elif defined(_MSC_VER)
-    #define RAYCHEL_FUNC_NAME __FUNCSIG__
-#else
-    #error "Unknown compiler!"
-#endif
+#include "RaychelMath/math.h"
+#include "Raychel_assert.h"
+#include "compat.h"
 
 #ifdef RAYCHEL_DEBUG
     #define RAYCHEL_LOG(...) Logger::debug(RAYCHEL_FUNC_NAME, ": ", __VA_ARGS__, '\n');
@@ -65,27 +52,9 @@
     #define RAYCHEL_LOG(...)
 #endif
 
-//terminate the application with the provided message
-#define RAYCHEL_TERMINATE(...)                                                                                                   \
-    Logger::fatal(RAYCHEL_FUNC_NAME, " at (", __FILE__, ":", __LINE__, "): ", __VA_ARGS__, '\n');                                \
-    std::terminate();
-
-#if defined(RAYCHEL_DEBUG) || !defined(NDEBUG)
-    #define RAYCHEL_ASSERT(exp)                                                                                                  \
-        if (!(exp)) {                                                                                                            \
-            RAYCHEL_TERMINATE("Assertion '", GSL_STRINGIFY(exp), "' failed!");                                                   \
-        }
-#else
-    #define RAYCHEL_ASSERT(exp) Expects(exp)
-#endif
-
-#define RAYCHEL_ASSERT_NOT_REACHED RAYCHEL_TERMINATE("Assertion failed! Expected to not execute ", __FILE__, ":", __LINE__)
-
-//#define RAYCHEL_LOGICALLY_EQUAL //<-- activates logical equivalency for vector-like types
-
 #define RAYCHEL_THROW_EXCEPTION(msg, fatal) throw ::Raychel::exception_context{msg, RAYCHEL_FUNC_NAME, fatal};
 
-#define RAYCHEL_ASSERT_NORMALIZED(vec) RAYCHEL_ASSERT(equivalent(magSq(vec), 1.0f));
+
 
 #define RAYCHEL_DELETE_COPY_CTOR(type_name) type_name(const type_name&) = delete;
 
@@ -126,74 +95,14 @@
 #define RAYCHEL_MAKE_DEFAULT_MOVE(type_name)                                                                                     \
     RAYCHEL_DEFAULT_MOVE_CTOR(type_name)                                                                                         \
     RAYCHEL_DEFAULT_MOVE_OP(type_name)
+
+
+
 namespace Raychel {
 
     //NOLINTNEXTLINE(misc-unused-using-decls)
     using gsl::byte, gsl::not_null;
     using std::size_t;
-
-    template <typename _num>
-    struct vec2Imp;
-    template <typename _num>
-    struct vec3Imp;
-    template <typename _num>
-    struct colorImp;
-    /*TODO: implement
-	template<typename _num>
-	class colorAlphaImp;
-	*/
-    template <typename _num>
-    class QuaternionImp;
-    template <typename _num>
-    struct TransformImp;
-
-    template <typename _number>
-    constexpr _number sq(_number x)
-    {
-        static_assert(std::is_arithmetic_v<_number>, "Raychel::sq<T> requires T to be of arithmetic type!");
-        return x * x;
-    }
-
-    /**
-	*\brief Linearly interpolate between two numbers
-	*
-	*\tparam _number Type of number to interpolate. Must be arithmetic
-	*\param a first number (x=0.0)
-	*\param b second number (x=1.0)
-	*\param x value of interpolation
-	*\return _number the interpolated number
-	*/
-    template <typename _number>
-    constexpr _number lerp(_number a, _number b, long double x)
-    {
-        return (x * b) + ((1.0 - x) * a);
-    }
-
-    template <typename _integral>
-    constexpr _integral bit(size_t shift)
-    {
-        static_assert(std::is_integral_v<_integral>, "Raychel::bit<T> requires T to be of integral type!");
-        RAYCHEL_ASSERT(shift < (sizeof(_integral) * 8));
-        return static_cast<_integral>(1U << shift);
-    }
-
-    /**
-	*\brief Get number of digits in a number
-	*
-	*\param num The number with its digits
-	*\return constexpr int 
-	*/
-    constexpr int numDigits(unsigned long long num, unsigned int base = 10U)
-    {
-        int digits = 0;
-
-        do {
-            digits++;
-            num /= base;
-        } while (num != 0);
-
-        return digits;
-    }
 
 } // namespace Raychel
 
