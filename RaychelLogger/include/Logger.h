@@ -52,20 +52,20 @@ namespace Logger {
     namespace _ {
 
         //internal function. Not to be used directly
-        [[nodiscard]] LogLevel requiredLevel() noexcept;
+        LOGGER_EXPORT [[nodiscard]] LogLevel requiredLevel() noexcept;
 
         //internal function. Not to be used directly
-        void setLogLevel(LogLevel) noexcept;
+        LOGGER_EXPORT void setLogLevel(LogLevel) noexcept;
 
         //internal function. Not to be used directly
-        void printWithoutLabel(std::string_view) noexcept;
+        LOGGER_EXPORT void printWithoutLabel(std::string_view) noexcept;
 
         //internal function. Not to be used directly
-        void print(std::string_view) noexcept;
+        LOGGER_EXPORT void print(std::string_view) noexcept;
 
-        void lockStream();
+        LOGGER_EXPORT void lockStream();
 
-        void unlockStream() noexcept;
+        LOGGER_EXPORT void unlockStream() noexcept;
 
         //internal function. Not to be used directly
         template <typename T>
@@ -234,48 +234,49 @@ namespace Logger {
     }
 
     //set the label that is displayed in front of the message [LABEL] msg
-    void setLogLabel(LogLevel, std::string_view) noexcept;
+    LOGGER_EXPORT void setLogLabel(LogLevel, std::string_view) noexcept;
 
     //set the color that should be used for the level. Must be an ANSI compatible color code
-    void setLogColor(LogLevel, std::string_view) noexcept;
+    LOGGER_EXPORT void setLogColor(LogLevel, std::string_view) noexcept;
 
     //set an alternative stream for the logger to write to
-    void setOutStream(std::ostream& os);
+    LOGGER_EXPORT void setOutStream(std::ostream& os);
 
     //disable colored output
-    void disableColor() noexcept;
+    LOGGER_EXPORT void disableColor() noexcept;
 
     //enable colored output
-    void enableColor() noexcept;
+    LOGGER_EXPORT void enableColor() noexcept;
 
     //start a timer and associate it with the label
-    std::string_view startTimer(std::string_view label) noexcept;
+    LOGGER_EXPORT std::string_view startTimer(std::string_view label) noexcept;
 
     //return the duration since the last call to startTimer(label). removes label from the list of active labels
-    [[nodiscard]] duration_t endTimer(std::string_view label) noexcept;
+    LOGGER_EXPORT [[nodiscard]] duration_t endTimer(std::string_view label) noexcept;
 
     //return the duration since the last call to startTimer(label). does NOT remove label from the list of acitve labels
-    [[nodiscard]] duration_t getTimer(std::string_view label) noexcept;
+    LOGGER_EXPORT [[nodiscard]] duration_t getTimer(std::string_view label) noexcept;
 
     //log the duration since the last call to startTimer(label). removes label from the list of active labels
-    void logDuration(std::string_view label, const std::string& prefix = ""s, const std::string& suffix = "ms\n"s) noexcept;
+    LOGGER_EXPORT void
+    logDuration(std::string_view label, const std::string& prefix = ""s, const std::string& suffix = "ms\n"s) noexcept;
 
     //log the duration since the last call to startTimer(label). does NOT remove label from the list of acitve labels
-    void
+    LOGGER_EXPORT void
     logDurationPersistent(std::string_view label, const std::string& prefix = ""s, const std::string& suffix = "ms\n"s) noexcept;
 
     //set minimum level the Message has to be sent with in order to show up. Default: INFO
-    LogLevel setMinimumLogLevel(LogLevel) noexcept;
+    LOGGER_EXPORT LogLevel setMinimumLogLevel(LogLevel) noexcept;
 
     /// \brief Configure the Logger to log into a file instead of a std::ostream
     /// \param directory Directory of the logfile. must end with "/"
     /// \param fileName Name of the logfile. Does not need an extension
-    void initLogFile(const std::string& directory, const std::string& fileName = "Log.log");
+    LOGGER_EXPORT void initLogFile(const std::string& directory, const std::string& fileName = "Log.log");
 
     /**
 	*\brief Close the current log file, if existent
 	*/
-    void dumpLogFile() noexcept;
+    LOGGER_EXPORT void dumpLogFile() noexcept;
 } // namespace Logger
 
 #endif /* LOGGER_H_ */

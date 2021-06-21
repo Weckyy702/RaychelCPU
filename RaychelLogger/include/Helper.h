@@ -29,16 +29,23 @@
 #ifndef HELPER_H_
 #define HELPER_H_
 
+#ifdef _WIN32
+    #ifdef RAYCHELLOGGER_EXPORTS
+        #define LOGGER_EXPORT __declspec(dllexport)
+    #else
+        #define LOGGER_EXPORT __declspec(dllimport)
+    #endif
+#else
+    #define LOGGER_EXPORT
+#endif
+
 #include <string_view>
 #include <type_traits>
 
 namespace Logger::details {
 
     template <size_t off_, typename = std::enable_if_t<(off_ < sizeof(uint32_t))>>
-    [[nodiscard]] constexpr uint32_t bit() noexcept
-    {
-        return 1UL << off_;
-    }
+    constexpr uint32_t bit =  1U << off_;
 
     template <typename S, typename T, typename = void>
     struct is_to_stream_writable : std::false_type
