@@ -29,8 +29,6 @@ add_library(${PROJECT_NAME} SHARED
     ${SOURCES}
 )
 
-
-
 #this assumes that zlib has been installed via zlib.install at https://github.com/horta/zlib.install
 if(WIN32)
     find_package(ZLIB REQUIRED)
