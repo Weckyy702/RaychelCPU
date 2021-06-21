@@ -67,7 +67,7 @@ namespace Raychel {
         *\param texture new background texture
         *\return CubeTexture<color>& reference to the set texture
         */
-        CubeTexture<color>& setBackgroundTexture(const CubeTexture<color>& texture);
+       RAYCHEL_EXPORT  CubeTexture<color>& setBackgroundTexture(const CubeTexture<color>& texture);
 
         /**
         *\brief Set the Camera for the scene
@@ -75,7 +75,7 @@ namespace Raychel {
         *\param cam new camera
         *\return Camera& reference to the set camera
         */
-        Camera& setCamera(const Camera& cam);
+        RAYCHEL_EXPORT Camera& setCamera(const Camera& cam);
 
         ~Scene()
         {

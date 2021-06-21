@@ -46,28 +46,28 @@ namespace Raychel {
         Camera(const Transform& t, float zoom) : transform_{t}, zoom_{zoom}
         {}
 
-        [[nodiscard]] vec3 forward() const noexcept;
+        RAYCHEL_EXPORT [[nodiscard]] vec3 forward() const noexcept;
 
-        [[nodiscard]] vec3 right() const noexcept;
+        RAYCHEL_EXPORT [[nodiscard]] vec3 right() const noexcept;
 
-        [[nodiscard]] vec3 up() const noexcept;
+        RAYCHEL_EXPORT [[nodiscard]] vec3 up() const noexcept;
 
-        [[nodiscard]] inline float zoom() const noexcept
+        RAYCHEL_EXPORT [[nodiscard]] inline float zoom() const noexcept
         {
             return zoom_;
         }
 
-        void setRoll(float angle) noexcept;
+        RAYCHEL_EXPORT void setRoll(float angle) noexcept;
 
-        void setPitch(float angle) noexcept;
+        RAYCHEL_EXPORT void setPitch(float angle) noexcept;
 
-        void setYaw(float angle) noexcept;
+        RAYCHEL_EXPORT void setYaw(float angle) noexcept;
 
-        Quaternion updateRoll(float da) noexcept;
+        RAYCHEL_EXPORT Quaternion updateRoll(float da) noexcept;
 
-        Quaternion updatePitch(float da) noexcept;
+        RAYCHEL_EXPORT Quaternion updatePitch(float da) noexcept;
 
-        Quaternion updateYaw(float da) noexcept;
+        RAYCHEL_EXPORT Quaternion updateYaw(float da) noexcept;
 
         friend class RaymarchRenderer;
 

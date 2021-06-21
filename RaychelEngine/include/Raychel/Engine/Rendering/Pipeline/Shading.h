@@ -13,48 +13,48 @@ namespace Raychel {
     public:
         RaymarchRenderer() = default;
 
-        void setRenderSize(const vec2i& new_size);
+        RAYCHEL_EXPORT void setRenderSize(const vec2i& new_size);
 
-        void setSceneData(not_null<std::vector<IRaymarchable_p>*> objects, not_null<CubeTexture<color>*> background_texture);
+        RAYCHEL_EXPORT void setSceneData(not_null<std::vector<IRaymarchable_p>*> objects, not_null<CubeTexture<color>*> background_texture);
 
-        std::optional<Texture<RenderResult>> renderImage(const Camera& cam);
+        RAYCHEL_EXPORT std::optional<Texture<RenderResult>> renderImage(const Camera& cam);
 
     private:
-        void set_scene_callback_renderer();
+        RAYCHEL_EXPORT void set_scene_callback_renderer();
 
-        void _refillRequestBuffer();
+        RAYCHEL_EXPORT void _refillRequestBuffer();
 
-        RaymarchData _getRootRequest(size_t x, size_t y) const;
+        RAYCHEL_EXPORT RaymarchData _getRootRequest(size_t x, size_t y) const;
 
-        bool _renderToTexture(Texture<RenderResult>& output) const;
+        RAYCHEL_EXPORT bool _renderToTexture(Texture<RenderResult>& output) const;
 
-        void _setupCamData(const Camera& cam) noexcept;
+        RAYCHEL_EXPORT void _setupCamData(const Camera& cam) noexcept;
 
 //these functions are defined in RaymarchMath.cpp
 #pragma region Raymarching functions
 
-        vec3 _getRayDirectionFromUV(const vec2&) const noexcept;
+        RAYCHEL_EXPORT vec3 _getRayDirectionFromUV(const vec2&) const noexcept;
 
-        RenderResult _raymarchFunction(const RaymarchData& req) const noexcept;
+        RAYCHEL_EXPORT RenderResult _raymarchFunction(const RaymarchData& req) const noexcept;
 
-        color getShadedColor(const vec3& origin, const vec3& direction, size_t recursion_depth) const;
+        RAYCHEL_EXPORT color getShadedColor(const vec3& origin, const vec3& direction, size_t recursion_depth) const;
 
-        RaymarchHitInfo getHitInfo(
+        RAYCHEL_EXPORT RaymarchHitInfo getHitInfo(
             const vec3& origin, const vec3& direction, float depth, size_t num_ray_steps, size_t recursion_depth) const noexcept;
 
-        vec3 getNormal(const vec3& p) const noexcept;
+        RAYCHEL_EXPORT vec3 getNormal(const vec3& p) const noexcept;
 
-        IRaymarchable* getHitObject(const vec3& p) const noexcept;
+        RAYCHEL_EXPORT IRaymarchable* getHitObject(const vec3& p) const noexcept;
 
-        float sdScene(const vec3& p) const;
+        RAYCHEL_EXPORT float sdScene(const vec3& p) const;
 
-        bool raymarch(
+        RAYCHEL_EXPORT bool raymarch(
             const vec3& origin, const normalized3& direction, float max_depth, float* out_depth,
             size_t* out_num_ray_steps) const noexcept;
 
 #pragma endregion
 
-        vec2 _getScreenspaceUV(const vec2& uv) const noexcept;
+        RAYCHEL_EXPORT vec2 _getScreenspaceUV(const vec2& uv) const noexcept;
 
         vec2i output_size_;
         float aspect_ratio = 0.0;

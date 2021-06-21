@@ -45,6 +45,7 @@
 #include "RaychelMath/math.h"
 #include "Raychel_assert.h"
 #include "compat.h"
+#include "export.h"
 
 #ifdef RAYCHEL_DEBUG
     #define RAYCHEL_LOG(...) Logger::debug(RAYCHEL_FUNC_NAME, ": ", __VA_ARGS__, '\n');

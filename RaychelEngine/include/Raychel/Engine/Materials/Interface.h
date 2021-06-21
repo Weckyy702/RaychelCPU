@@ -74,7 +74,7 @@ namespace Raychel {
     {
 
     public:
-        void setParentRenderer(const RaymarchRenderer& new_renderer) override;
+        RAYCHEL_EXPORT void setParentRenderer(const RaymarchRenderer& new_renderer) override;
 
     protected:
         Material() = default;

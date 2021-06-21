@@ -34,11 +34,11 @@ namespace Raychel {
     public:
         RAYCHEL_MAKE_NONCOPY_NONMOVE(SdObject);
 
-        [[nodiscard]] vec3 getDirectionToObject(const vec3& p) const override;
+        RAYCHEL_EXPORT [[nodiscard]] vec3 getDirectionToObject(const vec3& p) const override;
 
-        [[nodiscard]] color getSurfaceColor(const ShadingData& data) const override;
+        RAYCHEL_EXPORT [[nodiscard]] color getSurfaceColor(const ShadingData& data) const override;
 
-        void onRendererAttached(const RaymarchRenderer& new_renderer) override;
+        RAYCHEL_EXPORT void onRendererAttached(const RaymarchRenderer& new_renderer) override;
 
         ~SdObject() override = default;
 

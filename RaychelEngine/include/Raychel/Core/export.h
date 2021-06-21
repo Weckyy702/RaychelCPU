@@ -31,7 +31,7 @@
 #include "compat.h"
 
 #if RAYCHEL_ACTIVE_OS == RAYCHEL_OS_WIN32
-    #ifdef RAYCHEL_DLL_EXPORTS
+    #ifdef RAYCHEL_EXPORTS
         #define RAYCHEL_EXPORT __declspec(dllexport)
     #else
         #define RAYCHEL_EXPORT __declspec(dllimport)

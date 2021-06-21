@@ -39,12 +39,12 @@ namespace Raychel {
         class ConsoleManager
         {
         public:
-            explicit ConsoleManager(const AsciiTarget* _owner);
+            RAYCHEL_EXPORT explicit ConsoleManager(const AsciiTarget* _owner);
             RAYCHEL_MAKE_NONCOPY_NONMOVE(ConsoleManager);
 
-            void do_framebuffer_write(const Texture<RenderResult>& framebuffer) noexcept;
+            RAYCHEL_EXPORT void do_framebuffer_write(const Texture<RenderResult>& framebuffer) noexcept;
 
-            ~ConsoleManager() noexcept;
+            RAYCHEL_EXPORT ~ConsoleManager() noexcept;
 
         private:
             class Impl_; //OS-specific implementation
@@ -67,9 +67,9 @@ namespace Raychel {
 
         RAYCHEL_MAKE_NONCOPY_NONMOVE(AsciiTarget);
 
-        void writeFramebuffer(const Texture<RenderResult>& framebuffer) override;
+        RAYCHEL_EXPORT void writeFramebuffer(const Texture<RenderResult>& framebuffer) override;
 
-        void finishFramebufferWrite() override;
+        RAYCHEL_EXPORT void finishFramebufferWrite() override;
 
         ~AsciiTarget() override = default;
 

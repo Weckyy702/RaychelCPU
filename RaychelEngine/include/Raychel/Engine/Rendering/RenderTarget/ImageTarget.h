@@ -67,7 +67,7 @@ namespace Raychel {
         *
         *\param framebuffer the framebuffer to be saved
         */
-        void writeFramebuffer(const Texture<RenderResult>& framebuffer) override;
+        RAYCHEL_EXPORT void writeFramebuffer(const Texture<RenderResult>& framebuffer) override;
 
     private:
         [[nodiscard]] std::string _getFullFileName() const;
