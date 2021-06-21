@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(RaychelCPU LANGUAGES CXX VERSION 0.0.1)
+project(Raychel LANGUAGES CXX VERSION 0.0.1)
 
 include(FindRequiredLibraries.cmake)
 
@@ -29,21 +29,9 @@ add_library(${PROJECT_NAME} SHARED
     ${SOURCES}
 )
 
-#this assumes that zlib has been installed via zlib.install at https://github.com/horta/zlib.install
-if(WIN32)
-    find_package(ZLIB REQUIRED)
-    set(ZLIB_LIBRARY_DIR ${ZLIB_LIBRARY})
-
-    string(REPLACE "lib/zlib.lib" "bin/zlib.dll" ZLIB_DLL_LOCATION ${ZLIB_LIBRARY_DIR})
-
-    file(COPY ${ZLIB_DLL_LOCATION} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/zlib.dll $<TARGET_FILE_DIR:${PROJECT_NAME}>
-    )   
-endif()
-
-
+target_compile_definitions(${PROJECT_NAME} PUBLIC
+    RAYCHEL_EXPORTS
+)
 
 #set the needed include directories
 configure_file( ${RAYCHEL_INCLUDE_DIR}/CMakeSettings.h.in
@@ -55,8 +43,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     ${pngpp_SOURCE_DIR}/include
 )
 
-set(RAYCHEL_COMPILER_FLAGS
-)
+set(RAYCHEL_COMPILER_FLAGS)
 
 #Set compiler flags
 #build time support for sanitizers
@@ -132,7 +119,7 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 if(LINK_GSL)
-    target_link_libraries(${PROJECT_NAME} PRIVATE
+    target_link_libraries(${PROJECT_NAME} PUBLIC
         GSL
     )
 endif()
@@ -146,4 +133,10 @@ endif()
 #Unit tests
 if(${RAYCHEL_DO_TESTING})
     add_subdirectory(src/test)
+endif()
+
+if(RAYCHEL_MOVE_ZLIB_FILES)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/zlib.dll $<TARGET_FILE_DIR:${PROJECT_NAME}>
+    )   
 endif()
