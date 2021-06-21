@@ -22,6 +22,20 @@ endif()
 
 
 
+#this assumes that zlib has been installed via zlib.install at https://github.com/horta/zlib.install
+if(WIN32)
+    find_package(ZLIB REQUIRED)
+    set(ZLIB_LIBRARY_DIR ${ZLIB_LIBRARY})
+
+    string(REPLACE "lib/zlib.lib" "bin/zlib.dll" ZLIB_DLL_LOCATION ${ZLIB_LIBRARY_DIR})
+
+    file(COPY ${ZLIB_DLL_LOCATION} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+
+    set(RAYCHEL_MOVE_ZLIB_FILES TRUE)
+endif()
+
+
+
 find_library(LIB_PNG png)
 if(NOT LIB_PNG)
 
