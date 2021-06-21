@@ -139,6 +139,31 @@ namespace Raychel::details {
 #elif defined(_WIN32)
 
 //TODO: implement
+namespace Raychel::details {
+
+    class ConsoleManager::Impl_
+    {
+    public:
+        Impl_(bool /*unused*/)
+        {
+            RAYCHEL_LOG("CONSTRUCTOR\n");
+        }
+
+        ~Impl_() noexcept
+        {
+            RAYCHEL_LOG("DESTRUCTOR\n");
+        }
+    };
+
+
+
+    void ConsoleManager::do_framebuffer_write(const Texture<RenderResult>& framebuffer) noexcept
+    {
+        (void)framebuffer;
+        RAYCHEL_LOG("DO_FRAMEBUFFER\n");
+    }
+
+}
 
 #elif defined(RAYCHEL_USE_NCURSES_FALLBACK)
 
