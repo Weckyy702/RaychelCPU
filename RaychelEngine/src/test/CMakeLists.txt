@@ -50,6 +50,8 @@ endif()
 include(Catch)
 catch_discover_tests(Unit_test)
 
+
+
 add_executable(RaychelCPU_test
     main.cpp
 )
@@ -60,5 +62,5 @@ target_compile_options(RaychelCPU_test PUBLIC
 
 target_link_libraries(RaychelCPU_test PRIVATE
     RaychelLogger
-    RaychelCPU
+    Raychel
 )
