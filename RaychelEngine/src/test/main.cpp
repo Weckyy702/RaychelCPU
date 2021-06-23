@@ -63,7 +63,7 @@ int main(int /*unused*/, char** argv)
         target->finishFramebufferWrite();
         Logger::logDuration(file_label);
 
-        //cam.update_yaw(2_deg);
+        cam.update_yaw(2_deg);
 
         using namespace std::chrono_literals;
     }
