@@ -43,7 +43,7 @@ int main(int /*unused*/, char** argv)
     renderer.setCurrentScene(&scene);
     renderer.setOutputSize(size);
 
-    gsl::owner<RenderTarget*> target = new AsciiTarget{size, true}; //new ImageTargetPng{size, "../../res", 4};
+    gsl::owner<RenderTarget*> target = new AsciiTarget{size, true}; //new ImageTargetPng{size, "./res", 4}
 
     auto label = Logger::startTimer("Total time");
 
