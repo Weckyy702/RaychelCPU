@@ -63,7 +63,6 @@ namespace Raychel::details {
                 mvaddch(y, x, c);
                 attroff(COLOR_PAIR(ncurses_col)); //NOLINT: we can't change what ncurses does
             } else {
-                (void)col;
                 mvaddch(y, x, c);
             }
         }
@@ -118,15 +117,13 @@ namespace Raychel::details {
     void ConsoleManager::do_framebuffer_write(const Texture<RenderResult>& framebuffer) noexcept
     {
         const auto owner_size = owner_->size();
-        const auto& owner_charset = owner_->character_set_;
 
         for (size_t i = 0U; i < owner_size.x; i++) {
             for (size_t j = 0U; j < owner_size.y; j++) {
                 auto col = framebuffer.at(vec2i{owner_size.x - 1 - i, j}).output;
 
                 const auto col_brightness = brightness(col);
-                const auto character_index = static_cast<size_t>(col_brightness * static_cast<float>(owner_charset.size() - 1));
-                const char c = owner_charset.at(character_index);
+                const char c = get_char_from_brightness(col_brightness);
 
                 impl_->output_character(owner_size.x - i, owner_size.y - j, c, col);
             }
@@ -138,21 +135,62 @@ namespace Raychel::details {
 
 #elif defined(_WIN32)
 
-//TODO: implement
+#define NOMINMAX //Why Microsoft? WHY?!?
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
 namespace Raychel::details {
 
     class ConsoleManager::Impl_
     {
     public:
-        Impl_(bool /*unused*/)
+        Impl_(bool use_color) 
+            : hConsole_{GetStdHandle(STD_OUTPUT_HANDLE)}, use_color_{use_color}
         {
-            RAYCHEL_LOG("CONSTRUCTOR\n");
+            RAYCHEL_ASSERT(hConsole_ != NULL);
+        }
+
+        void output_character(char c, size_t _x, size_t _y, const color& col) const noexcept
+        {
+            RAYCHEL_ASSERT(_x < std::numeric_limits<SHORT>::max());
+            RAYCHEL_ASSERT(_y < std::numeric_limits<SHORT>::max());
+
+            const auto x = static_cast<SHORT>(_x);
+            const auto y = static_cast<SHORT>(_y);
+
+            SetConsoleCursorPosition(hConsole_, {x, y});
+
+            if (use_color_) {
+                const WORD console_color = _get_closest_console_color(col);
+
+                SetConsoleTextAttribute(hConsole_, console_color);
+            }
+            WriteConsoleA(hConsole_, &c, 1, nullptr, NULL);
         }
 
         ~Impl_() noexcept
+        {}
+
+    private:
+        WORD _get_closest_console_color(const color& col) const noexcept
         {
-            RAYCHEL_LOG("DESTRUCTOR\n");
+            WORD res = 0;
+
+            if (col.r > 0.5f) {
+                res |= FOREGROUND_RED;
+            }
+            if (col.g > 0.5f) {
+                res |= FOREGROUND_GREEN;
+            }
+            if (col.b > 0.5f) {
+                res |= FOREGROUND_BLUE;
+            }
+
+            return res;
         }
+
+        const HANDLE hConsole_;
+        const bool use_color_;
     };
 
 
@@ -160,7 +198,17 @@ namespace Raychel::details {
     void ConsoleManager::do_framebuffer_write(const Texture<RenderResult>& framebuffer) noexcept
     {
         (void)framebuffer;
-        RAYCHEL_LOG("DO_FRAMEBUFFER\n");
+        const auto owner_size = owner_->size();
+        for (size_t x = 0; x < owner_size.x; x++) {
+            for (size_t y = 0; y < owner_size.y; y++) {
+                const auto& col = framebuffer.at(vec2i{x, y}).output;
+
+                const auto b = brightness(col);
+                const char c = get_char_from_brightness(b);
+
+                impl_->output_character(c, x, y, col);
+            }
+        }
     }
 
 }
@@ -183,6 +231,14 @@ namespace Raychel::details {
     ConsoleManager::~ConsoleManager() noexcept
     {
         delete impl_;
+    }
+
+    char ConsoleManager::get_char_from_brightness(float brightness) const noexcept
+    {
+        const auto& owner_charset = owner_->character_set_;
+
+        const auto character_index = static_cast<size_t>(brightness * static_cast<float>(owner_charset.size() - 1));
+        return owner_charset.at(character_index);
     }
 
 } // namespace Raychel::details
