@@ -88,6 +88,7 @@ else()
         -Wextra
         -Wshadow 
         -Wno-unknown-pragmas
+        -Wconversion
     )
 endif()
 
@@ -135,6 +136,7 @@ if(${RAYCHEL_DO_TESTING})
     add_subdirectory(src/test)
 endif()
 
+#needed if zlib is not pre installed on your system
 if(RAYCHEL_MOVE_ZLIB_FILES)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/zlib.dll $<TARGET_FILE_DIR:${PROJECT_NAME}>
