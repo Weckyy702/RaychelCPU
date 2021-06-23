@@ -105,7 +105,7 @@ namespace Raychel {
     };
 
     /**
-    *\brief Data for lighting calculation. All Materials take this in
+    *\brief Data for lighting calculation. Most basic information needed for shading
     *
     */
     struct ShadingData
@@ -113,11 +113,41 @@ namespace Raychel {
         vec3 surface_point, hit_normal;
         vec3 in_direction;
 
-        size_t num_ray_steps{0};
-        float ray_depth{0.0F};
-
         size_t recursion_depth{0};
     };
+
+#pragma region Shading callback structs
+
+    /**
+    *\brief Data for simple shading. All Materials take this in
+    *
+    */
+    struct PrimaryShadingData : public ShadingData
+    {
+        size_t num_ray_steps{0};
+        float ray_depth{0.0F};
+    };
+
+    /**
+    *\brief Data for diffuse shading
+    *
+    */
+    struct DiffuseShadingData : ShadingData
+    {
+        color albedo;
+    };
+
+    /**
+    *\brief Data for reflective shading
+    *
+    */
+    struct ReflectiveShadingData : ShadingData
+    {
+        color reflection_tint;
+        float roughness{0.0F};
+    };
+
+#pragma endregion
 
     /**
     *\brief Info struct for objects that were hit while raymarching
@@ -125,7 +155,7 @@ namespace Raychel {
     */
     struct RaymarchHitInfo
     {
-        ShadingData shading_data;
+        PrimaryShadingData shading_data;
         const IRaymarchable* hit_object{nullptr};
     };
 
