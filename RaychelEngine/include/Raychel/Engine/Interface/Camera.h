@@ -57,15 +57,17 @@ namespace Raychel {
             return zoom_;
         }
 
-        RAYCHEL_EXPORT void setRoll(float angle) noexcept;
+        RAYCHEL_EXPORT void set_roll(float angle) noexcept;
 
-        RAYCHEL_EXPORT void setPitch(float angle) noexcept;
+        RAYCHEL_EXPORT void set_pitch(float angle) noexcept;
 
-        RAYCHEL_EXPORT void setYaw(float angle) noexcept;
+        RAYCHEL_EXPORT void set_yaw(float angle) noexcept;
 
-        RAYCHEL_EXPORT Quaternion updateRoll(float da) noexcept;
+        RAYCHEL_EXPORT Quaternion update_roll(float da) noexcept;
 
-        RAYCHEL_EXPORT Quaternion updatePitch(float da) noexcept;
+        RAYCHEL_EXPORT Quaternion update_pitch(float da) noexcept;
+
+        RAYCHEL_EXPORT Quaternion update_yaw(float da) noexcept;
 
         RAYCHEL_EXPORT Quaternion updateYaw(float da) noexcept;
 

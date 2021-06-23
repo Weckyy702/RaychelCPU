@@ -15,15 +15,15 @@ namespace Raychel {
 
 #pragma region Setup functions
 
-    void RaymarchRenderer::setRenderSize(const vec2i& new_size)
+    void RaymarchRenderer::set_render_size(const vec2i& new_size)
     {
         RAYCHEL_LOG(
-            "Setting render output size to ", new_size, " (aspect ratio of ", (static_cast<float>(new_size.x) / new_size.y), ")");
+            "Setting render output size to ", new_size, " (aspect ratio of ", static_cast<number_t>(new_size.x) / static_cast<number_t>(new_size.y), ")");
         output_size_ = new_size;
-        _refillRequestBuffer();
+        _refill_request_buffer();
     }
 
-    void RaymarchRenderer::setSceneData(
+    void RaymarchRenderer::set_scene_data(
         const not_null<std::vector<IRaymarchable_p>*> objects, const not_null<CubeTexture<color>*> background_texture)
     {
         objects_ = objects;
@@ -39,7 +39,7 @@ namespace Raychel {
         }
     }
 
-    void RaymarchRenderer::_refillRequestBuffer()
+    void RaymarchRenderer::_refill_request_buffer()
     {
         RAYCHEL_LOG("Refilling request buffer to ", output_size_.x * output_size_.y, " pixels");
 
@@ -51,7 +51,7 @@ namespace Raychel {
 
         for (auto i = 0U; i < output_size_.y; i++) {
             for (auto j = 0U; j < output_size_.x; j++) {
-                requests_.push_back(_getRootRequest(j, i));
+                requests_.push_back(_get_root_request(j, i));
             }
         }
 
@@ -59,7 +59,7 @@ namespace Raychel {
         requests_.shrink_to_fit();
     }
 
-    RaymarchData RaymarchRenderer::_getRootRequest(size_t x, size_t y) const
+    RaymarchData RaymarchRenderer::_get_root_request(size_t x, size_t y) const
     {
         //generate UVs in range [-0.5; 0.5]
 
@@ -78,15 +78,17 @@ namespace Raychel {
 
 #pragma endregion
 
+
+
 #pragma region Render functions
 
-    std::optional<Texture<RenderResult>> RaymarchRenderer::renderImage(const Camera& cam)
+    std::optional<Texture<RenderResult>> RaymarchRenderer::render_image(const Camera& cam)
     {
-        _setupCamData(cam);
+        _setup_cam_data(cam);
 
         Texture<RenderResult> output{output_size_};
 
-        if (!_renderToTexture(output)) {
+        if (!_render_to_texture(output)) {
             Logger::error(
                 "Image rendering failed with error: ", current_exception_.what(), "at (", current_exception_.origin(), ")!\n");
             //TODO: customizable error handling
@@ -96,12 +98,12 @@ namespace Raychel {
         return output;
     }
 
-    bool RaymarchRenderer::_renderToTexture(Texture<RenderResult>& output_texture) const
+    bool RaymarchRenderer::_render_to_texture(Texture<RenderResult>& output_texture) const
     {
 
         using namespace std::placeholders;
 
-        static const auto f = [this](const RaymarchData& req) { return _raymarchFunction(req); };
+        static const auto f = [this](const RaymarchData& req) { return _raymarch_function(req); };
 
         RAYCHEL_LOG("Starting render...");
 
@@ -111,7 +113,7 @@ namespace Raychel {
         return !failed_;
     }
 
-    void RaymarchRenderer::_setupCamData(const Camera& cam) noexcept
+    void RaymarchRenderer::_setup_cam_data(const Camera& cam) noexcept
     {
         cam_data_.position = cam.transform_.position;
         cam_data_.forward = cam.forward();
@@ -131,9 +133,7 @@ namespace Raychel {
             " }");
     }
 
-#pragma endregion
-
-    vec2 RaymarchRenderer::_getScreenspaceUV(const vec2& uv) const noexcept
+    vec2 RaymarchRenderer::_get_screenspace_UV(const vec2& uv) const noexcept
     {
         vec2 actual_uv = uv;
 

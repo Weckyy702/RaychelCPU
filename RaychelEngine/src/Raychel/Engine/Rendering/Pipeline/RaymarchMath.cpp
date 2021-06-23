@@ -32,20 +32,20 @@
 
 namespace Raychel {
 
-    vec3 RaymarchRenderer::_getRayDirectionFromUV(const vec2& uv) const noexcept
+    vec3 RaymarchRenderer::_get_ray_direction_from_UV(const vec2& uv) const noexcept
     {
         return normalize((cam_data_.forward * cam_data_.zoom) + (cam_data_.right * uv.x) + (cam_data_.up * uv.y));
     }
 
-    RenderResult RaymarchRenderer::_raymarchFunction(const RaymarchData& req) const noexcept
+    RenderResult RaymarchRenderer::_raymarch_function(const RaymarchData& req) const noexcept
     {
-        const vec2 screenspace_uv = _getScreenspaceUV(req.uv);
+        const vec2 screenspace_uv = _get_screenspace_UV(req.uv);
         const vec3 origin = cam_data_.position;
-        const vec3 direction = _getRayDirectionFromUV(req.uv);
+        const vec3 direction = _get_ray_direction_from_UV(req.uv);
 
         if (!failed_) {
             try {
-                color res = getShadedColor(origin, direction, 0);
+                color res = get_shaded_color(origin, direction, 0);
                 return {screenspace_uv, res};
 
             } catch (const exception_context& exception) {
@@ -59,7 +59,7 @@ namespace Raychel {
         return {screenspace_uv, color{0}};
     }
 
-    color RaymarchRenderer::getShadedColor(const vec3& origin, const normalized3& direction, size_t recursion_depth) const
+    color RaymarchRenderer::get_shaded_color(const vec3& origin, const normalized3& direction, size_t recursion_depth) const
     {
         RAYCHEL_ASSERT_NORMALIZED(direction);
 
@@ -67,7 +67,7 @@ namespace Raychel {
             float depth = 0;
             size_t num_ray_steps = 0;
             if (raymarch(origin, direction, raymarch_data_.max_ray_depth, &depth, &num_ray_steps)) {
-                const RaymarchHitInfo hit_info = getHitInfo(origin, direction, depth, num_ray_steps, recursion_depth);
+                const RaymarchHitInfo hit_info = get_hit_info(origin, direction, depth, num_ray_steps, recursion_depth);
 
                 return hit_info.hit_object->getSurfaceColor(hit_info.shading_data);
             }
@@ -75,7 +75,7 @@ namespace Raychel {
         return (*background_texture_)(direction);
     }
 
-    RaymarchHitInfo RaymarchRenderer::getHitInfo(
+    RaymarchHitInfo RaymarchRenderer::get_hit_info(
         const vec3& origin, const normalized3& direction, float depth, size_t num_ray_steps,
         size_t recursion_depth) const noexcept
     {
@@ -83,26 +83,26 @@ namespace Raychel {
 
         const vec3 hit_point = origin + (direction * depth);
 
-        const vec3 normal = getNormal(hit_point);
+        const vec3 normal = get_normal(hit_point);
         const vec3 surface_point = hit_point + (normal * raymarch_data_.surface_bias);
 
-        const IRaymarchable* hit_obj = getHitObject(hit_point);
+        const IRaymarchable* hit_obj = get_hit_object(hit_point);
         RAYCHEL_ASSERT(hit_obj);
 
-        return {{surface_point, normal, direction, num_ray_steps, depth, recursion_depth + 1}, hit_obj};
+        return {PrimaryShadingData{{surface_point, normal, direction, recursion_depth + 1}, num_ray_steps, depth}, hit_obj};
     }
 
-    vec3 RaymarchRenderer::getNormal(const vec3& p) const noexcept
+    vec3 RaymarchRenderer::get_normal(const vec3& p) const noexcept
     {
         const float k = raymarch_data_.normal_bias;
         return normalize(vec3{
-            sdScene(p + vec3{k, 0, 0}) - sdScene(p + vec3{-k, 0, 0}),
-            sdScene(p + vec3{0, k, 0}) - sdScene(p + vec3{0, -k, 0}),
-            sdScene(p + vec3{0, 0, k}) - sdScene(p + vec3{0, 0, -k}),
+            sd_scene(p + vec3{k, 0, 0}) - sd_scene(p + vec3{-k, 0, 0}),
+            sd_scene(p + vec3{0, k, 0}) - sd_scene(p + vec3{0, -k, 0}),
+            sd_scene(p + vec3{0, 0, k}) - sd_scene(p + vec3{0, 0, -k}),
         });
     }
 
-    IRaymarchable* RaymarchRenderer::getHitObject(const vec3& p) const noexcept
+    IRaymarchable* RaymarchRenderer::get_hit_object(const vec3& p) const noexcept
     {
         float min_distance = raymarch_data_.max_ray_depth;
         IRaymarchable* closest_object = nullptr;
@@ -117,7 +117,7 @@ namespace Raychel {
         return closest_object;
     }
 
-    float RaymarchRenderer::sdScene(const vec3& p) const
+    float RaymarchRenderer::sd_scene(const vec3& p) const
     {
         float min = 10.0;
         for (const auto* obj : *objects_) {
@@ -137,7 +137,7 @@ namespace Raychel {
         while (depth < max_depth) {
             const vec3 p = origin + (depth * direction);
 
-            const float scene_dist = sdScene(p);
+            const float scene_dist = sd_scene(p);
 
             if (scene_dist < raymarch_data_.distance_bias) {
                 if (out_depth != nullptr) {
