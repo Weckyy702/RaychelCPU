@@ -45,7 +45,7 @@
 namespace Logger::details {
 
     template <size_t off_, typename = std::enable_if_t<(off_ < sizeof(uint32_t))>>
-    constexpr uint32_t bit =  1U << off_;
+    constexpr uint32_t bit = 1U << off_;
 
     template <typename S, typename T, typename = void>
     struct is_to_stream_writable : std::false_type

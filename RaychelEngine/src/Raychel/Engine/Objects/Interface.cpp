@@ -8,7 +8,7 @@ namespace Raychel {
         return transform().position - p;
     }
 
-    color SdObject::getSurfaceColor(const ShadingData& data) const
+    color SdObject::getSurfaceColor(const PrimaryShadingData& data) const
     {
         return material()->getSurfaceColor(data);
     }

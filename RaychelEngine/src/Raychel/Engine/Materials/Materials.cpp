@@ -1,4 +1,5 @@
 #include "Raychel/Engine/Materials/Materials.h"
+#include "Raychel/Engine/Rendering/Pipeline/Shading.h"
 
 namespace Raychel {
 
@@ -7,9 +8,11 @@ namespace Raychel {
         RAYCHEL_LOG("Initializing texture providers");
     }
 
-    color DiffuseMaterial::getSurfaceColor(const ShadingData& data) const
+    color DiffuseMaterial::getSurfaceColor(const PrimaryShadingData& data) const
     {
-        return albedo_(data.surface_point, data.hit_normal);
+        return parent_renderer()->shade_diffuse(
+            {{data.surface_point, data.hit_normal, data.in_direction, data.recursion_depth},
+             albedo_(data.surface_point, data.hit_normal)});
     }
 
 } // namespace Raychel

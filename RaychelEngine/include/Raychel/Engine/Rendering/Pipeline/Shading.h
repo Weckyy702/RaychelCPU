@@ -17,7 +17,8 @@ namespace Raychel {
 
         RAYCHEL_EXPORT void setSceneData(not_null<std::vector<IRaymarchable_p>*> objects, not_null<CubeTexture<color>*> background_texture);
 
-        RAYCHEL_EXPORT std::optional<Texture<RenderResult>> renderImage(const Camera& cam);
+
+        RAYCHEL_EXPORT color shade_diffuse(const DiffuseShadingData& data) const noexcept;
 
     private:
         RAYCHEL_EXPORT void set_scene_callback_renderer();

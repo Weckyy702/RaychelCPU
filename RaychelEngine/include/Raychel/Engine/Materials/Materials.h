@@ -52,7 +52,7 @@ namespace Raychel {
         RAYCHEL_DELETE_MOVE_OP(DiffuseMaterial);
         RAYCHEL_EXPORT void initializeTextureProviders(const vec3& parent_position, const vec3& parent_bounding_box) override;
 
-        RAYCHEL_EXPORT [[nodiscard]] color getSurfaceColor(const ShadingData& data) const override;
+        RAYCHEL_EXPORT [[nodiscard]] color getSurfaceColor(const PrimaryShadingData& data) const override;
 
         ~DiffuseMaterial() override = default;
 

@@ -150,4 +150,25 @@ namespace Raychel {
         return actual_uv;
     }
 
+#pragma endregion
+
+
+
+#pragma region Shading functions
+
+    //Lambertian term for the rendering equation
+    [[nodiscard]] inline float lambert(const normalized3& normal, const normalized3& light_dir) noexcept {
+        return std::max(0.0F, dot(normal, light_dir));
+    }
+
+
+
+    color RaymarchRenderer::shade_diffuse(const DiffuseShadingData &data) const noexcept
+    {
+        (void)this;
+        return data.albedo * lambert(data.hit_normal, vec3{0, 1, 0});
+    }
+
+#pragma endregion
+
 } // namespace Raychel

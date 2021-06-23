@@ -55,8 +55,6 @@
 
 #define RAYCHEL_THROW_EXCEPTION(msg, fatal) throw ::Raychel::exception_context{msg, RAYCHEL_FUNC_NAME, fatal};
 
-
-
 #define RAYCHEL_DELETE_COPY_CTOR(type_name) type_name(const type_name&) = delete;
 
 #define RAYCHEL_DELETE_COPY_OP(type_name) type_name& operator=(const type_name&) = delete;
@@ -96,8 +94,6 @@
 #define RAYCHEL_MAKE_DEFAULT_MOVE(type_name)                                                                                     \
     RAYCHEL_DEFAULT_MOVE_CTOR(type_name)                                                                                         \
     RAYCHEL_DEFAULT_MOVE_OP(type_name)
-
-
 
 namespace Raychel {
 

@@ -54,7 +54,7 @@ namespace Raychel {
         *\param data parameters for the Materials surface color equation
         *\return color 
         */
-        [[nodiscard]] virtual color getSurfaceColor(const ShadingData& data) const = 0;
+        [[nodiscard]] virtual color getSurfaceColor(const PrimaryShadingData& data) const = 0;
 
         /**
         *\brief Set the parent Renderer used for rendering callbacks

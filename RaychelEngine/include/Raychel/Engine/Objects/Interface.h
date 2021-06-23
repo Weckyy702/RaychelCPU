@@ -21,7 +21,7 @@ namespace Raychel {
 
         [[nodiscard]] virtual vec3 getDirectionToObject(const vec3&) const = 0;
 
-        [[nodiscard]] virtual color getSurfaceColor(const ShadingData&) const = 0;
+        [[nodiscard]] virtual color getSurfaceColor(const PrimaryShadingData&) const = 0;
 
         virtual void onRendererAttached(const RaymarchRenderer&) = 0;
 
@@ -36,7 +36,7 @@ namespace Raychel {
 
         RAYCHEL_EXPORT [[nodiscard]] vec3 getDirectionToObject(const vec3& p) const override;
 
-        RAYCHEL_EXPORT [[nodiscard]] color getSurfaceColor(const ShadingData& data) const override;
+        RAYCHEL_EXPORT [[nodiscard]] color getSurfaceColor(const PrimaryShadingData& data) const override;
 
         RAYCHEL_EXPORT void onRendererAttached(const RaymarchRenderer& new_renderer) override;
 
