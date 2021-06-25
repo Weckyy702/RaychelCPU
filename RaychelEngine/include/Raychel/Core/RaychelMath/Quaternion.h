@@ -178,35 +178,18 @@ namespace Raychel {
 	*\return QuaternionImp<T> the interpolated Quaternion
 	*/
     template <typename T>
-    QuaternionImp<T> lerp(const QuaternionImp<T>& _a, const QuaternionImp<T>& _b, float x)
-    {
-        constexpr auto threshold = 0.995;
+    QuaternionImp<T> lerp(const QuaternionImp<T>& _a, const QuaternionImp<T>& _b, T x) noexcept;
 
-        const auto a = normalize(_a);
-        const auto b = normalize(_b);
-
-        auto d = dot(a.v(), b.v());
-
-        if (d < 0.0) {
-            a *= -1;
-            b *= -1;
-        }
-
-        //if the Quaternions are very similar, just lerp them
-        if (d >= threshold) {
-            return normalize(a * x + b * (1.0 - x));
-        }
-
-        const auto theta0 = std::acos(d);
-        const auto theta = theta0 * x;
-        const auto sinTheta = std::sin(theta);
-        const auto sinTheta0 = std::sin(theta0);
-
-        const auto s1 = sinTheta / sinTheta0;
-        const auto s0 = std::cos(theta) - (d * s1);
-
-        return (a * s0) + (b * s1);
-    }
+    /**
+    *\brief Calculate the Quaternion to rotate old_forward onto new_forward
+    *
+    *\tparam T Type of the Quaternion
+    *\param old_forward old forward vector
+    *\param new_forward new forward vector
+    *\return QuaternionImp<T> the Quaternion that rotates old onto new
+    */
+    template<typename T>
+    QuaternionImp<T> look_at(const vec3Imp<T>& _old_forward, const vec3Imp<T>& _new_forward) noexcept;
 
 } // namespace Raychel
 

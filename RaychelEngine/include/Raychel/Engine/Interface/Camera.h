@@ -69,11 +69,11 @@ namespace Raychel {
 
         RAYCHEL_EXPORT Quaternion update_yaw(float da) noexcept;
 
-        RAYCHEL_EXPORT Quaternion updateYaw(float da) noexcept;
+        RAYCHEL_EXPORT Quaternion look_at(const vec3& p) noexcept;
 
         friend class RaymarchRenderer;
 
-    private:
+    //private:
         Transform transform_;
         float zoom_ = 1.0;
 

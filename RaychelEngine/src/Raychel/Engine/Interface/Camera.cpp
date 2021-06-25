@@ -50,4 +50,13 @@ namespace Raychel {
         return transform_.rotation;
     }
 
+    Quaternion Camera::look_at(const vec3& p) noexcept
+    {
+        if(p != transform_.position) {
+            const vec3 direction_to_p = normalize(p -transform_.position);
+            transform_.rotation = Raychel::look_at(g_forward, direction_to_p);
+        }
+        return transform_.rotation;
+    }
+
 } // namespace Raychel
