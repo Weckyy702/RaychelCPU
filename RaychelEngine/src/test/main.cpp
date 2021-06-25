@@ -14,9 +14,10 @@
 
 using namespace Raychel;
 
-int main(int /*unused*/, char** argv)
+int main(int /*unused*/, const char** argv)
 {
     Logger::setMinimumLogLevel(Logger::LogLevel::log);
+    Logger::setOutStream(std::cerr);
 
     Logger::log("Welcome to Raychel Version ", RAYCHEL_VERSION_TAG, " at ", *argv, '\n');
 
@@ -24,29 +25,32 @@ int main(int /*unused*/, char** argv)
 
     scene.setBackgroundTexture({[](const vec3& dir) {
         (void)dir;
-        return color{dir};
+        return color{dir} * 0.2F;
     }});
 
-    Quaternion start_rotation = Quaternion{};
+    const Quaternion start_rotation = Quaternion{};
+    const vec3 cam_offset = vec3{0, 0, -7};
 
-    auto& cam = scene.setCamera({Transform{vec3(0, 0, 0), start_rotation}, 0.75});
+    auto& cam = scene.setCamera({Transform{cam_offset, start_rotation}, 1.5});
 
-    scene.addObject<SdSphere>(make_object_data({vec3{0, 0, 2.5}, Quaternion{}}, DiffuseMaterial{color{1, 0, 0}}), 1.0F);
-    scene.addObject<SdSphere>(make_object_data({vec3{2.5, 0, 0}, Quaternion{}}, DiffuseMaterial(color(0, 1, 1))), 1.0F);
-    scene.addObject<SdSphere>(make_object_data({vec3{0, 0, -2.5}, Quaternion{}}, DiffuseMaterial(color(0.5, 0, 1))), 1.0F);
-    scene.addObject<SdSphere>(make_object_data({vec3{-2.5, 0, 0}, Quaternion{}}, DiffuseMaterial(color(1))), 1.0F);
+    scene.addObject<SdSphere>(make_object_data({vec3{0, 0, 0}, Quaternion{}}, DiffuseMaterial{color{1, 0, 0}}), 1.0F);
+    scene.addObject<SdSphere>(make_object_data({vec3{0.25, -2, 0}, Quaternion{}}, DiffuseMaterial{color{0, 1, 0}}), 1.0F);
+    // scene.addObject<SdSphere>(make_object_data({vec3{2.5, 0, 0}, Quaternion{}}, DiffuseMaterial(color(0, 1, 1))), 1.0F);
+    // scene.addObject<SdSphere>(make_object_data({vec3{0, 0, -2.5}, Quaternion{}}, DiffuseMaterial(color(0.5, 0, 1))), 1.0F);
+    // scene.addObject<SdSphere>(make_object_data({vec3{-2.5, 0, 0}, Quaternion{}}, DiffuseMaterial(color(1))), 1.0F);
 
-    const vec2i size = {50, 25};
+    const vec2i size = {640, 360};
 
     RenderController renderer;
 
     renderer.setCurrentScene(&scene);
     renderer.setOutputSize(size);
 
-    gsl::owner<RenderTarget*> target = new AsciiTarget{size, true}; //new ImageTargetPng{size, "./res", 4}
+    gsl::owner<RenderTarget*> target = new ImageTargetPng{size, "../../results/res", 4}; // new AsciiTarget{size, true};
 
     auto label = Logger::startTimer("Total time");
 
+    float a = 0;
     for (size_t i = 0;; i++) {
 
         auto render_label = Logger::startTimer("Render time");
@@ -63,9 +67,13 @@ int main(int /*unused*/, char** argv)
         target->finishFramebufferWrite();
         Logger::logDuration(file_label);
 
-        cam.update_yaw(2_deg);
+        //cam.update_yaw(2_deg);
 
-        using namespace std::chrono_literals;
+
+        cam.transform_.position = rotateX(rotateZ(rotateY(cam_offset, a * degToRad<>), a * 0.6F * degToRad<>), a * 0.1F * degToRad<>);
+        cam.look_at(vec3{});
+
+        a += 1.0F;
     }
 
     Logger::logDuration(label);
