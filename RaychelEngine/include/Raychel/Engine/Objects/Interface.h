@@ -1,3 +1,30 @@
+/**
+*\file Interface.h
+*\author weckyy702 (weckyy702@gmail.com)
+*\brief Interface header for Objects classes
+*\date 2021-06-25
+*
+*MIT License
+*Copyright (c) [2021] [Weckyy702 (weckyy702@gmail.com | https://github.com/Weckyy702)]
+*Permission is hereby granted, free of charge, to any person obtaining a copy
+*of this software and associated documentation files (the "Software"), to deal
+*in the Software without restriction, including without limitation the rights
+*to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+*copies of the Software, and to permit persons to whom the Software is
+*furnished to do so, subject to the following conditions:
+*
+*The above copyright notice and this permission notice shall be included in all
+*copies or substantial portions of the Software.
+*
+*THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+*IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+*FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+*AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+*LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+*OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+*SOFTWARE.
+*
+*/
 #ifndef SD_OBJECT_INTERFACE_H
 #define SD_OBJECT_INTERFACE_H
 
@@ -25,7 +52,7 @@ namespace Raychel {
 
         virtual void onRendererAttached(const RaymarchRenderer&) = 0;
 
-        virtual ~IRaymarchable() = default;
+        virtual ~IRaymarchable()=default;
     };
 
     //Base class for Objects
@@ -65,36 +92,6 @@ namespace Raychel {
     {
         return ObjectData{transform, std::make_unique<Mat>(std::forward<Mat>(mat))};
     }
-
-    class SdLamp : public IRaymarchable
-    {
-    public:
-        RAYCHEL_MAKE_NONCOPY_NONMOVE(SdLamp);
-
-    protected:
-        explicit SdLamp(const LampData& _data) : color_{_data.c}, brightness_{_data.b}, size_{_data.sz}
-        {}
-
-        [[nodiscard]] color lampColor() const noexcept
-        {
-            return color_;
-        }
-        [[nodiscard]] float brightness() const noexcept
-        {
-            return brightness_;
-        }
-        [[nodiscard]] float size() const noexcept
-        {
-            return size_;
-        }
-
-        ~SdLamp() override = default;
-
-    private:
-        color color_;
-        float brightness_{1.0};
-        float size_{0.0};
-    };
 
 } // namespace Raychel
 

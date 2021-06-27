@@ -244,24 +244,21 @@ namespace Raychel {
         return (a * s0) + (b * s1);
     }
 
-    template<typename T>
+    template <typename T>
     QuaternionImp<T> look_at(const vec3Imp<T>& _old_forward, const vec3Imp<T>& _new_forward) noexcept
     {
         const auto old_forward = normalize(_old_forward);
         const auto new_forward = normalize(_new_forward);
 
         const auto u_dot_v = dot(old_forward, new_forward);
-        
-        if(u_dot_v == 1) {
+
+        if (u_dot_v == 1) {
             return {};
         }
 
         const auto angle_between = std::acos(u_dot_v); //shortest angle between a and b
 
-        return {
-            cross(old_forward, new_forward),
-            angle_between
-        };
+        return {cross(old_forward, new_forward), angle_between};
     }
 
 } // namespace Raychel

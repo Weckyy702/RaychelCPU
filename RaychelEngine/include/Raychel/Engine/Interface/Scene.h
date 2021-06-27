@@ -31,7 +31,9 @@
 #include "Raychel/Core/utils.h"
 #include "Raychel/Engine/Interface/Camera.h"
 #include "Raychel/Engine/Objects/Interface.h"
+#include "Raychel/Engine/Lights/Interface.h"
 #include "Raychel/Misc/Texture/CubeTexture.h"
+#include "Raychel/Engine/Rendering/Renderer.h"
 
 namespace Raychel {
 
@@ -43,13 +45,21 @@ namespace Raychel {
     {
 
     public:
-        Scene() = default;
+        RAYCHEL_EXPORT Scene();
 
         RAYCHEL_MAKE_NONCOPY(Scene);
         RAYCHEL_MAKE_DEFAULT_MOVE(Scene);
 
+        /**
+        *\brief Add a new object to the scene. Returns a reference to the newly created object
+        *
+        *\tparam T Type of object. Must derive from IRaymarchable
+        *\tparam Args Constructor argument types for the object
+        *\param args Constructor arguments for the object
+        *\return IRaymarchable_p& reference to the newly created object
+        */
         template <typename T, typename... Args>
-        void addObject(Args&&... args)
+        IRaymarchable_p& addObject(Args&&... args)
         {
             static_assert(
                 std::is_base_of_v<IRaymarchable, T>,
@@ -59,6 +69,29 @@ namespace Raychel {
                 "Raychel::Scene::addObject<T, Args...> requires T to be constructible from Args...!");
 
             objects_.push_back(new T(std::forward<Args>(args)...));
+            _notify_renderer();
+
+            return objects_.back();
+        }
+
+        /**
+        *\brief Add a new lamp to the scene. Returns a reference to the newly created lamp
+        *
+        *\tparam T Type of lamp. Must derive from ILamp
+        *\tparam Args Constructor argument types for the lamp
+        *\param args Constructor arguments for the lamp
+        *\return ILamp_p& reference to the newly created lamp
+        */
+        template <typename T, typename... Args>
+        ILamp_p& addLamp(Args&&... args)
+        {
+            static_assert(std::is_base_of_v<ILamp, T>, "Only Objects that derive from Raychel::ILamp can be added as lamps!");
+            static_assert(std::is_constructible_v<T, Args...>, "Raychel::Scene::addLight<T, Args...> requires T to be constructible from Args...!");
+
+            lamps_.push_back(new T(std::forward<Args>(args)...));
+            _notify_renderer();
+
+            return lamps_.back();
         }
 
         /**
@@ -77,10 +110,20 @@ namespace Raychel {
         */
         RAYCHEL_EXPORT Camera& setCamera(const Camera& cam);
 
+        /**
+        *\brief Get the Renderer associated with this scene
+        *
+        *\return RAYCHEL_EXPORT 
+        */
+        RAYCHEL_EXPORT [[nodiscard]] RenderController& get_renderer() const;
+
         ~Scene()
         {
-            //TODO: turn IRaymarchable_p into a smart pointer
-            for (IRaymarchable_p ptr : objects_) {
+            //TODO: turn IRaymarchable_p and ILamp_p into smart pointers
+            for (const auto* ptr : objects_) {
+                delete ptr;
+            }
+            for(const auto* ptr : lamps_) {
                 delete ptr;
             }
         }
@@ -88,9 +131,15 @@ namespace Raychel {
         friend class RenderController;
 
     private:
+
+        void _notify_renderer() const noexcept;
+
         Camera cam_;
+        std::unique_ptr<RenderController> renderer_;
+
         CubeTexture<color> background_texture_;
         std::vector<IRaymarchable_p> objects_{};
+        std::vector<ILamp_p> lamps_{};
         //TODO: implement
         //std::vector<Camera> cams_;
     };

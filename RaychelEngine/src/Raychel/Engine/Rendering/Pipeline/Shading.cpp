@@ -7,34 +7,42 @@
 
 #include "Raychel/Core/Types.h"
 #include "Raychel/Engine/Interface/Camera.h"
+#include "Raychel/Engine/Interface/Scene.h"
 #include "Raychel/Engine/Objects/Interface.h"
 #include "Raychel/Engine/Rendering/Pipeline/Shading.h"
 #include "Raychel/Misc/Texture/CubeTexture.h"
 
 namespace Raychel {
 
+    color RaymarchRenderer::shade_diffuse(const DiffuseShadingData& data) const noexcept
+    {
+        const color lighting = get_diffuse_lighting(data.surface_point, data.hit_normal, data.recursion_depth);
+        return data.albedo * lighting;
+    }
+
 #pragma region Setup functions
+
+    RaymarchRenderer::RaymarchRenderer(
+        const std::vector<IRaymarchable_p>& objects, const std::vector<ILamp_p>& lamps,
+        const CubeTexture<color>& background_texture)
+        : objects_{objects}, lamps_{lamps}, background_texture_{background_texture}
+    {}
 
     void RaymarchRenderer::set_render_size(const vec2i& new_size)
     {
         RAYCHEL_LOG(
-            "Setting render output size to ", new_size, " (aspect ratio of ", static_cast<number_t>(new_size.x) / static_cast<number_t>(new_size.y), ")");
+            "Setting render output size to ",
+            new_size,
+            " (aspect ratio of ",
+            static_cast<number_t>(new_size.x) / static_cast<number_t>(new_size.y),
+            ")");
         output_size_ = new_size;
         _refill_request_buffer();
     }
 
-    void RaymarchRenderer::set_scene_data(
-        const not_null<std::vector<IRaymarchable_p>*> objects, const not_null<CubeTexture<color>*> background_texture)
+    void RaymarchRenderer::_set_scene_callback_renderer() const
     {
-        objects_ = objects;
-        background_texture_ = background_texture;
-
-        set_scene_callback_renderer();
-    }
-
-    void RaymarchRenderer::set_scene_callback_renderer()
-    {
-        for (const auto& obj : *objects_) {
+        for (const auto& obj : objects_) {
             obj->onRendererAttached(*this);
         }
     }
@@ -77,8 +85,6 @@ namespace Raychel {
     }
 
 #pragma endregion
-
-
 
 #pragma region Render functions
 
@@ -152,21 +158,41 @@ namespace Raychel {
 
 #pragma endregion
 
-
-
 #pragma region Shading functions
 
     //Lambertian term for the rendering equation
-    [[nodiscard]] inline float lambert(const normalized3& normal, const normalized3& light_dir) noexcept {
+    [[nodiscard]] inline float lambert(const normalized3& normal, const normalized3& light_dir) noexcept
+    {
         return std::max(0.0F, dot(normal, light_dir));
     }
 
-
-
-    color RaymarchRenderer::shade_diffuse(const DiffuseShadingData &data) const noexcept
+    color RaymarchRenderer::get_diffuse_lighting(
+        const vec3& surface_point, const normalized3& normal, size_t /*recursion_depth*/) const noexcept
     {
-        (void)this;
-        return data.albedo * lambert(data.hit_normal, vec3{0, 1, 0});
+        //TODO: implement other types of lighting
+        return get_lamp_lighting(surface_point, normal);
+    }
+
+    color RaymarchRenderer::get_lamp_lighting(const vec3& surface_point, const normalized3& normal) const noexcept
+    {
+        color res{};
+        for (const auto& lamp : lamps_) {
+            res += calculate_lamp_lighting(lamp, surface_point, normal);
+        }
+        return res;
+    }
+
+    color RaymarchRenderer::calculate_lamp_lighting(const ILamp_p& lamp, const vec3& surface_point, const normalized3& normal) const noexcept
+    {
+        const vec3 light_vector = lamp->get_light_vector(surface_point);
+        const auto light_dist = mag(light_vector);
+        const vec3 light_dir = light_vector / light_dist;
+
+        if(lambert(normal, light_dir) > 0.0F && !raymarch(surface_point, light_dir, light_dist, nullptr, nullptr)) {
+            return lamp->get_lighting(surface_point) * lambert(normal, light_dir);
+        }
+
+        return color{};
     }
 
 #pragma endregion

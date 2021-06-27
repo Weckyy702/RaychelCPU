@@ -122,7 +122,7 @@ namespace Raychel {
     *\brief Data for simple shading. All Materials take this in
     *
     */
-    struct PrimaryShadingData : public ShadingData
+    struct PrimaryShadingData : ShadingData
     {
         size_t num_ray_steps{0};
         float ray_depth{0.0F};

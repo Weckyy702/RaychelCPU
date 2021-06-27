@@ -78,7 +78,9 @@ namespace Raychel {
     using normalized2 = vec2;
     using normalized3 = vec3;
 
+    //TODO: make these smart pointers
     using IRaymarchable_p = gsl::owner<IRaymarchable*>;
+    using ILamp_p = gsl::owner<ILamp*>;
     using IMaterial_p = std::unique_ptr<IMaterial>;
 
     extern const vec3 g_forward;

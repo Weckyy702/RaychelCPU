@@ -47,11 +47,14 @@ namespace Raychel {
     class Camera;
 
     struct IRaymarchable;
+    struct ILamp;
     class IMaterial;
 
     class Material;
 
+    class RenderController;
     class RaymarchRenderer;
+    //class PostProcessor;
 } // namespace Raychel
 
 #endif //RAYCHEL_FORWARD_H

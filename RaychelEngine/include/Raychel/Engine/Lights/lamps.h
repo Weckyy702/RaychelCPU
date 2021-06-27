@@ -1,8 +1,8 @@
 /**
-*\file Renderer.h
+*\file lights.h
 *\author weckyy702 (weckyy702@gmail.com)
-*\brief Header file for RenderController class
-*\date 2021-06-27
+*\brief Header file for lamp classes
+*\date 2021-06-25
 *
 *MIT License
 *Copyright (c) [2021] [Weckyy702 (weckyy702@gmail.com | https://github.com/Weckyy702)]
@@ -25,43 +25,35 @@
 *SOFTWARE.
 *
 */
-#ifndef RAYCHEL_RENDERER_H
-#define RAYCHEL_RENDERER_H
+#ifndef RAYCHEL_LIGHTS_H
+#define RAYCHEL_LIGHTS_H
 
-#include "Raychel/Core/LinkTypes.h"
-#include "Raychel/Core/Types.h"
-#include "Raychel/Engine/Rendering/Pipeline/Shading.h"
-#include "Raychel/Misc/Texture/Texture.h"
-
+#include "Interface.h"
+    
 namespace Raychel {
 
-    class RenderController
+    class DirectionalLight : public Lamp
     {
-    public:
-        RAYCHEL_EXPORT vec2i setOutputSize(const vec2i& new_size);
+        public:
 
-        //will become private later
-        RAYCHEL_EXPORT std::optional<Texture<RenderResult>> getImageRendered();
+        DirectionalLight(const LampData& data, vec3 direction)
+            :Lamp{data}, direction_{direction}
+        {}
 
-        RAYCHEL_EXPORT std::optional<Texture<color>> getImagePostprocessed() const;
+        [[nodiscard]] color get_lighting(const vec3& /*unused*/) const noexcept override
+        {
+            return lampColor();
+        }
 
-        void renderImage();
+        [[nodiscard]] vec3 get_light_vector(const vec3& /*unused*/) const noexcept override
+        {
+            return direction_ * -10'000.0F; //a directional light is 'infinitely' far away
+        }
 
-    private:
-        void on_scene_layout_changed() const;
-
-        RAYCHEL_EXPORT explicit RenderController(const Scene& parent);
-
-        friend class Scene;
-
-        //non-owning reference to current scene
-        const Scene& parent_scene_;
-        vec2i output_size_;
-
-        RaymarchRenderer renderer_;
-        //PostProcessor postprecessor_;
+        private:
+            vec3 direction_;
     };
 
-} // namespace Raychel
+}
 
-#endif //RAYCHEL_RENDERER_H
+#endif //!RAYCHEL_LIGHTS_H
