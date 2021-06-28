@@ -14,13 +14,13 @@ namespace Raychel {
         return *renderer_;
     }
 
-    CubeTexture<color>& Scene::setBackgroundTexture(const CubeTexture<color>& texture)
+    CubeTexture<color>& Scene::set_background_texture(const CubeTexture<color>& texture)
     {
         background_texture_ = texture;
         return background_texture_;
     }
 
-    Camera& Scene::setCamera(const Camera& cam)
+    Camera& Scene::set_camera(const Camera& cam)
     {
         cam_ = cam;
         return cam_;

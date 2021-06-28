@@ -25,7 +25,7 @@ int main(int /*unused*/, const char** argv)
 
     Scene scene;
 
-    scene.setBackgroundTexture({[](const vec3& dir) {
+    scene.set_background_texture({[](const vec3& dir) {
         (void)dir;
         return color{0.05F};
     }});
@@ -33,30 +33,32 @@ int main(int /*unused*/, const char** argv)
     const Quaternion start_rotation = Quaternion{};
     const vec3 cam_offset = vec3{0, 0, -7};
 
-    auto& cam = scene.setCamera({Transform{cam_offset, start_rotation}, 1.5});
+    auto& cam = scene.set_camera({Transform{cam_offset, start_rotation}, 1.5});
 
-    scene.addObject<SdSphere>(make_object_data({vec3{0, 0, 0}, Quaternion{}}, DiffuseMaterial{color{1}}), 1.0F);
-    scene.addObject<SdPlane>(make_object_data({}, DiffuseMaterial{color{1}}), vec3{0, 1, 0}, -1.0F);
+    scene.add_object<SdSphere>(make_object_data({vec3{0, 0, 0}, Quaternion{}}, DiffuseMaterial{color{1}}), 1.0F);
+    scene.add_object<SdPlane>(make_object_data({}, DiffuseMaterial{color{1}}), vec3{0, 1, 0}, -1.0F);
 
-    scene.addLamp<DirectionalLight>(LampData{color{1, 0, 0}, 0.5F, 0.0F}, vec3{0, -1, 1});
-    scene.addLamp<DirectionalLight>(LampData{color{0, 1, 0}, 0.75F, 0.0F}, vec3{-1, -1, 1});
-    scene.addLamp<DirectionalLight>(LampData{color{0, 0, 1}, 1.0F, 0.0F}, vec3{1, -1, 1});
+    scene.add_lamp<DirectionalLight>(LampData{color{1, 0, 0}, 0.75F, 0.0F}, vec3{0, -1, 1});
+    scene.add_lamp<DirectionalLight>(LampData{color{0, 1, 0}, 0.875F, 0.0F}, vec3{-1, -1, 1});
+    scene.add_lamp<DirectionalLight>(LampData{color{0, 0, 1}, 1.0F, 0.0F}, vec3{1, -1, 1});
 
-    const vec2i size = vec2i{3840, 2160} / 16UL;
+    const vec2i size = vec2i{3840, 2160} / 4UL;
 
     RenderController& renderer = scene.get_renderer();
 
-    renderer.setOutputSize(size);
+    //renderer.set_render_settings({/*TODO: RenderSettings*/});
 
-    gsl::owner<RenderTarget*> target = new NullTarget{size}; //new ImageTargetPng{size, "../../results/res", 4}; // new AsciiTarget{size, true};
+    renderer.set_output_size(size);
+
+    gsl::owner<RenderTarget*> target = new ImageTargetPng{size, "../../results/res", 4}; //new AsciiTarget{size, true}; //new NullTarget{size};
 
     auto label = Logger::startTimer("Total time");
 
     float a = 0;
-    for (size_t i = 0; i < 1; i++) {
+    for (size_t i = 0; i < 60; i++) {
 
         auto render_label = Logger::startTimer("Render time");
-        auto results = renderer.getImageRendered();
+        auto results = renderer.get_rendered_image();
         Logger::logDuration(render_label);
 
         if (!results) {
@@ -71,10 +73,10 @@ int main(int /*unused*/, const char** argv)
 
         //cam.update_yaw(2_deg);
 
-        //cam.transform_.position = rotateY(cam_offset, a);
+        cam.transform_.position = rotateY(cam_offset, a);
         cam.look_at(vec3{});
 
-        a += twoPi<> / 30.0F;
+        a += twoPi<> / 60.0F;
     }
 
     Logger::logDuration(label);

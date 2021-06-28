@@ -9,7 +9,7 @@ namespace Raychel {
         renderer_._set_scene_callback_renderer();
     }
 
-    vec2i RenderController::setOutputSize(const vec2i& new_size)
+    vec2i RenderController::set_output_size(const vec2i& new_size)
     {
         output_size_ = new_size;
 
@@ -18,7 +18,7 @@ namespace Raychel {
         return output_size_;
     }
 
-    std::optional<Texture<RenderResult>> RenderController::getImageRendered()
+    std::optional<Texture<RenderResult>> RenderController::get_rendered_image()
     {
         //TODO implement postprocessing
         return renderer_.render_image(parent_scene_.cam_);

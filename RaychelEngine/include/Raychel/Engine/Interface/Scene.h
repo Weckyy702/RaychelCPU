@@ -59,14 +59,14 @@ namespace Raychel {
         *\return IRaymarchable_p& reference to the newly created object
         */
         template <typename T, typename... Args>
-        IRaymarchable_p& addObject(Args&&... args)
+        IRaymarchable_p& add_object(Args&&... args)
         {
             static_assert(
                 std::is_base_of_v<IRaymarchable, T>,
                 "Only Objects that derive from Raychel::IRaymarchable can be added to a scene!");
             static_assert(
                 std::is_constructible_v<T, Args...>,
-                "Raychel::Scene::addObject<T, Args...> requires T to be constructible from Args...!");
+                "Raychel::Scene::add_object<T, Args...> requires T to be constructible from Args...!");
 
             objects_.push_back(new T(std::forward<Args>(args)...));
             _notify_renderer();
@@ -83,12 +83,12 @@ namespace Raychel {
         *\return ILamp_p& reference to the newly created lamp
         */
         template <typename T, typename... Args>
-        ILamp_p& addLamp(Args&&... args)
+        ILamp_p& add_lamp(Args&&... args)
         {
             static_assert(std::is_base_of_v<ILamp, T>, "Only Objects that derive from Raychel::ILamp can be added as lamps!");
             static_assert(
                 std::is_constructible_v<T, Args...>,
-                "Raychel::Scene::addLight<T, Args...> requires T to be constructible from Args...!");
+                "Raychel::Scene::add_lamp<T, Args...> requires T to be constructible from Args...!");
 
             lamps_.push_back(new T(std::forward<Args>(args)...));
             _notify_renderer();
@@ -102,7 +102,7 @@ namespace Raychel {
         *\param texture new background texture
         *\return CubeTexture<color>& reference to the set texture
         */
-        RAYCHEL_EXPORT CubeTexture<color>& setBackgroundTexture(const CubeTexture<color>& texture);
+        RAYCHEL_EXPORT CubeTexture<color>& set_background_texture(const CubeTexture<color>& texture);
 
         /**
         *\brief Set the Camera for the scene
@@ -110,7 +110,7 @@ namespace Raychel {
         *\param cam new camera
         *\return Camera& reference to the set camera
         */
-        RAYCHEL_EXPORT Camera& setCamera(const Camera& cam);
+        RAYCHEL_EXPORT Camera& set_camera(const Camera& cam);
 
         /**
         *\brief Get the Renderer associated with this scene

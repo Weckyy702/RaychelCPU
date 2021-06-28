@@ -54,6 +54,13 @@ namespace Raychel {
         */
         [[nodiscard]] virtual vec3 get_light_vector(const vec3& surface_point) const noexcept = 0;
 
+        /**
+        *\brief Get the size of the lamp. Used for smooth lighting calculations
+        *
+        *\return float size of the lamp
+        */
+        [[nodiscard]] virtual float get_size() const noexcept = 0;
+
         virtual ~ILamp() = default;
     };
 
@@ -61,6 +68,11 @@ namespace Raychel {
     {
     public:
         RAYCHEL_MAKE_NONCOPY_NONMOVE(Lamp);
+
+        [[nodiscard]] float get_size() const noexcept override
+        {
+            return size_;
+        }
 
     protected:
         explicit Lamp(const LampData& _data) : color_{_data.c}, brightness_{_data.b}, size_{_data.sz}

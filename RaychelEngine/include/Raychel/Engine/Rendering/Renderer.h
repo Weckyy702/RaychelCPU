@@ -38,14 +38,14 @@ namespace Raychel {
     class RenderController
     {
     public:
-        RAYCHEL_EXPORT vec2i setOutputSize(const vec2i& new_size);
+        RAYCHEL_EXPORT vec2i set_output_size(const vec2i& new_size);
 
         //will become private later
-        RAYCHEL_EXPORT std::optional<Texture<RenderResult>> getImageRendered();
+        RAYCHEL_EXPORT std::optional<Texture<RenderResult>> get_rendered_image();
 
-        RAYCHEL_EXPORT std::optional<Texture<color>> getImagePostprocessed() const;
+        RAYCHEL_EXPORT std::optional<Texture<color>> get_postprocessed_image() const;
 
-        void renderImage();
+        void render_image(); //?
 
     private:
         void on_scene_layout_changed() const;

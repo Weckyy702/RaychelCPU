@@ -107,16 +107,16 @@ namespace Raychel {
             return pixel_buffer_.at(idx);
         }
 
-        [[nodiscard]] size_t vecToIndex(const vec2i& _uv) const noexcept
+        [[nodiscard]] size_t vec_to_index(const vec2i& _uv) const noexcept
         {
             const vec2i uv = min(max(_uv, vec2i{0, 0}), size_); //clamp the vector
             return (uv.y * size_.x) + uv.x;
         }
 
-        [[nodiscard]] size_t vecToIndex(const vec2& _uv) const noexcept
+        [[nodiscard]] size_t vec_to_index(const vec2& _uv) const noexcept
         {
             const vec2 pixel_uv = _uv * (size_.to<number_t>());
-            return vecToIndex(pixel_uv.to<size_t>());
+            return vec_to_index(pixel_uv.to<size_t>());
         }
 
         vec2i size_;
@@ -126,25 +126,25 @@ namespace Raychel {
     template <typename T>
     auto Texture<T>::at(const vec2i& _uv) -> value_type&
     {
-        return read(vecToIndex(_uv));
+        return read(vec_to_index(_uv));
     }
 
     template <typename T>
     auto Texture<T>::at(const vec2& _uv) -> value_type&
     {
-        return read(vecToIndex(_uv));
+        return read(vec_to_index(_uv));
     }
 
     template <typename T>
     auto Texture<T>::at(const vec2i& _uv) const -> const value_type&
     {
-        return read(vecToIndex(_uv));
+        return read(vec_to_index(_uv));
     }
 
     template <typename T>
     auto Texture<T>::at(const vec2& _uv) const -> const value_type&
     {
-        return read(vecToIndex(_uv));
+        return read(vec_to_index(_uv));
     }
 
 } // namespace Raychel
