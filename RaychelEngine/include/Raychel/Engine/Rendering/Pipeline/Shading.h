@@ -66,7 +66,8 @@ namespace Raychel {
 
         RAYCHEL_EXPORT color get_lamp_lighting(const vec3& surface_point, const normalized3& normal) const noexcept;
 
-        RAYCHEL_EXPORT color calculate_lamp_lighting(const ILamp_p& lamp, const vec3& surface_point, const normalized3& normal) const noexcept;
+        RAYCHEL_EXPORT color
+        calculate_lamp_lighting(const ILamp_p& lamp, const vec3& surface_point, const normalized3& normal) const noexcept;
 
 #pragma endregion
 

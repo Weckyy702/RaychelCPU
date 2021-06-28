@@ -1,8 +1,8 @@
 /**
-*\file lights.h
+*\file NullTarget.h
 *\author weckyy702 (weckyy702@gmail.com)
-*\brief Header file for lamp classes
-*\date 2021-06-25
+*\brief Header file NullTarget class
+*\date 2021-06-28
 *
 *MIT License
 *Copyright (c) [2021] [Weckyy702 (weckyy702@gmail.com | https://github.com/Weckyy702)]
@@ -25,33 +25,27 @@
 *SOFTWARE.
 *
 */
-#ifndef RAYCHEL_LIGHTS_H
-#define RAYCHEL_LIGHTS_H
+#ifndef RAYCHEL_NULL_TARGET_H
+#define RAYCHEL_NULL_TARGET_H
 
-#include "Interface.h"
+#include "RenderTarget.h"
 
 namespace Raychel {
 
-    class DirectionalLight : public Lamp
+    class NullTarget : public RenderTarget
     {
     public:
-        DirectionalLight(const LampData& data, vec3 direction) : Lamp{data}, direction_{direction}
+        explicit NullTarget(const vec2i& size) : RenderTarget(size)
         {}
 
-        [[nodiscard]] color get_lighting(const vec3& /*unused*/) const noexcept override
+        void writeFramebuffer(const Texture<RenderResult>& /*unused*/) override
         {
-            return lampColor() * brightness();
+            /*do nothing*/
         }
 
-        [[nodiscard]] vec3 get_light_vector(const vec3& /*unused*/) const noexcept override
-        {
-            return direction_ * -10'000.0F; //a directional light is 'infinitely' far away
-        }
-
-    private:
-        vec3 direction_;
+        ~NullTarget() override = default;
     };
 
 } // namespace Raychel
 
-#endif //!RAYCHEL_LIGHTS_H
+#endif //!RAYCHEL_NULL_TARGET_H

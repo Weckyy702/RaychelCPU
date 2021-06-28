@@ -52,7 +52,7 @@ namespace Raychel {
 
         virtual void onRendererAttached(const RaymarchRenderer&) = 0;
 
-        virtual ~IRaymarchable()=default;
+        virtual ~IRaymarchable() = default;
     };
 
     //Base class for Objects
@@ -73,11 +73,11 @@ namespace Raychel {
         explicit SdObject(ObjectData&& _data) : transform_{_data.t}, material_{std::move(_data.mat)}
         {}
 
-        [[nodiscard]] const Transform& transform() const
+        [[nodiscard]] inline const Transform& transform() const
         {
             return transform_;
         }
-        [[nodiscard]] const IMaterial_p& material() const
+        [[nodiscard]] inline const IMaterial_p& material() const
         {
             return material_;
         }

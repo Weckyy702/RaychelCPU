@@ -7,6 +7,7 @@
 #include "Raychel/Engine/Objects/sdObjects.h"
 #include "Raychel/Engine/Rendering/RenderTarget/AsciiTarget.h"
 #include "Raychel/Engine/Rendering/RenderTarget/ImageTarget.h"
+#include "Raychel/Engine/Rendering/RenderTarget/NullTarget.h"
 #include "Raychel/Engine/Rendering/Renderer.h"
 #include "Raychel/Raychel.h"
 
@@ -35,22 +36,24 @@ int main(int /*unused*/, const char** argv)
     auto& cam = scene.setCamera({Transform{cam_offset, start_rotation}, 1.5});
 
     scene.addObject<SdSphere>(make_object_data({vec3{0, 0, 0}, Quaternion{}}, DiffuseMaterial{color{1}}), 1.0F);
-    scene.addObject<SdSphere>(make_object_data({vec3{0.25, -2, 0}, Quaternion{}}, DiffuseMaterial{color{1}}), 1.0F);
-    scene.addLamp<DirectionalLight>(LampData{color{1, 0, 0}, 1.0, 0.0}, vec3{0, -1, 0});
-    scene.addLamp<DirectionalLight>(LampData{color{0, 1, 0}, 1.0, 0.0}, vec3{1, 0, 0});
+    scene.addObject<SdPlane>(make_object_data({}, DiffuseMaterial{color{1}}), vec3{0, 1, 0}, -1.0F);
 
-    const vec2i size = {480, 270};
+    scene.addLamp<DirectionalLight>(LampData{color{1, 0, 0}, 0.5F, 0.0F}, vec3{0, -1, 1});
+    scene.addLamp<DirectionalLight>(LampData{color{0, 1, 0}, 0.75F, 0.0F}, vec3{-1, -1, 1});
+    scene.addLamp<DirectionalLight>(LampData{color{0, 0, 1}, 1.0F, 0.0F}, vec3{1, -1, 1});
+
+    const vec2i size = vec2i{3840, 2160} / 16UL;
 
     RenderController& renderer = scene.get_renderer();
 
     renderer.setOutputSize(size);
 
-    gsl::owner<RenderTarget*> target = new ImageTargetPng{size, "../../results/res", 4}; //new AsciiTarget{size, true}; 
+    gsl::owner<RenderTarget*> target = new NullTarget{size}; //new ImageTargetPng{size, "../../results/res", 4}; // new AsciiTarget{size, true};
 
     auto label = Logger::startTimer("Total time");
 
     float a = 0;
-    for (size_t i = 0; i < 3600; i++) {
+    for (size_t i = 0; i < 1; i++) {
 
         auto render_label = Logger::startTimer("Render time");
         auto results = renderer.getImageRendered();
@@ -68,11 +71,10 @@ int main(int /*unused*/, const char** argv)
 
         //cam.update_yaw(2_deg);
 
-        cam.transform_.position =
-            rotateX(rotateZ(rotateY(cam_offset, a * degToRad<>), a * 0.6F * degToRad<>), a * 0.1F * degToRad<>);
+        //cam.transform_.position = rotateY(cam_offset, a);
         cam.look_at(vec3{});
 
-        a += 1.0F;
+        a += twoPi<> / 30.0F;
     }
 
     Logger::logDuration(label);

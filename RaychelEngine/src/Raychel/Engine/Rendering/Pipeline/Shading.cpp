@@ -182,13 +182,14 @@ namespace Raychel {
         return res;
     }
 
-    color RaymarchRenderer::calculate_lamp_lighting(const ILamp_p& lamp, const vec3& surface_point, const normalized3& normal) const noexcept
+    color RaymarchRenderer::calculate_lamp_lighting(
+        const ILamp_p& lamp, const vec3& surface_point, const normalized3& normal) const noexcept
     {
         const vec3 light_vector = lamp->get_light_vector(surface_point);
         const auto light_dist = mag(light_vector);
         const vec3 light_dir = light_vector / light_dist;
 
-        if(lambert(normal, light_dir) > 0.0F && !raymarch(surface_point, light_dir, light_dist, nullptr, nullptr)) {
+        if (lambert(normal, light_dir) > 0.0F && !raymarch(surface_point, light_dir, light_dist, nullptr, nullptr)) {
             return lamp->get_lighting(surface_point) * lambert(normal, light_dir);
         }
 

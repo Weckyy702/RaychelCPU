@@ -4,7 +4,7 @@
 namespace Raychel {
 
     RenderController::RenderController(const Scene& parent)
-        :parent_scene_(parent), renderer_(parent.objects_, parent.lamps_, parent.background_texture_)
+        : parent_scene_(parent), renderer_(parent.objects_, parent.lamps_, parent.background_texture_)
     {
         renderer_._set_scene_callback_renderer();
     }

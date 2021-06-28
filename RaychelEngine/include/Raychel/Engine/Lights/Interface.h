@@ -54,7 +54,7 @@ namespace Raychel {
         */
         [[nodiscard]] virtual vec3 get_light_vector(const vec3& surface_point) const noexcept = 0;
 
-        virtual ~ILamp()=default;
+        virtual ~ILamp() = default;
     };
 
     class Lamp : public ILamp

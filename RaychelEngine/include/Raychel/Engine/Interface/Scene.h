@@ -30,10 +30,10 @@
 
 #include "Raychel/Core/utils.h"
 #include "Raychel/Engine/Interface/Camera.h"
-#include "Raychel/Engine/Objects/Interface.h"
 #include "Raychel/Engine/Lights/Interface.h"
-#include "Raychel/Misc/Texture/CubeTexture.h"
+#include "Raychel/Engine/Objects/Interface.h"
 #include "Raychel/Engine/Rendering/Renderer.h"
+#include "Raychel/Misc/Texture/CubeTexture.h"
 
 namespace Raychel {
 
@@ -86,7 +86,9 @@ namespace Raychel {
         ILamp_p& addLamp(Args&&... args)
         {
             static_assert(std::is_base_of_v<ILamp, T>, "Only Objects that derive from Raychel::ILamp can be added as lamps!");
-            static_assert(std::is_constructible_v<T, Args...>, "Raychel::Scene::addLight<T, Args...> requires T to be constructible from Args...!");
+            static_assert(
+                std::is_constructible_v<T, Args...>,
+                "Raychel::Scene::addLight<T, Args...> requires T to be constructible from Args...!");
 
             lamps_.push_back(new T(std::forward<Args>(args)...));
             _notify_renderer();
@@ -123,7 +125,7 @@ namespace Raychel {
             for (const auto* ptr : objects_) {
                 delete ptr;
             }
-            for(const auto* ptr : lamps_) {
+            for (const auto* ptr : lamps_) {
                 delete ptr;
             }
         }
@@ -131,7 +133,6 @@ namespace Raychel {
         friend class RenderController;
 
     private:
-
         void _notify_renderer() const noexcept;
 
         Camera cam_;

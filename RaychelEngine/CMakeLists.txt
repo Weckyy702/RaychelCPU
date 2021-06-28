@@ -25,7 +25,7 @@ set(SOURCES
     ${RAYCHEL_SOURCE_DIR}/Engine/Interface/Scene.cpp
 )
 
-add_library(${PROJECT_NAME} SHARED
+add_library(${PROJECT_NAME} STATIC
     ${SOURCES}
 )
 
@@ -65,7 +65,7 @@ endif()
 
 #MSVC does not support UBSAN :(
 if(${USE_UBSAN} AND NOT MSVC)
-    message(STATUS "EnabledUbSAN support")
+    message(STATUS "Enabled UBSAN support")
 
     list(APPEND RAYCHEL_COMPILER_FLAGS
         -fsanitize=undefined
