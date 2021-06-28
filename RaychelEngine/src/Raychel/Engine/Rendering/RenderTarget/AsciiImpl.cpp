@@ -54,8 +54,14 @@ namespace Raychel::details {
             endwin();
         }
 
-        void output_character(size_t x, size_t y, char c, const color& col) const noexcept
+        void output_character(size_t _x, size_t _y, char c, const color& col) const noexcept
         {
+            RAYCHEL_ASSERT(_x < std::numeric_limits<int>::max());
+            RAYCHEL_ASSERT(_y < std::numeric_limits<int>::max());
+
+            const auto x = static_cast<int>(_x);
+            const auto y = static_cast<int>(_y);
+
             if (use_color_) {
                 //TODO: implement finding the correct color
                 const auto ncurses_col = _find_closest_ncurses_col(col);
@@ -101,7 +107,9 @@ namespace Raychel::details {
         {
             ncurses_color res = black;
             float min_dist = 1000;
+
             for (NCURSES_COLOR_T i = 0; i < 8; i++) {
+
                 if (distSq(vec3{col}, vec3{ncurses_colors.at(i)}) < min_dist) {
                     min_dist = distSq(vec3{col}, vec3{ncurses_colors.at(i)});
 
@@ -135,17 +143,16 @@ namespace Raychel::details {
 
 #elif defined(_WIN32)
 
-#define NOMINMAX //Why Microsoft? WHY?!?
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+    #define NOMINMAX //Why Microsoft? WHY?!?
+    #define WIN32_LEAN_AND_MEAN
+    #include <windows.h>
 
 namespace Raychel::details {
 
     class ConsoleManager::Impl_
     {
     public:
-        Impl_(bool use_color) 
-            : hConsole_{GetStdHandle(STD_OUTPUT_HANDLE)}, use_color_{use_color}
+        Impl_(bool use_color) : hConsole_{GetStdHandle(STD_OUTPUT_HANDLE)}, use_color_{use_color}
         {
             RAYCHEL_ASSERT(hConsole_ != NULL);
         }
@@ -193,8 +200,6 @@ namespace Raychel::details {
         const bool use_color_;
     };
 
-
-
     void ConsoleManager::do_framebuffer_write(const Texture<RenderResult>& framebuffer) noexcept
     {
         (void)framebuffer;
@@ -211,7 +216,7 @@ namespace Raychel::details {
         }
     }
 
-}
+} // namespace Raychel::details
 
 #elif defined(RAYCHEL_USE_NCURSES_FALLBACK)
 

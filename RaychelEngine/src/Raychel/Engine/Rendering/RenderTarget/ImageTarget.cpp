@@ -13,7 +13,7 @@ namespace Raychel {
     void ImageTargetPng::writeFramebuffer(const Texture<RenderResult>& framebuffer)
     {
 
-        RAYCHEL_LOG("Writing framebuffer to image...")
+        RAYCHEL_LOG("Writing framebuffer to image...");
 
         RAYCHEL_ASSERT(framebuffer.size() == size());
 

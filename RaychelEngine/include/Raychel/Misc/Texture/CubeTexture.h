@@ -100,7 +100,7 @@ namespace Raychel {
 
         CubeTexture& operator=(const CubeTexture& rhs) noexcept
         {
-            _destroyActiveMember();
+            _destroy_active_member();
 
             type_ = rhs.type_;
             switch (type_) {
@@ -121,7 +121,7 @@ namespace Raychel {
 
         CubeTexture& operator=(CubeTexture&& rhs) noexcept
         {
-            _destroyActiveMember();
+            _destroy_active_member();
 
             type_ = rhs.type_;
             switch (type_) {
@@ -165,11 +165,11 @@ namespace Raychel {
 
         ~CubeTexture() noexcept
         {
-            _destroyActiveMember();
+            _destroy_active_member();
         }
 
     private:
-        void _destroyActiveMember() noexcept
+        void _destroy_active_member() noexcept
         {
             switch (type_) {
                 case TextureType::function:

@@ -188,7 +188,7 @@ namespace Raychel {
     *\param new_forward new forward vector
     *\return QuaternionImp<T> the Quaternion that rotates old onto new
     */
-    template<typename T>
+    template <typename T>
     QuaternionImp<T> look_at(const vec3Imp<T>& _old_forward, const vec3Imp<T>& _new_forward) noexcept;
 
 } // namespace Raychel

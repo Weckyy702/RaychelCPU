@@ -47,8 +47,7 @@ namespace Raychel {
             RAYCHEL_EXPORT ~ConsoleManager() noexcept;
 
         private:
-
-            char get_char_from_brightness(float brightness) const noexcept;
+            [[nodiscard]] char get_char_from_brightness(float brightness) const noexcept;
 
             class Impl_; //OS-specific implementation
             gsl::owner<Impl_*> impl_;
