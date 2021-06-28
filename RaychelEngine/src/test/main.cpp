@@ -3,9 +3,11 @@
 #include <thread>
 
 #include "Raychel/Engine/Interface/Scene.h"
+#include "Raychel/Engine/Lights/lamps.h"
 #include "Raychel/Engine/Objects/sdObjects.h"
 #include "Raychel/Engine/Rendering/RenderTarget/AsciiTarget.h"
 #include "Raychel/Engine/Rendering/RenderTarget/ImageTarget.h"
+#include "Raychel/Engine/Rendering/RenderTarget/NullTarget.h"
 #include "Raychel/Engine/Rendering/Renderer.h"
 #include "Raychel/Raychel.h"
 
@@ -16,7 +18,7 @@ using namespace Raychel;
 
 int main(int /*unused*/, const char** argv)
 {
-    Logger::setMinimumLogLevel(Logger::LogLevel::log);
+    Logger::setMinimumLogLevel(Logger::LogLevel::debug);
     Logger::setOutStream(std::cerr);
 
     Logger::log("Welcome to Raychel Version ", RAYCHEL_VERSION_TAG, " at ", *argv, '\n');
@@ -36,7 +38,9 @@ int main(int /*unused*/, const char** argv)
     scene.add_object<SdSphere>(make_object_data({vec3{0, 0, 0}, Quaternion{}}, DiffuseMaterial{color{1}}), 1.0F);
     scene.add_object<SdPlane>(make_object_data({}, DiffuseMaterial{color{1}}), vec3{0, 1, 0}, -1.0F);
 
-    const vec2i size = {640, 360};
+    scene.add_lamp<DirectionalLight>(LampData{color{1, 0, 0}, 0.75F, 0.0F}, vec3{0, -1, 1});
+    scene.add_lamp<DirectionalLight>(LampData{color{0, 1, 0}, 0.875F, 0.0F}, vec3{-1, -1, 1});
+    scene.add_lamp<DirectionalLight>(LampData{color{0, 0, 1}, 1.0F, 0.0F}, vec3{1, -1, 1});
 
     const vec2i size = vec2i{3840, 2160} / 4UL;
 
@@ -51,7 +55,7 @@ int main(int /*unused*/, const char** argv)
     auto label = Logger::startTimer("Total time");
 
     float a = 0;
-    for (size_t i = 0;; i++) {
+    for (size_t i = 0; i < 60; i++) {
 
         auto render_label = Logger::startTimer("Render time");
         auto results = renderer.get_rendered_image();
@@ -69,11 +73,10 @@ int main(int /*unused*/, const char** argv)
 
         //cam.update_yaw(2_deg);
 
-
-        cam.transform_.position = rotateX(rotateZ(rotateY(cam_offset, a * degToRad<>), a * 0.6F * degToRad<>), a * 0.1F * degToRad<>);
+        cam.transform_.position = rotateY(cam_offset, a);
         cam.look_at(vec3{});
 
-        a += 1.0F;
+        a += twoPi<> / 60.0F;
     }
 
     Logger::logDuration(label);

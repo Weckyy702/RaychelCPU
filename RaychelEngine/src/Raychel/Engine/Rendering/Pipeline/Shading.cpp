@@ -7,11 +7,18 @@
 
 #include "Raychel/Core/Types.h"
 #include "Raychel/Engine/Interface/Camera.h"
+#include "Raychel/Engine/Interface/Scene.h"
 #include "Raychel/Engine/Objects/Interface.h"
 #include "Raychel/Engine/Rendering/Pipeline/Shading.h"
 #include "Raychel/Misc/Texture/CubeTexture.h"
 
 namespace Raychel {
+
+    color RaymarchRenderer::shade_diffuse(const DiffuseShadingData& data) const noexcept
+    {
+        const color lighting = get_diffuse_lighting(data.surface_point, data.hit_normal, data.recursion_depth);
+        return data.albedo * lighting;
+    }
 
 #pragma region Setup functions
 
@@ -78,8 +85,6 @@ namespace Raychel {
     }
 
 #pragma endregion
-
-
 
 #pragma region Render functions
 
@@ -153,21 +158,47 @@ namespace Raychel {
 
 #pragma endregion
 
-
-
 #pragma region Shading functions
 
     //Lambertian term for the rendering equation
-    [[nodiscard]] inline float lambert(const normalized3& normal, const normalized3& light_dir) noexcept {
+    [[nodiscard]] inline float lambert(const normalized3& normal, const normalized3& light_dir) noexcept
+    {
         return std::max(0.0F, dot(normal, light_dir));
     }
 
-
-
-    color RaymarchRenderer::shade_diffuse(const DiffuseShadingData &data) const noexcept
+    color RaymarchRenderer::get_diffuse_lighting(
+        const vec3& surface_point, const normalized3& normal, size_t /*recursion_depth*/) const noexcept
     {
-        (void)this;
-        return data.albedo * lambert(data.hit_normal, vec3{0, 1, 0});
+        //TODO: implement other types of lighting
+        return get_lamp_lighting(surface_point, normal);
+    }
+
+    color RaymarchRenderer::get_lamp_lighting(const vec3& surface_point, const normalized3& normal) const noexcept
+    {
+        color res{};
+        for (const auto& lamp : lamps_) {
+            res += calculate_lamp_lighting(lamp, surface_point, normal);
+        }
+        return res;
+    }
+
+    color RaymarchRenderer::calculate_lamp_lighting(
+        const ILamp_p& lamp, const vec3& surface_point, const normalized3& normal) const noexcept
+    {
+        const vec3 light_vector = lamp->get_light_vector(surface_point);
+        const auto light_dist = mag(light_vector);
+        const vec3 light_dir = light_vector / light_dist;
+
+        if (dot(normal, light_dir) > 0.0F && !raymarch(surface_point, light_dir, light_dist, nullptr, nullptr)) {
+            const float light_size = lamp->get_size();
+
+            if(light_size == 0.0F) {
+                    return lamp->get_lighting(surface_point) * lambert(normal, light_dir);
+            }
+            RAYCHEL_ASSERT_NOT_REACHED; //TODO: implement smooth lighting
+        }
+
+        return color{};
     }
 
 #pragma endregion

@@ -1,8 +1,8 @@
 /**
-*\file Forward.h
+*\file lights.h
 *\author weckyy702 (weckyy702@gmail.com)
-*\brief Header for forward declarations
-*\date 2021-03-24
+*\brief Header file for lamp classes
+*\date 2021-06-25
 *
 *MIT License
 *Copyright (c) [2021] [Weckyy702 (weckyy702@gmail.com | https://github.com/Weckyy702)]
@@ -25,36 +25,33 @@
 *SOFTWARE.
 *
 */
-#ifndef RAYCHEL_FORWARD_H
-#define RAYCHEL_FORWARD_H
+#ifndef RAYCHEL_LIGHTS_H
+#define RAYCHEL_LIGHTS_H
+
+#include "Interface.h"
 
 namespace Raychel {
 
-    //Image Texture
-    template <typename T>
-    class Texture;
+    class DirectionalLight : public Lamp
+    {
+    public:
+        DirectionalLight(const LampData& data, vec3 direction) : Lamp{data}, direction_{direction}
+        {}
 
-    //Wrapper for either an Image or procedural Texture
-    template <typename T>
-    class TextureProvider;
+        [[nodiscard]] color get_lighting(const vec3& /*unused*/) const noexcept override
+        {
+            return lampColor() * brightness();
+        }
 
-    //Wrapper for either a Cube Map or a procedural Texture
-    template <typename T>
-    class CubeTexture;
+        [[nodiscard]] vec3 get_light_vector(const vec3& /*unused*/) const noexcept override
+        {
+            return direction_ * -10'000.0F; //a directional light is 'infinitely' far away
+        }
 
-    class Scene;
+    private:
+        vec3 direction_;
+    };
 
-    class Camera;
-
-    struct IRaymarchable;
-    struct ILamp;
-    class IMaterial;
-
-    class Material;
-
-    class RenderController;
-    class RaymarchRenderer;
-    //class PostProcessor;
 } // namespace Raychel
 
-#endif //RAYCHEL_FORWARD_H
+#endif //!RAYCHEL_LIGHTS_H

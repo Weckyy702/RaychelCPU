@@ -63,10 +63,10 @@ namespace Raychel {
     {
         RAYCHEL_ASSERT_NORMALIZED(direction);
 
-        if (recursion_depth <= raymarch_data_.max_recursion_depth) {
+        if (recursion_depth <= options_.max_recursion_depth) {
             float depth = 0;
             size_t num_ray_steps = 0;
-            if (raymarch(origin, direction, raymarch_data_.max_ray_depth, &depth, &num_ray_steps)) {
+            if (raymarch(origin, direction, options_.max_ray_depth, &depth, &num_ray_steps)) {
                 const RaymarchHitInfo hit_info = get_hit_info(origin, direction, depth, num_ray_steps, recursion_depth);
 
                 return hit_info.hit_object->getSurfaceColor(hit_info.shading_data);
@@ -84,7 +84,7 @@ namespace Raychel {
         const vec3 hit_point = origin + (direction * depth);
 
         const vec3 normal = get_normal(hit_point);
-        const vec3 surface_point = hit_point + (normal * raymarch_data_.surface_bias);
+        const vec3 surface_point = hit_point + (normal * options_.surface_bias);
 
         const IRaymarchable* hit_obj = get_hit_object(hit_point);
         RAYCHEL_ASSERT(hit_obj);
@@ -94,7 +94,7 @@ namespace Raychel {
 
     vec3 RaymarchRenderer::get_normal(const vec3& p) const noexcept
     {
-        const float k = raymarch_data_.normal_bias;
+        const float k = options_.normal_bias;
         return normalize(vec3{
             sd_scene(p + vec3{k, 0, 0}) - sd_scene(p + vec3{-k, 0, 0}),
             sd_scene(p + vec3{0, k, 0}) - sd_scene(p + vec3{0, -k, 0}),
@@ -104,16 +104,18 @@ namespace Raychel {
 
     IRaymarchable* RaymarchRenderer::get_hit_object(const vec3& p) const noexcept
     {
-        float min_distance = raymarch_data_.max_ray_depth;
+        float min_distance = options_.max_ray_depth;
         IRaymarchable* closest_object = nullptr;
-        for (const auto& object : *objects_) {
+
+        for (const auto& object : objects_) {
             float object_distance = object->eval(p);
 
-            if (object_distance < raymarch_data_.distance_bias && std::abs(object_distance) < min_distance) {
+            if (object_distance < options_.distance_bias && std::abs(object_distance) < min_distance) {
                 min_distance = std::abs(object_distance);
                 closest_object = object;
             }
         }
+
         return closest_object;
     }
 
@@ -139,7 +141,7 @@ namespace Raychel {
 
             const float scene_dist = sd_scene(p);
 
-            if (scene_dist < raymarch_data_.distance_bias) {
+            if (scene_dist < options_.distance_bias) {
                 if (out_depth != nullptr) {
                     *out_depth = depth;
                 }

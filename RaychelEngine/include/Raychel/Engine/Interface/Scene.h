@@ -30,6 +30,7 @@
 
 #include "Raychel/Core/utils.h"
 #include "Raychel/Engine/Interface/Camera.h"
+#include "Raychel/Engine/Lights/Interface.h"
 #include "Raychel/Engine/Objects/Interface.h"
 #include "Raychel/Engine/Rendering/Renderer.h"
 #include "Raychel/Misc/Texture/CubeTexture.h"
@@ -73,6 +74,26 @@ namespace Raychel {
             return objects_.back();
         }
 
+        /**
+        *\brief Add a new lamp to the scene. Returns a reference to the newly created lamp
+        *
+        *\tparam T Type of lamp. Must derive from ILamp
+        *\tparam Args Constructor argument types for the lamp
+        *\param args Constructor arguments for the lamp
+        *\return ILamp_p& reference to the newly created lamp
+        */
+        template <typename T, typename... Args>
+        ILamp_p& add_lamp(Args&&... args)
+        {
+            static_assert(std::is_base_of_v<ILamp, T>, "Only Objects that derive from Raychel::ILamp can be added as lamps!");
+            static_assert(
+                std::is_constructible_v<T, Args...>,
+                "Raychel::Scene::add_lamp<T, Args...> requires T to be constructible from Args...!");
+
+            lamps_.push_back(new T(std::forward<Args>(args)...));
+            _notify_renderer();
+
+            return lamps_.back();
         }
 
         /**
@@ -97,12 +118,14 @@ namespace Raychel {
         *\return RAYCHEL_EXPORT 
         */
         RAYCHEL_EXPORT [[nodiscard]] RenderController& get_renderer() const;
+
         ~Scene()
         {
             //TODO: turn IRaymarchable_p and ILamp_p into smart pointers
             for (const auto* ptr : objects_) {
                 delete ptr;
             }
+            for (const auto* ptr : lamps_) {
                 delete ptr;
             }
         }
@@ -117,6 +140,7 @@ namespace Raychel {
 
         CubeTexture<color> background_texture_;
         std::vector<IRaymarchable_p> objects_{};
+        std::vector<ILamp_p> lamps_{};
         //TODO: implement
         //std::vector<Camera> cams_;
     };

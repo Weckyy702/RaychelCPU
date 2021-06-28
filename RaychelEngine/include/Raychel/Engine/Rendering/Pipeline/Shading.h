@@ -5,18 +5,14 @@
 
 #include "Raychel/Core/LinkTypes.h"
 #include "Raychel/Core/Types.h"
+#include "Raychel/Core/export.h"
+#include "Raychel/Misc/Texture/CubeTexture.h"
 namespace Raychel {
 
     class RaymarchRenderer
     {
-
     public:
-        RaymarchRenderer() = default;
-
         RAYCHEL_EXPORT void set_render_size(const vec2i& new_size);
-
-        RAYCHEL_EXPORT void
-        set_scene_data(not_null<std::vector<IRaymarchable_p>*> objects, not_null<CubeTexture<color>*> background_texture);
 
         RAYCHEL_EXPORT std::optional<Texture<RenderResult>> render_image(const Camera& cam);
 
@@ -36,6 +32,8 @@ namespace Raychel {
         RAYCHEL_EXPORT bool _render_to_texture(Texture<RenderResult>& output) const;
 
         RAYCHEL_EXPORT void _setup_cam_data(const Camera& cam) noexcept;
+
+        RAYCHEL_EXPORT vec2 _get_screenspace_UV(const vec2& uv) const noexcept;
 
 //these functions are defined in RaymarchMath.cpp
 #pragma region Raymarching functions
@@ -61,14 +59,28 @@ namespace Raychel {
 
 #pragma endregion
 
+#pragma region shading functions
+
+        RAYCHEL_EXPORT color
+        get_diffuse_lighting(const vec3& surface_point, const normalized3& normal, size_t recursion_depth) const noexcept;
+
+        RAYCHEL_EXPORT color get_lamp_lighting(const vec3& surface_point, const normalized3& normal) const noexcept;
+
+        RAYCHEL_EXPORT color
+        calculate_lamp_lighting(const ILamp_p& lamp, const vec3& surface_point, const normalized3& normal) const noexcept;
+
+#pragma endregion
+
         void _register_render_exception(gsl::czstring<> origin, gsl::czstring<> msg, bool fatal)
         {
             failed_ = true;
             current_exception_ = {msg, origin, fatal};
         }
 
+        friend class RenderController;
+
         vec2i output_size_;
-        float aspect_ratio = 0.0;
+        float aspect_ratio{0.0F};
 
         //Non-owning references to scene specific data
         const std::vector<IRaymarchable_p>& objects_;
@@ -97,7 +109,7 @@ namespace Raychel {
             float distance_bias{1e-4F};
             float normal_bias{1e-5F};
             float surface_bias{5e-4F};
-        } raymarch_data_;
+        } options_;
 
         mutable std::atomic_bool failed_{false};
         mutable exception_context current_exception_;
