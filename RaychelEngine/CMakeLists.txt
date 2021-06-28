@@ -65,7 +65,7 @@ endif()
 
 #MSVC does not support UBSAN :(
 if(${USE_UBSAN} AND NOT MSVC)
-    message(STATUS "EnabledUbSAN support")
+    message(STATUS "Enabled UBSAN support")
 
     list(APPEND RAYCHEL_COMPILER_FLAGS
         -fsanitize=undefined
