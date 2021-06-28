@@ -57,11 +57,7 @@ namespace Raychel {
 
 #pragma endregion
 
-        void _register_render_exception(gsl::czstring<> origin, gsl::czstring<> msg, bool fatal)
-        {
-            failed_ = true;
-            current_exception_ = {msg, origin, fatal};
-        }
+        RAYCHEL_EXPORT vec2 _get_screenspace_UV(const vec2& uv) const noexcept;
 
         vec2i output_size_;
         float aspect_ratio = 0.0;

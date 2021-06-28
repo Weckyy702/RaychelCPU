@@ -28,33 +28,29 @@
 #ifndef RAYCHEL_EXCEPTION_CONTEXT_H
 #define RAYCHEL_EXCEPTION_CONTEXT_H
 
-#include "Raychel/Core/utils.h"
+#include <exception>
 
-#define RAYCHEL_THROW_RENDER_ERROR(msg, fatal)                                                                                   \
-    {                                                                                                                            \
-        _register_render_exception(RAYCHEL_FUNCTION_NAME, msg, fatal);                                                           \
-    }
+#include "Raychel/Core/utils.h"
 
 namespace Raychel {
 
     /**
     *\brief Base class for all Exceptions in Raychel. Contains additional information compared to std::exception
     */
-    class exception_context
+    class exception_context : public std::exception
     {
-    public:
-        exception_context() = default;
 
+    public:
         exception_context(std::string_view what, std::string_view origin, bool fatal)
             : what_{what}, origin_{origin}, fatal_{fatal}
         {}
 
-        [[nodiscard]] gsl::czstring<> what() const noexcept
+        [[nodiscard]] const char* what() const noexcept override
         {
             return what_.data();
         }
 
-        [[nodiscard]] gsl::czstring<> origin() const noexcept
+        [[nodiscard]] const char* origin() const noexcept
         {
             return origin_.data();
         }
@@ -67,7 +63,7 @@ namespace Raychel {
     private:
         std::string_view what_;
         std::string_view origin_;
-        bool fatal_{false};
+        const bool fatal_{false};
     };
 
 } // namespace Raychel
