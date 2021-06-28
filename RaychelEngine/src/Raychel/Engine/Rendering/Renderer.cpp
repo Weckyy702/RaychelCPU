@@ -3,7 +3,13 @@
 
 namespace Raychel {
 
-    vec2i RenderController::setOutputSize(const vec2i& new_size)
+    RenderController::RenderController(const Scene& parent)
+        : parent_scene_(parent), renderer_(parent.objects_, parent.lamps_, parent.background_texture_)
+    {
+        renderer_._set_scene_callback_renderer();
+    }
+
+    vec2i RenderController::set_output_size(const vec2i& new_size)
     {
         output_size_ = new_size;
 
@@ -12,16 +18,16 @@ namespace Raychel {
         return output_size_;
     }
 
-    void RenderController::setCurrentScene(const not_null<Scene*> new_scene)
-    {
-        current_scene_ = new_scene;
-        renderer_.set_scene_data(&current_scene_->objects_, &current_scene_->background_texture_);
-    }
-
-    std::optional<Texture<RenderResult>> RenderController::getImageRendered()
+    std::optional<Texture<RenderResult>> RenderController::get_rendered_image()
     {
         //TODO implement postprocessing
-        return renderer_.render_image(current_scene_->cam_);
+        return renderer_.render_image(parent_scene_.cam_);
+    }
+
+    void RenderController::on_scene_layout_changed() const
+    {
+        //possibly recalculate later optimizations
+        renderer_._set_scene_callback_renderer();
     }
 
 } // namespace Raychel

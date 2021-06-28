@@ -51,6 +51,7 @@ namespace Raychel {
 
     class Material;
 
+    class RenderController;
     class RaymarchRenderer;
 } // namespace Raychel
 

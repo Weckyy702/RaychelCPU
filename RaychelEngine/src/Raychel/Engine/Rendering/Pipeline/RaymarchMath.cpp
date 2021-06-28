@@ -72,7 +72,7 @@ namespace Raychel {
                 return hit_info.hit_object->getSurfaceColor(hit_info.shading_data);
             }
         }
-        return (*background_texture_)(direction);
+        return background_texture_(direction);
     }
 
     RaymarchHitInfo RaymarchRenderer::get_hit_info(
@@ -120,7 +120,7 @@ namespace Raychel {
     float RaymarchRenderer::sd_scene(const vec3& p) const
     {
         float min = 10.0;
-        for (const auto* obj : *objects_) {
+        for (const auto& obj : objects_) {
             min = std::min(min, obj->eval(p));
         }
         return min;

@@ -23,7 +23,11 @@ namespace Raychel {
         RAYCHEL_EXPORT color shade_diffuse(const DiffuseShadingData& data) const noexcept;
 
     private:
-        RAYCHEL_EXPORT void set_scene_callback_renderer();
+        RAYCHEL_EXPORT explicit RaymarchRenderer(
+            const std::vector<IRaymarchable_p>& objects, const std::vector<ILamp_p>& lamps,
+            const CubeTexture<color>& background_texture);
+
+        RAYCHEL_EXPORT void _set_scene_callback_renderer() const;
 
         RAYCHEL_EXPORT void _refill_request_buffer();
 
@@ -63,8 +67,9 @@ namespace Raychel {
         float aspect_ratio = 0.0;
 
         //Non-owning references to scene specific data
-        const std::vector<IRaymarchable_p>* objects_ = nullptr;
-        const CubeTexture<color>* background_texture_ = nullptr;
+        const std::vector<IRaymarchable_p>& objects_;
+        const std::vector<ILamp_p>& lamps_;
+        const CubeTexture<color>& background_texture_;
 
         //Buffer of all UVs for which to raymarch
         std::vector<RaymarchData> requests_;

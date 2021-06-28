@@ -15,26 +15,27 @@ namespace Raychel {
 
 #pragma region Setup functions
 
+    RaymarchRenderer::RaymarchRenderer(
+        const std::vector<IRaymarchable_p>& objects, const std::vector<ILamp_p>& lamps,
+        const CubeTexture<color>& background_texture)
+        : objects_{objects}, lamps_{lamps}, background_texture_{background_texture}
+    {}
+
     void RaymarchRenderer::set_render_size(const vec2i& new_size)
     {
         RAYCHEL_LOG(
-            "Setting render output size to ", new_size, " (aspect ratio of ", static_cast<number_t>(new_size.x) / static_cast<number_t>(new_size.y), ")");
+            "Setting render output size to ",
+            new_size,
+            " (aspect ratio of ",
+            static_cast<number_t>(new_size.x) / static_cast<number_t>(new_size.y),
+            ")");
         output_size_ = new_size;
         _refill_request_buffer();
     }
 
-    void RaymarchRenderer::set_scene_data(
-        const not_null<std::vector<IRaymarchable_p>*> objects, const not_null<CubeTexture<color>*> background_texture)
+    void RaymarchRenderer::_set_scene_callback_renderer() const
     {
-        objects_ = objects;
-        background_texture_ = background_texture;
-
-        set_scene_callback_renderer();
-    }
-
-    void RaymarchRenderer::set_scene_callback_renderer()
-    {
-        for (const auto& obj : *objects_) {
+        for (const auto& obj : objects_) {
             obj->onRendererAttached(*this);
         }
     }

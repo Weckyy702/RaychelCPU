@@ -23,30 +23,30 @@ int main(int /*unused*/, const char** argv)
 
     Scene scene;
 
-    scene.setBackgroundTexture({[](const vec3& dir) {
+    scene.set_background_texture({[](const vec3& dir) {
         (void)dir;
-        return color{dir} * 0.2F;
+        return color{0.05F};
     }});
 
     const Quaternion start_rotation = Quaternion{};
     const vec3 cam_offset = vec3{0, 0, -7};
 
-    auto& cam = scene.setCamera({Transform{cam_offset, start_rotation}, 1.5});
+    auto& cam = scene.set_camera({Transform{cam_offset, start_rotation}, 1.5});
 
-    scene.addObject<SdSphere>(make_object_data({vec3{0, 0, 0}, Quaternion{}}, DiffuseMaterial{color{1, 0, 0}}), 1.0F);
-    scene.addObject<SdSphere>(make_object_data({vec3{0.25, -2, 0}, Quaternion{}}, DiffuseMaterial{color{0, 1, 0}}), 1.0F);
-    // scene.addObject<SdSphere>(make_object_data({vec3{2.5, 0, 0}, Quaternion{}}, DiffuseMaterial(color(0, 1, 1))), 1.0F);
-    // scene.addObject<SdSphere>(make_object_data({vec3{0, 0, -2.5}, Quaternion{}}, DiffuseMaterial(color(0.5, 0, 1))), 1.0F);
-    // scene.addObject<SdSphere>(make_object_data({vec3{-2.5, 0, 0}, Quaternion{}}, DiffuseMaterial(color(1))), 1.0F);
+    scene.add_object<SdSphere>(make_object_data({vec3{0, 0, 0}, Quaternion{}}, DiffuseMaterial{color{1}}), 1.0F);
+    scene.add_object<SdPlane>(make_object_data({}, DiffuseMaterial{color{1}}), vec3{0, 1, 0}, -1.0F);
 
     const vec2i size = {640, 360};
 
-    RenderController renderer;
+    const vec2i size = vec2i{3840, 2160} / 4UL;
 
-    renderer.setCurrentScene(&scene);
-    renderer.setOutputSize(size);
+    RenderController& renderer = scene.get_renderer();
 
-    gsl::owner<RenderTarget*> target = new ImageTargetPng{size, "../../results/res", 4}; // new AsciiTarget{size, true};
+    //renderer.set_render_settings({/*TODO: RenderSettings*/});
+
+    renderer.set_output_size(size);
+
+    gsl::owner<RenderTarget*> target = new ImageTargetPng{size, "../../results/res", 4}; //new AsciiTarget{size, true}; //new NullTarget{size};
 
     auto label = Logger::startTimer("Total time");
 
@@ -54,7 +54,7 @@ int main(int /*unused*/, const char** argv)
     for (size_t i = 0;; i++) {
 
         auto render_label = Logger::startTimer("Render time");
-        auto results = renderer.getImageRendered();
+        auto results = renderer.get_rendered_image();
         Logger::logDuration(render_label);
 
         if (!results) {

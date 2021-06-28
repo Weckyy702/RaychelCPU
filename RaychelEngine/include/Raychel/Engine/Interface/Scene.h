@@ -31,6 +31,7 @@
 #include "Raychel/Core/utils.h"
 #include "Raychel/Engine/Interface/Camera.h"
 #include "Raychel/Engine/Objects/Interface.h"
+#include "Raychel/Engine/Rendering/Renderer.h"
 #include "Raychel/Misc/Texture/CubeTexture.h"
 
 namespace Raychel {
@@ -43,22 +44,35 @@ namespace Raychel {
     {
 
     public:
-        Scene() = default;
+        RAYCHEL_EXPORT Scene();
 
         RAYCHEL_MAKE_NONCOPY(Scene);
         RAYCHEL_MAKE_DEFAULT_MOVE(Scene);
 
+        /**
+        *\brief Add a new object to the scene. Returns a reference to the newly created object
+        *
+        *\tparam T Type of object. Must derive from IRaymarchable
+        *\tparam Args Constructor argument types for the object
+        *\param args Constructor arguments for the object
+        *\return IRaymarchable_p& reference to the newly created object
+        */
         template <typename T, typename... Args>
-        void addObject(Args&&... args)
+        IRaymarchable_p& add_object(Args&&... args)
         {
             static_assert(
                 std::is_base_of_v<IRaymarchable, T>,
                 "Only Objects that derive from Raychel::IRaymarchable can be added to a scene!");
             static_assert(
                 std::is_constructible_v<T, Args...>,
-                "Raychel::Scene::addObject<T, Args...> requires T to be constructible from Args...!");
+                "Raychel::Scene::add_object<T, Args...> requires T to be constructible from Args...!");
 
             objects_.push_back(new T(std::forward<Args>(args)...));
+            _notify_renderer();
+
+            return objects_.back();
+        }
+
         }
 
         /**
@@ -67,7 +81,7 @@ namespace Raychel {
         *\param texture new background texture
         *\return CubeTexture<color>& reference to the set texture
         */
-        RAYCHEL_EXPORT CubeTexture<color>& setBackgroundTexture(const CubeTexture<color>& texture);
+        RAYCHEL_EXPORT CubeTexture<color>& set_background_texture(const CubeTexture<color>& texture);
 
         /**
         *\brief Set the Camera for the scene
@@ -75,12 +89,20 @@ namespace Raychel {
         *\param cam new camera
         *\return Camera& reference to the set camera
         */
-        RAYCHEL_EXPORT Camera& setCamera(const Camera& cam);
+        RAYCHEL_EXPORT Camera& set_camera(const Camera& cam);
 
+        /**
+        *\brief Get the Renderer associated with this scene
+        *
+        *\return RAYCHEL_EXPORT 
+        */
+        RAYCHEL_EXPORT [[nodiscard]] RenderController& get_renderer() const;
         ~Scene()
         {
-            //TODO: turn IRaymarchable_p into a smart pointer
-            for (IRaymarchable_p ptr : objects_) {
+            //TODO: turn IRaymarchable_p and ILamp_p into smart pointers
+            for (const auto* ptr : objects_) {
+                delete ptr;
+            }
                 delete ptr;
             }
         }
@@ -88,7 +110,11 @@ namespace Raychel {
         friend class RenderController;
 
     private:
+        void _notify_renderer() const noexcept;
+
         Camera cam_;
+        std::unique_ptr<RenderController> renderer_;
+
         CubeTexture<color> background_texture_;
         std::vector<IRaymarchable_p> objects_{};
         //TODO: implement
