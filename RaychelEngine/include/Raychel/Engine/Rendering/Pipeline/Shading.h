@@ -49,7 +49,7 @@ namespace Raychel {
 
         RAYCHEL_EXPORT vec3 get_normal(const vec3& p) const noexcept;
 
-        RAYCHEL_EXPORT IRaymarchable* get_hit_object(const vec3& p) const noexcept;
+        RAYCHEL_EXPORT not_null<IRaymarchable*> get_hit_object(const vec3& p) const noexcept;
 
         RAYCHEL_EXPORT float sd_scene(const vec3& p) const;
 
@@ -67,7 +67,7 @@ namespace Raychel {
         RAYCHEL_EXPORT color get_lamp_lighting(const vec3& surface_point, const normalized3& normal) const noexcept;
 
         RAYCHEL_EXPORT color
-        calculate_lamp_lighting(const ILamp_p& lamp, const vec3& surface_point, const normalized3& normal) const noexcept;
+        calculate_lamp_lighting(const ILamp* lamp, const vec3& surface_point, const normalized3& normal) const noexcept;
 
 #pragma endregion
 
