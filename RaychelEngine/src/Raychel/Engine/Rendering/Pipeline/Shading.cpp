@@ -192,6 +192,7 @@ namespace Raychel {
         if (dot(normal, light_dir) > 0.0F && !raymarch(surface_point, light_dir, light_dist, nullptr, nullptr)) {
             const float light_size = lamp->get_size();
 
+            if (light_size == 0.0F) {
                 return lamp->get_lighting(surface_point) * lambert(normal, light_dir);
             }
             RAYCHEL_ASSERT_NOT_REACHED; //TODO: implement smooth lighting
