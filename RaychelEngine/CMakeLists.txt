@@ -50,15 +50,16 @@ set(RAYCHEL_COMPILER_FLAGS)
 if(${USE_ASAN})
     message(STATUS "Enabled ASAN support")
 
-    list(APPEND RAYCHEL_COMPILER_FLAGS
-        -fsanitize=address
-    )
-
     if(NOT MSVC)
-        target_compile_options(${PROJECT_NAME} PUBLIC -fno-omit-frame-pointer)
-        target_link_options(${PROJECT_NAME} PUBLIC -fsanitize=address)
+        list(APPEND RAYCHEL_COMPILER_FLAGS
+            -fsanitize=address
+            -fno-omit-frame-pointer
+        )
+        list(APPEND RAYCHEL_LINKER_FLAGS
+            -fsanitize=address
+        )
     else()
-        message(WARNING "It looks like you're using MSVC. On Visual Studio, please head into RaychelCPU properties and tick 'Enable Address Sanitizer'")
+        message(WARNING "It looks like you're using MSVC. On Visual Studio, please head into ${PROJECT_NAME} properties and tick 'Enable Address Sanitizer'")
     endif()
 
 endif()
@@ -73,7 +74,7 @@ if(${USE_UBSAN} AND NOT MSVC)
         -fno-sanitize-recover
         -fno-omit-frame-pointer
     )
-    target_link_options(${PROJECT_NAME} PUBLIC -fsanitize=undefined)
+    list(APPEND RAYCHEL_LINKER_FLAGS -fsanitize=undefined)
 endif()
 
 #General compiler flags
@@ -113,10 +114,14 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
 
 #link the correct libraries
+target_link_options(${PROJECT_NAME} PUBLIC
+    ${RAYCHEL_LINKER_FLAGS}
+)
+
 target_link_libraries(${PROJECT_NAME}
     PUBLIC RaychelLogger
     PRIVATE png
-            ${LIB_NCURSES}
+    ${LIB_NCURSES}
 )
 
 if(LINK_GSL)

@@ -31,9 +31,9 @@
 #include "Logger.h"
 #include "compat.h"
 
-#define _RAYCHEL_STRINGIFY(x) #x
+#define RAYCHEL_STRINGIFY_IMPL(x) #x
 
-#define RAYCHEL_STRINGIFY(x) _RAYCHEL_STRINGIFY(x)
+#define RAYCHEL_STRINGIFY(x) RAYCHEL_STRINGIFY_IMPL(x)
 
 //terminate the application with the provided message
 #define RAYCHEL_TERMINATE(...)                                                                                                   \

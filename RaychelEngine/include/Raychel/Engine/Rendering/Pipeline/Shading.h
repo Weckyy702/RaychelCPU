@@ -42,7 +42,7 @@ namespace Raychel {
 
         RAYCHEL_EXPORT RenderResult _raymarch_function(const RaymarchData& req) const noexcept;
 
-        RAYCHEL_EXPORT color get_shaded_color(const vec3& origin, const vec3& direction, size_t recursion_depth) const;
+        RAYCHEL_EXPORT color get_shaded_color(const vec3& origin, const vec3& direction, size_t recursion_depth) const noexcept;
 
         RAYCHEL_EXPORT RaymarchHitInfo get_hit_info(
             const vec3& origin, const vec3& direction, float depth, size_t num_ray_steps, size_t recursion_depth) const noexcept;

@@ -247,18 +247,19 @@ namespace Raychel {
     template <typename T>
     QuaternionImp<T> look_at(const vec3Imp<T>& _old_forward, const vec3Imp<T>& _new_forward) noexcept
     {
+        constexpr auto threshold = T(0.995L);
+
         const auto old_forward = normalize(_old_forward);
         const auto new_forward = normalize(_new_forward);
 
-        const auto u_dot_v = dot(old_forward, new_forward);
-
-        if (u_dot_v == 1) {
-            return {};
+        if(dot(old_forward, new_forward) < -threshold) {
+            return {vec3Imp<T>{0, 1, 0}, pi<T>};
         }
 
-        const auto angle_between = std::acos(u_dot_v); //shortest angle between a and b
+        const auto angle = std::acos(dot(old_forward, new_forward));
+        const auto axis = cross(old_forward, new_forward);
 
-        return {cross(old_forward, new_forward), angle_between};
+        return {axis, angle};
     }
 
 } // namespace Raychel

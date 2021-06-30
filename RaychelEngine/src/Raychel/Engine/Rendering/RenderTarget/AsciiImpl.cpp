@@ -63,7 +63,6 @@ namespace Raychel::details {
             const auto y = static_cast<int>(_y);
 
             if (use_color_) {
-                //TODO: implement finding the correct color
                 const auto ncurses_col = _find_closest_ncurses_col(col);
                 attron(COLOR_PAIR(ncurses_col)); //NOLINT: we can't change what ncurses does
                 mvaddch(y, x, c);

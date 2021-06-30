@@ -44,22 +44,14 @@ namespace Raychel {
         const vec3 direction = _get_ray_direction_from_UV(req.uv);
 
         if (!failed_) {
-            try {
-                color res = get_shaded_color(origin, direction, 0);
-                return {screenspace_uv, res};
-
-            } catch (const exception_context& exception) {
-                new (&current_exception_) exception_context(exception);
-                failed_ = true;
-            } catch (...) {
-                RAYCHEL_TERMINATE("RaymarchRenderer::getShadedColor() threw unexpected exception!");
-            }
+            color res = get_shaded_color(origin, direction, 0);
+            return {screenspace_uv, res};
         }
 
         return {screenspace_uv, color{0}};
     }
 
-    color RaymarchRenderer::get_shaded_color(const vec3& origin, const normalized3& direction, size_t recursion_depth) const
+    color RaymarchRenderer::get_shaded_color(const vec3& origin, const normalized3& direction, size_t recursion_depth) const noexcept
     {
         RAYCHEL_ASSERT_NORMALIZED(direction);
 
@@ -95,11 +87,15 @@ namespace Raychel {
     vec3 RaymarchRenderer::get_normal(const vec3& p) const noexcept
     {
         const float k = options_.normal_bias;
-        return normalize(vec3{
+
+        const auto n = normalize(vec3{
             sd_scene(p + vec3{k, 0, 0}) - sd_scene(p + vec3{-k, 0, 0}),
             sd_scene(p + vec3{0, k, 0}) - sd_scene(p + vec3{0, -k, 0}),
             sd_scene(p + vec3{0, 0, k}) - sd_scene(p + vec3{0, 0, -k}),
         });
+
+        RAYCHEL_ASSERT_NORMALIZED(n);
+        return n;
     }
 
     IRaymarchable* RaymarchRenderer::get_hit_object(const vec3& p) const noexcept
@@ -121,7 +117,7 @@ namespace Raychel {
 
     float RaymarchRenderer::sd_scene(const vec3& p) const
     {
-        float min = 10.0;
+        float min = options_.max_ray_depth;
         for (const auto& obj : objects_) {
             min = std::min(min, obj->eval(p));
         }

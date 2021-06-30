@@ -45,7 +45,7 @@ namespace Raychel {
     public:
         exception_context() = default;
 
-        exception_context(std::string_view what, std::string_view origin, bool fatal)
+        exception_context(gsl::czstring<> what, gsl::czstring<> origin, bool fatal) noexcept
             : what_{what}, origin_{origin}, fatal_{fatal}
         {}
 

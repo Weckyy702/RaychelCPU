@@ -1,5 +1,4 @@
 #include <catch2/catch.hpp>
-#include <cmath>
 #include <type_traits>
 
 #include "Raychel/Core/RaychelMath/Impl/vec3Impl.inl"

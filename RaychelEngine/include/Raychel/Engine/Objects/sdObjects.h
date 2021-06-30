@@ -11,7 +11,7 @@ namespace Raychel {
         SdSphere(ObjectData&& data, float _r) : SdObject{std::move(data)}, radius{_r}
         {}
 
-        RAYCHEL_EXPORT [[nodiscard]] float eval(const vec3& p) const noexcept override
+        [[nodiscard]] float eval(const vec3& p) const noexcept override
         {
             return dist(p, transform().position) - radius;
         }
@@ -30,7 +30,10 @@ namespace Raychel {
             : SdObject{std::move(data)}, normal_{normalize(normal)}, offset_along_normal_(offset_along_normal)
         {}
 
-        RAYCHEL_EXPORT [[nodiscard]] float eval(const vec3& p) const noexcept override;
+        [[nodiscard]]inline  float eval(const vec3& p) const noexcept override
+        {
+            return std::abs(dot(p, normal_) - offset_along_normal_);
+        }
 
     private:
         normalized3 normal_;
