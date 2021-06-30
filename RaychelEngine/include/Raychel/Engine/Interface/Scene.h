@@ -68,7 +68,7 @@ namespace Raychel {
                 std::is_constructible_v<T, Args...>,
                 "Raychel::Scene::add_object<T, Args...> requires T to be constructible from Args...!");
 
-            objects_.push_back(new T(std::forward<Args>(args)...));
+            objects_.emplace_back(new T(std::forward<Args>(args)...));
             _notify_renderer();
 
             return objects_.back();
@@ -90,7 +90,7 @@ namespace Raychel {
                 std::is_constructible_v<T, Args...>,
                 "Raychel::Scene::add_lamp<T, Args...> requires T to be constructible from Args...!");
 
-            lamps_.push_back(new T(std::forward<Args>(args)...));
+            lamps_.emplace_back(new T(std::forward<Args>(args)...));
             _notify_renderer();
 
             return lamps_.back();
@@ -119,17 +119,7 @@ namespace Raychel {
         */
         RAYCHEL_EXPORT [[nodiscard]] RenderController& get_renderer() const;
 
-        ~Scene()
-        {
-            //TODO: turn IRaymarchable_p and ILamp_p into smart pointers
-            for (const auto* ptr : objects_) {
-                delete ptr;
-            }
-            for (const auto* ptr : lamps_) {
-                delete ptr;
-            }
-        }
-
+        ~Scene() = default;
         friend class RenderController;
 
     private:

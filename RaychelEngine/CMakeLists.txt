@@ -25,7 +25,7 @@ set(SOURCES
     ${RAYCHEL_SOURCE_DIR}/Engine/Interface/Scene.cpp
 )
 
-add_library(${PROJECT_NAME} STATIC
+add_library(${PROJECT_NAME} SHARED
     ${SOURCES}
 )
 

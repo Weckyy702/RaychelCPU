@@ -48,7 +48,7 @@
 #include "export.h"
 
 #ifdef RAYCHEL_DEBUG
-    #define RAYCHEL_LOG(...) Logger::debug(RAYCHEL_FUNC_NAME, ": ", __VA_ARGS__, '\n')
+    #define RAYCHEL_LOG(...) Logger::debug(RAYCHEL_FUNC_NAME, ": ", __VA_ARGS__, '\n');
 #else
     #define RAYCHEL_LOG(...)
 #endif

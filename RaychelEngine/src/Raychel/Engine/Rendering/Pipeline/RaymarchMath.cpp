@@ -78,7 +78,7 @@ namespace Raychel {
         const vec3 normal = get_normal(hit_point);
         const vec3 surface_point = hit_point + (normal * options_.surface_bias);
 
-        const IRaymarchable* hit_obj = get_hit_object(hit_point);
+        const auto hit_obj = get_hit_object(hit_point);
         RAYCHEL_ASSERT(hit_obj);
 
         return {PrimaryShadingData{{surface_point, normal, direction, recursion_depth + 1}, num_ray_steps, depth}, hit_obj};
@@ -98,7 +98,7 @@ namespace Raychel {
         return n;
     }
 
-    IRaymarchable* RaymarchRenderer::get_hit_object(const vec3& p) const noexcept
+    not_null<IRaymarchable*> RaymarchRenderer::get_hit_object(const vec3& p) const noexcept
     {
         float min_distance = options_.max_ray_depth;
         IRaymarchable* closest_object = nullptr;
@@ -108,7 +108,7 @@ namespace Raychel {
 
             if (object_distance < options_.distance_bias && std::abs(object_distance) < min_distance) {
                 min_distance = std::abs(object_distance);
-                closest_object = object;
+                closest_object = object.get();
             }
         }
 

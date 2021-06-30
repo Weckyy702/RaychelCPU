@@ -156,7 +156,7 @@ namespace Raychel {
     struct RaymarchHitInfo
     {
         PrimaryShadingData shading_data;
-        const IRaymarchable* hit_object{nullptr};
+        not_null<IRaymarchable*> hit_object;
     };
 
     /**

@@ -78,6 +78,7 @@ namespace Raychel {
     using normalized2 = vec2;
     using normalized3 = vec3;
 
+    //TODO: make these smart pointers
     using IRaymarchable_p = std::unique_ptr<IRaymarchable>;
     using ILamp_p = std::unique_ptr<ILamp>;
     using IMaterial_p = std::unique_ptr<IMaterial>;

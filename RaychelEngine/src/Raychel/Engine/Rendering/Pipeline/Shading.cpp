@@ -177,23 +177,23 @@ namespace Raychel {
     {
         color res{};
         for (const auto& lamp : lamps_) {
-            res += calculate_lamp_lighting(lamp, surface_point, normal);
+            res += calculate_lamp_lighting(lamp.get(), surface_point, normal);
         }
         return res;
     }
 
     color RaymarchRenderer::calculate_lamp_lighting(
-        const ILamp_p& lamp, const vec3& surface_point, const normalized3& normal) const noexcept
+        const ILamp* lamp, const vec3& surface_point, const normalized3& normal) const noexcept
     {
         const vec3 light_vector = lamp->get_light_vector(surface_point);
         const auto light_dist = mag(light_vector);
         const vec3 light_dir = light_vector / light_dist;
 
-        if (lambert(normal, light_dir) > 0.0F && !raymarch(surface_point, light_dir, light_dist, nullptr, nullptr)) {
+        if (dot(normal, light_dir) > 0.0F && !raymarch(surface_point, light_dir, light_dist, nullptr, nullptr)) {
             const float light_size = lamp->get_size();
 
-            if(light_size == 0.0F) {
-                    return lamp->get_lighting(surface_point) * lambert(normal, light_dir);
+            if (light_size == 0.0F) {
+                return lamp->get_lighting(surface_point) * lambert(normal, light_dir);
             }
             RAYCHEL_ASSERT_NOT_REACHED; //TODO: implement smooth lighting
         }
