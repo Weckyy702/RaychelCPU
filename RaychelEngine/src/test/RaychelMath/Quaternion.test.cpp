@@ -1,6 +1,7 @@
 #include <catch2/catch.hpp>
 
 #include "Raychel/Core/RaychelMath/Impl/QuaternionImpl.inl"
+#include "Raychel/Core/RaychelMath/Impl/vec3Impl.inl"
 #include "Raychel/Core/RaychelMath/Quaternion.h"
 
 //clang-format doesn't like these macros
@@ -23,7 +24,5 @@ RAYCHEL_BEGIN_TEST("Creating Quaternions", "[RaychelMath][Quaternion]")
     const Quaternion b{12, 7, 19, 4};
     const Quaternion c{vec3{0, 1, 0}, 0.0};
     const Quaternion d{vec3{1, 0, 1}, halfPi<TestType>};
-
-    
 
 RAYCHEL_END_TEST
