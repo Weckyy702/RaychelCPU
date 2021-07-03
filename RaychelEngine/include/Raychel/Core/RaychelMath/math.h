@@ -45,8 +45,8 @@ namespace Raychel {
 	template<typename _num>
 	class colorAlphaImp;
 	*/
-    template <typename _num>
-    class QuaternionImp;
+    template <typename _floating>
+    struct QuaternionImp;
     template <typename _num>
     struct TransformImp;
 

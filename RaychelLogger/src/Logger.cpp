@@ -88,37 +88,33 @@ namespace Logger {
 
         void printWithoutLabel(std::string_view msg) noexcept
         {
-            if (currentLevel >= minLogLevel) {
-                if (doColor) {
-                    const auto col = getLogColor();
-                    outStream.write(col.data(), col.size())
-                        .write(msg.data(), msg.size())
-                        .write(reset_col.data(), reset_col.size());
-                } else {
-                    outStream.write(msg.data(), msg.size());
-                }
+            if (doColor) {
+                const auto col = getLogColor();
+                outStream.write(col.data(), col.size())
+                    .write(msg.data(), msg.size())
+                    .write(reset_col.data(), reset_col.size());
+            } else {
+                outStream.write(msg.data(), msg.size());
             }
         }
 
         void print(std::string_view msg) noexcept
         {
-            if (currentLevel >= minLogLevel) {
-                if (doColor) {
-                    const auto col = getLogColor();
-                    const auto label = getLogLabel();
+            if (doColor) {
+                const auto col = getLogColor();
+                const auto label = getLogLabel();
 
-                    outStream.write(col.data(), col.size())
-                        .write("[", 1)
-                        .write(label.data(), label.size())
-                        .write("] ", 2)
-                        .write(reset_col.data(), reset_col.size());
-                } else {
-                    const auto label = getLogLabel();
+                outStream.write(col.data(), col.size())
+                    .write("[", 1)
+                    .write(label.data(), label.size())
+                    .write("] ", 2)
+                    .write(reset_col.data(), reset_col.size());
+            } else {
+                const auto label = getLogLabel();
 
-                    outStream.write("[", 1).write(label.data(), label.size()).write("] ", 2);
-                }
-                printWithoutLabel(msg);
+                outStream.write("[", 1).write(label.data(), label.size()).write("] ", 2);
             }
+            printWithoutLabel(msg);
         }
 
         void lockStream()

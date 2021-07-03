@@ -28,6 +28,7 @@
 #ifndef RAYCHEL_QUATERNION_H
 #define RAYCHEL_QUATERNION_H
 
+#include <type_traits>
 #include "../utils.h"
 
 namespace Raychel {
@@ -38,10 +39,11 @@ namespace Raychel {
 	*\tparam _number Type of the Quaternion. Must be arithmetic
 	*/
     template <typename _number>
-    class QuaternionImp
+    struct QuaternionImp
     {
     public:
         using value_type = std::remove_reference_t<std::remove_cv_t<_number>>;
+        static_assert(std::is_floating_point_v<value_type>, "Raychel::QuaternionImp<T> expects T to be of floating point type!");
 
     private:
         static_assert(std::is_arithmetic_v<value_type>, "Raychel::Quaternion<T> requires T to be of arithmetic type!");
@@ -52,7 +54,7 @@ namespace Raychel {
 		*\brief Construct a new QuaternionImp object. Will rotate 0° around positive y
 		*
 		*/
-        QuaternionImp() : QuaternionImp(vec3{0, 1, 0}, 0)
+        constexpr QuaternionImp() : QuaternionImp{1, 0, 0, 0}
         {}
 
         /**
@@ -65,7 +67,7 @@ namespace Raychel {
 		*
 		*\note Constructing quaternions from raw data is not recommended
 		*/
-        QuaternionImp(value_type _r, value_type _i, value_type _j, value_type _k) : r{_r}, i{_i}, j{_j}, k{_k}
+        constexpr QuaternionImp(value_type _r, value_type _i, value_type _j, value_type _k) : r{_r}, i{_i}, j{_j}, k{_k}
         {}
 
         QuaternionImp(const vec3&, value_type);
@@ -75,7 +77,7 @@ namespace Raychel {
 		*
 		*\return vec3 
 		*/
-        inline vec3 v() const noexcept
+        constexpr vec3 v() const noexcept
         {
             return {i, j, k};
         }
@@ -85,7 +87,7 @@ namespace Raychel {
 		*
 		*\return value_type 
 		*/
-        inline value_type s() const noexcept
+        constexpr value_type s() const noexcept
         {
             return r;
         }
@@ -97,13 +99,14 @@ namespace Raychel {
 		*\return QuaternionImp<To> 
 		*/
         template <typename To>
-        QuaternionImp<To> to() const noexcept;
+        constexpr QuaternionImp<To> to() const noexcept;
 
-        QuaternionImp& operator+=(const QuaternionImp&);
-        QuaternionImp& operator-=(const QuaternionImp&);
-        QuaternionImp& operator*=(value_type);
-        QuaternionImp& operator*=(const QuaternionImp&);
-        QuaternionImp& operator/=(value_type);
+        constexpr QuaternionImp& operator+=(const QuaternionImp&);
+        constexpr QuaternionImp& operator-=(const QuaternionImp&);
+        constexpr QuaternionImp& operator*=(value_type);
+        constexpr QuaternionImp& operator*=(const QuaternionImp&);
+        constexpr QuaternionImp& operator/=(value_type);
+        constexpr QuaternionImp& operator/=(const QuaternionImp&);
 
         value_type r{0}, i{0}, j{0}, k{0};
     };
@@ -112,13 +115,16 @@ namespace Raychel {
     std::ostream& operator<<(std::ostream&, const QuaternionImp<T>&);
 
     template <typename T>
-    QuaternionImp<T> operator+(const QuaternionImp<T>&, const QuaternionImp<T>&);
+    constexpr QuaternionImp<T> operator-(const QuaternionImp<T>&);
 
     template <typename T>
-    QuaternionImp<T> operator-(const QuaternionImp<T>&, const QuaternionImp<T>&);
+    constexpr QuaternionImp<T> operator+(const QuaternionImp<T>&, const QuaternionImp<T>&);
 
     template <typename T>
-    QuaternionImp<T> operator*(const QuaternionImp<T>&, const QuaternionImp<T>&);
+    constexpr QuaternionImp<T> operator-(const QuaternionImp<T>&, const QuaternionImp<T>&);
+
+    template <typename T>
+    constexpr QuaternionImp<T> operator*(const QuaternionImp<T>&, const QuaternionImp<T>&);
 
     /**
 	*\brief Rotate a vector using a quaternion
@@ -130,43 +136,46 @@ namespace Raychel {
     vec3Imp<T> operator*(const vec3Imp<T>&, const QuaternionImp<T>&);
 
     template <typename T>
-    QuaternionImp<T> operator*(const QuaternionImp<T>&, T);
+    constexpr QuaternionImp<T> operator*(const QuaternionImp<T>&, T);
 
     template <typename T>
-    inline QuaternionImp<T> operator*(T s, const QuaternionImp<T>& v)
+    constexpr QuaternionImp<T> operator*(T s, const QuaternionImp<T>& v)
     {
         return v * s;
     }
 
     template <typename T>
-    QuaternionImp<T> operator/(const QuaternionImp<T>&, T);
+    constexpr QuaternionImp<T> operator/(const QuaternionImp<T>&, T);
+
+    template<typename T>
+    constexpr QuaternionImp<T> operator/(const QuaternionImp<T>&, const QuaternionImp<T>&);
 
     template <typename T>
-    bool operator==(const QuaternionImp<T>&, const QuaternionImp<T>&);
+    constexpr bool operator==(const QuaternionImp<T>&, const QuaternionImp<T>&);
 
     template <typename T>
-    bool operator!=(const QuaternionImp<T>& a, const QuaternionImp<T>& b)
+    constexpr bool operator!=(const QuaternionImp<T>& a, const QuaternionImp<T>& b)
     {
         return !(a == b);
     }
 
     template <typename T>
-    T dot(const QuaternionImp<T>&, const QuaternionImp<T>&);
+    constexpr T dot(const QuaternionImp<T>&, const QuaternionImp<T>&);
 
     template <typename T>
     T mag(const QuaternionImp<T>&);
 
     template <typename T>
-    T magSq(const QuaternionImp<T>&);
+    constexpr T magSq(const QuaternionImp<T>&);
 
     template <typename T, typename = std::enable_if_t<std::is_floating_point_v<T>>>
     QuaternionImp<T> normalize(const QuaternionImp<T>&);
 
     template <typename T>
-    QuaternionImp<T> conjugate(const QuaternionImp<T>&);
+    constexpr QuaternionImp<T> conjugate(const QuaternionImp<T>&);
 
     template <typename T>
-    QuaternionImp<T> inverse(const QuaternionImp<T>&);
+    constexpr QuaternionImp<T> inverse(const QuaternionImp<T>&);
 
     /**
 	*\brief Smoothly interpolate two normalized Quaternions (Versors)

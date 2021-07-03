@@ -143,7 +143,7 @@ namespace Logger {
             lockStream();
             [[maybe_unused]] const auto unlock_mutex_on_exit = details::Finally([]() { unlockStream(); });
 
-            if (lv < _::requiredLevel() || lv == LogLevel::fatal) {
+            if (lv < _::requiredLevel() && lv != LogLevel::fatal) { //fatal messages cannot be blocked
                 return;
             }
 

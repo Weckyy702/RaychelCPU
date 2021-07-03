@@ -73,7 +73,7 @@ int main(int /*unused*/, const char** argv)
         target->finishFramebufferWrite();
         Logger::logDuration(file_label);
 
-        cam.transform_.position = rotateX(cam_offset, a);
+        cam.transform_.position = rotateY(cam_offset, a);
         //cam.transform_.position.y = 2.0F * std::sin(a * 0.5F);
         cam.look_at(vec3{});
 
@@ -83,5 +83,6 @@ int main(int /*unused*/, const char** argv)
     Logger::logDuration(label);
 
     delete target;
+
     return 0;
 }

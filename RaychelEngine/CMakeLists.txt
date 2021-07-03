@@ -54,6 +54,7 @@ if(${USE_ASAN})
         list(APPEND RAYCHEL_COMPILER_FLAGS
             -fsanitize=address
             -fno-omit-frame-pointer
+            -fno-sanitize-recover
         )
         list(APPEND RAYCHEL_LINKER_FLAGS
             -fsanitize=address
@@ -71,6 +72,7 @@ if(${USE_UBSAN} AND NOT MSVC)
     list(APPEND RAYCHEL_COMPILER_FLAGS
         -fsanitize=undefined
         -fsanitize=float-divide-by-zero
+        
         -fno-sanitize-recover
         -fno-omit-frame-pointer
     )

@@ -28,29 +28,31 @@
 #ifndef RAYCHEL_QUATERNION_IMP
 #define RAYCHEL_QUATERNION_IMP
 
+#include <type_traits>
 #include "../Quaternion.h"
 #include "../vec3.h"
+#include "Raychel/Core/RaychelMath/math.h"
 
 namespace Raychel {
 
     template <typename T>
-    QuaternionImp<T>::QuaternionImp(const vec3& _axis, value_type angle)
+    QuaternionImp<T>::QuaternionImp(const vec3& _axis, value_type theta)
     {
-        using std::sin, std::cos;
+        const auto half_theta = theta / 2;
 
-        const vec3 axis = -normalize(_axis);
-        const value_type s = sin(angle * value_type(0.5));
+        r = std::cos(half_theta);
+
+        const auto s = std::sin(half_theta);
+        const auto axis = normalize(_axis);
 
         i = axis.x * s;
         j = axis.y * s;
         k = axis.z * s;
-
-        r = value_type(cos(angle * value_type(0.5)));
     }
 
     template <typename T>
     template <typename To>
-    QuaternionImp<To> QuaternionImp<T>::to() const noexcept
+    constexpr QuaternionImp<To> QuaternionImp<T>::to() const noexcept
     {
         static_assert(std::is_convertible_v<T, To>, "Raychel::QuaternionImp<T>::to<To> requires T to be convetibel to To!");
 
@@ -58,7 +60,7 @@ namespace Raychel {
     }
 
     template <typename T>
-    QuaternionImp<T>& QuaternionImp<T>::operator+=(const QuaternionImp& q)
+    constexpr QuaternionImp<T>& QuaternionImp<T>::operator+=(const QuaternionImp& q)
     {
         r += q.r;
         i += q.i;
@@ -69,7 +71,7 @@ namespace Raychel {
     }
 
     template <typename T>
-    QuaternionImp<T>& QuaternionImp<T>::operator-=(const QuaternionImp& q)
+    constexpr QuaternionImp<T>& QuaternionImp<T>::operator-=(const QuaternionImp& q)
     {
         r -= q.r;
         i -= q.i;
@@ -80,7 +82,7 @@ namespace Raychel {
     }
 
     template <typename T>
-    QuaternionImp<T>& QuaternionImp<T>::operator*=(value_type s)
+    constexpr QuaternionImp<T>& QuaternionImp<T>::operator*=(value_type s)
     {
         r *= s;
         i *= s;
@@ -91,7 +93,7 @@ namespace Raychel {
     }
 
     template <typename T>
-    QuaternionImp<T>& QuaternionImp<T>::operator*=(const QuaternionImp<T>& q)
+    constexpr QuaternionImp<T>& QuaternionImp<T>::operator*=(const QuaternionImp<T>& q)
     {
         value_type _r = r;
         value_type _i = i;
@@ -107,7 +109,7 @@ namespace Raychel {
     }
 
     template <typename T>
-    QuaternionImp<T>& QuaternionImp<T>::operator/=(value_type s)
+    constexpr QuaternionImp<T>& QuaternionImp<T>::operator/=(value_type s)
     {
         r /= s;
         i /= s;
@@ -118,57 +120,84 @@ namespace Raychel {
     }
 
     template <typename T>
+    constexpr QuaternionImp<T>& QuaternionImp<T>::operator/=(const QuaternionImp& q)
+    {
+        return (*this) *= inverse(q);
+    }
+
+    template <typename T>
     std::ostream& operator<<(std::ostream& os, const QuaternionImp<T>& obj)
     {
         return os << "{ " << obj.r << ", " << obj.i << ", " << obj.j << ", " << obj.k << " }";
     }
 
     template <typename T>
-    QuaternionImp<T> operator+(const QuaternionImp<T>& a, const QuaternionImp<T>& b)
+    constexpr QuaternionImp<T> operator-(const QuaternionImp<T>& q)
+    {
+        return {-q.r, -q.i, -q.j, -q.k};
+    }
+
+    template <typename T>
+    constexpr QuaternionImp<T> operator+(const QuaternionImp<T>& a, const QuaternionImp<T>& b)
     {
         return {a.r + b.r, a.i + b.i, a.j + b.j, a.k + b.k};
     }
 
     template <typename T>
-    QuaternionImp<T> operator-(const QuaternionImp<T>& a, const QuaternionImp<T>& b)
+    constexpr QuaternionImp<T> operator-(const QuaternionImp<T>& a, const QuaternionImp<T>& b)
     {
         return {a.r - b.r, a.i - b.i, a.j - b.j, a.k - b.k};
     }
 
     template <typename T>
-    QuaternionImp<T> operator*(const QuaternionImp<T>& a, const QuaternionImp<T>& b)
+    constexpr QuaternionImp<T> operator*(const QuaternionImp<T>& a, const QuaternionImp<T>& b)
     {
-        auto r = a.r * b.r - a.i * b.i - a.j * b.j - a.k * b.k;
-        auto i = a.r * b.i + a.i * b.r + a.j * b.k - a.k * b.j;
-        auto j = a.r * b.j - a.i * b.k + a.j * b.r + a.k * b.i;
-        auto k = a.r * b.k + a.i * b.j - a.j * b.i + a.k * b.r;
+        const auto r = a.r * b.r - a.i * b.i - a.j * b.j - a.k * b.k;
+        const auto i = a.r * b.i + a.i * b.r + a.j * b.k - a.k * b.j;
+        const auto j = a.r * b.j - a.i * b.k + a.j * b.r + a.k * b.i;
+        const auto k = a.r * b.k + a.i * b.j - a.j * b.i + a.k * b.r;
 
         return {r, i, j, k};
     }
 
     template <typename T>
-    vec3Imp<T> operator*(const vec3Imp<T>& _v, const QuaternionImp<T>& _q)
+    vec3Imp<T> operator*(const vec3Imp<T>& v, const QuaternionImp<T>& _q)
     {
-        auto q = normalize(_q);
-        auto p = QuaternionImp<T>(0.0, _v.x, _v.y, _v.z);
+        const auto q = normalize(_q);
 
-        return (q * p * conjugate(q)).v();
+        //following is the expanded and somewhat optimized version of q * p * conjugate(q) with p = QuaternionImp{0.0, v.x, v.y, v.z}
+        const auto r = q.i * v.x + q.j * v.y + q.k * v.z;
+        const auto i = q.r * v.x + q.j * v.z - q.k * v.y;
+        const auto j = q.r * v.y - q.i * v.z + q.k * v.x;
+        const auto k = q.r * v.z + q.i * v.y - q.j * v.x;
+
+        const auto x = r * q.i + i * q.r - j * q.k + k * q.j;
+        const auto y = r * q.j + i * q.k + j * q.r - k * q.i;
+        const auto z = r * q.k - i * q.j + j * q.i + k * q.r;
+
+        return vec3Imp<T>{x, y, z};
     }
 
     template <typename T>
-    QuaternionImp<T> operator*(const QuaternionImp<T>& q, T s)
+    constexpr QuaternionImp<T> operator*(const QuaternionImp<T>& q, T s)
     {
         return {q.r * s, q.i * s, q.j * s, q.k * s};
     }
 
     template <typename T>
-    QuaternionImp<T> operator/(const QuaternionImp<T>& q, T s)
+    constexpr QuaternionImp<T> operator/(const QuaternionImp<T>& q, T s)
     {
         return {q.r / s, q.i / s, q.j / s, q.k / s};
     }
 
     template <typename T>
-    bool operator==(const QuaternionImp<T>& a, const QuaternionImp<T>& b)
+    constexpr QuaternionImp<T> operator/(const QuaternionImp<T>& a, const QuaternionImp<T>& b)
+    {
+        return a * inverse(b);
+    }
+
+    template <typename T>
+    constexpr bool operator==(const QuaternionImp<T>& a, const QuaternionImp<T>& b)
     {
 #ifdef RAYCHEL_LOGICALLY_EQUAL
         return equivalent(a.r, b.r) && equivalent(a.i, b.i) && equivalent(a.j, b.j) && equivalent(a.k, b.k);
@@ -178,7 +207,7 @@ namespace Raychel {
     }
 
     template <typename T>
-    T dot(const QuaternionImp<T>& a, const QuaternionImp<T>& b)
+    constexpr T dot(const QuaternionImp<T>& a, const QuaternionImp<T>& b)
     {
         return a.r * b.r + a.i * b.i + a.j * b.j + a.k * b.k;
     }
@@ -190,7 +219,7 @@ namespace Raychel {
     }
 
     template <typename T>
-    T magSq(const QuaternionImp<T>& q)
+    constexpr T magSq(const QuaternionImp<T>& q)
     {
         return sq(q.r) + sq(q.i) + sq(q.j) + sq(q.k);
     }
@@ -202,13 +231,13 @@ namespace Raychel {
     }
 
     template <typename T>
-    QuaternionImp<T> conjugate(const QuaternionImp<T>& q)
+    constexpr QuaternionImp<T> conjugate(const QuaternionImp<T>& q)
     {
         return {q.r, -q.i, -q.j, -q.k};
     }
 
     template <typename T>
-    QuaternionImp<T> inverse(const QuaternionImp<T>& q)
+    constexpr QuaternionImp<T> inverse(const QuaternionImp<T>& q)
     {
         return conjugate(q) / magSq(q);
     }
@@ -247,21 +276,20 @@ namespace Raychel {
     template <typename T>
     QuaternionImp<T> look_at(const vec3Imp<T>& _old_forward, const vec3Imp<T>& _new_forward) noexcept
     {
-        constexpr auto threshold = T(0.995L);
-
         const auto old_forward = normalize(_old_forward);
         const auto new_forward = normalize(_new_forward);
 
-        if(dot(old_forward, new_forward) < -threshold) {
+        if (dot(old_forward, new_forward) < -0.98) {
             return {vec3Imp<T>{0, 1, 0}, pi<T>};
         }
 
-        const auto angle = std::acos(dot(old_forward, new_forward));
-        const auto axis = cross(old_forward, new_forward);
+        const auto half = normalize(old_forward + new_forward);
 
-        return {axis, angle};
+        const auto r = dot(old_forward, half);
+        const auto ijk = cross(old_forward, half);
+
+        return {r, ijk.x, ijk.y, ijk.z};
     }
-
 } // namespace Raychel
 
 #endif // RAYCHEL_QUATERNION_IMP

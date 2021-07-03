@@ -52,15 +52,11 @@ namespace Raychel {
     public:
         constexpr vec2Imp() = default;
 
-        //clang-format off
-
         explicit constexpr vec2Imp(value_type _x) : x(_x), y(0)
         {}
 
         constexpr vec2Imp(value_type _x, value_type _y) : x(_x), y(_y)
         {}
-
-        //clang-format on
 
         /**
 		*\brief Convert the vector to another vector
@@ -87,6 +83,9 @@ namespace Raychel {
 
         value_type x{0}, y{0};
     };
+
+    template<typename T>
+    constexpr vec2Imp<T> zero{};
 
     template <typename T>
     std::ostream& operator<<(std::ostream&, const vec2Imp<T>&);
