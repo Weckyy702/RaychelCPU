@@ -107,12 +107,12 @@ namespace Raychel::details {
             ncurses_color res = black;
             float min_dist = 1000;
 
-            for (NCURSES_COLOR_T i = 0; i < 8; i++) {
-
+            for (NCURSES_COLOR_T _i = 0; _i < 8; _i++) {
+                const auto i = static_cast<size_t>(_i);
                 if (distSq(vec3{col}, vec3{ncurses_colors.at(i)}) < min_dist) {
                     min_dist = distSq(vec3{col}, vec3{ncurses_colors.at(i)});
 
-                    res = static_cast<ncurses_color>(i); //OOF, this hurts :( TODO: make this good
+                    res = static_cast<ncurses_color>(_i); //OOF, this hurts :( TODO: make this good
                 }
             }
             return res;

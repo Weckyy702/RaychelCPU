@@ -578,14 +578,32 @@ TEMPLATE_TEST_CASE("Vector cross product", "[RaychelMath][Vector3]", RAYCHEL_VEC
         const vec3 xz = cross(x, z);
 
         REQUIRE(equivalent<TestType>(xz.x, 0));
-        REQUIRE(equivalent<TestType>(xz.y, 1));
+        REQUIRE(equivalent<TestType>(xz.y, -1));
         REQUIRE(equivalent<TestType>(xz.z, 0));
 
         const vec3 zy = cross(z, y);
 
-        REQUIRE(equivalent<TestType>(zy.x, 1));
+        REQUIRE(equivalent<TestType>(zy.x, -1));
         REQUIRE(equivalent<TestType>(zy.y, 0));
         REQUIRE(equivalent<TestType>(zy.z, 0));
+    }
+
+    //cross product follows the right hand rule, Chapter Two
+    {
+        const vec3 a{12, 7, -34};
+        const vec3 b{7, 0, -2};
+
+        auto res = cross(a, b);
+        
+        REQUIRE(res.x == -14);
+        REQUIRE(res.y == -214);
+        REQUIRE(res.z == -49);
+
+        res = cross(b, a);
+
+        REQUIRE(res.x == 14);
+        REQUIRE(res.y == 214);
+        REQUIRE(res.z == 49);
     }
 }
 

@@ -320,10 +320,9 @@ namespace Raychel {
     template <typename T, typename>
     constexpr vec3Imp<T> cross(const vec3Imp<T>& a, const vec3Imp<T>& b) noexcept
     {
-        //it seems that Raychels vec3 uses an inverted z-axis, so the x and y terms are negated
         return {
-            (a.z * b.y) - (a.y * b.z),
-            (a.x * b.z) - (a.z * b.x),
+            (a.y * b.z) - (a.z * b.y),
+            (a.z * b.x) - (a.x * b.z),
             (a.x * b.y) - (a.y * b.x)
         };
     }

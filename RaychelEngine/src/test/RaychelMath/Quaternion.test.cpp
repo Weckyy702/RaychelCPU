@@ -1,6 +1,8 @@
 #include <catch2/catch.hpp>
 #include <iostream>
 
+#define RAYCHEL_LOGICALLY_EQUAL 1
+
 #include "Raychel/Core/RaychelMath/Impl/QuaternionImpl.inl"
 #include "Raychel/Core/RaychelMath/Impl/vec3Impl.inl"
 #include "Raychel/Core/RaychelMath/Quaternion.h"
@@ -175,7 +177,6 @@ RAYCHEL_BEGIN_TEST("Quaternion multiplication: Vector", "[RaychelMath][Quaternio
     const vec3 x{1, 0, 0};
     const vec3 y{0, 1, 0};
     const vec3 z{0, 0, 1};
-
     const vec3 v{12.345, -7.99, 4};
 
     const Quaternion a{vec3{2, 0, -1}, pi<TestType>};
@@ -394,12 +395,44 @@ RAYCHEL_END_TEST
 
 //NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
 RAYCHEL_BEGIN_TEST("Quaternion look_at", "[RaychelMath][Quaternion]")
+    const TestType one_over_sqrt2 = 1 / std::sqrt(2.0);
     const vec3 forward{0, 0, 1};
 
-    const vec3 origin{};
-    const vec3 target{0, 0, 12};
+    vec3 origin{};
+    vec3 target{0, 0, 12};
 
-    const auto dir = look_at(forward, target-origin);
+    auto dir = look_at(forward, target-origin);
 
-    
+    REQUIRE(dir.r == 1);
+    REQUIRE(dir.i == 0);
+    REQUIRE(dir.j == 0);
+    REQUIRE(dir.k == 0);
+
+
+    target = vec3{1, 0, 0};
+    dir = look_at(forward, target-origin);
+
+    REQUIRE(equivalent<TestType>(dir.r, one_over_sqrt2));
+    REQUIRE(dir.i == 0);
+    REQUIRE(equivalent<TestType>(dir.j, one_over_sqrt2));
+    REQUIRE(dir.k == 0);
+
+
+    origin = vec3{1, 1, 1};
+    target = vec3{};
+
+    dir = look_at(forward, target-origin);
+
+    auto q = Quaternion{-cross(forward, normalize(target-origin)), std::acos(dot(forward, normalize(target-origin)))};
+
+    REQUIRE(equivalent<TestType>(dir.r, q.r));
+    REQUIRE(equivalent<TestType>(dir.i, q.i));
+    REQUIRE(equivalent<TestType>(dir.j, q.j));
+    REQUIRE(equivalent<TestType>(dir.k, q.k));
+
+
+    origin = normalize(vec3{12, 7, 19}) * (TestType)7;
+
+    dir = look_at(forward, target-origin);
+
 RAYCHEL_END_TEST

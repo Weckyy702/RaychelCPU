@@ -27,10 +27,10 @@ int main(int /*unused*/, const char** argv)
 
     scene.set_background_texture({[](const vec3& dir) {
         (void)dir;
-        return color{0.05F};
+        return color{std::pow(std::max(dir.y, 0.0F), 0.75F)};
     }});
 
-    const Quaternion start_rotation = Quaternion{};
+    const Quaternion start_rotation{};
     const vec3 cam_offset = vec3{0, 0, 7};
 
     auto& cam = scene.set_camera({Transform{cam_offset, start_rotation}, 1.5});
@@ -43,7 +43,7 @@ int main(int /*unused*/, const char** argv)
     scene.add_lamp<DirectionalLight>(LampData{color{0, 0, 1}, 1.0F, 0.0F}, vec3{1, -1, 1});
     scene.add_lamp<DirectionalLight>(LampData{color{1}, 1.0F, 0.0F}, vec3{0, 1, 0});
 
-    const vec2i size = vec2i{50, 25};//vec2i{3840, 2160} / 2UL;
+    const vec2i size = vec2i{50, 25}*2UL;//vec2i{3840, 2160} / 2UL;
 
     RenderController& renderer = scene.get_renderer();
 
@@ -52,7 +52,7 @@ int main(int /*unused*/, const char** argv)
     renderer.set_output_size(size);
 
     //new ImageTargetPng{size, "../../results/res", 4}; // new NullTarget{size};
-    gsl::owner<RenderTarget*> target = new AsciiTarget{size, true};
+    gsl::owner<RenderTarget*> target = new AsciiTarget{size, true}; 
 
     auto label = Logger::startTimer("Total time");
 
@@ -74,7 +74,7 @@ int main(int /*unused*/, const char** argv)
         Logger::logDuration(file_label);
 
         cam.transform_.position = rotateY(cam_offset, a);
-        //cam.transform_.position.y = 2.0F * std::sin(a * 0.5F);
+        //cam.transform_.position.y = 2.0F * std::sin(a * 2.0F);
         cam.look_at(vec3{});
 
         a += 1.0F / 30.0F;

@@ -165,7 +165,7 @@ namespace Raychel {
     {
         const auto q = normalize(_q);
 
-        //following is the expanded and somewhat optimized version of q * p * conjugate(q) with p = QuaternionImp{0.0, v.x, v.y, v.z}
+        //following is the expanded and somewhat optimized version of q * p * q^-1 with p = QuaternionImp{0.0, v.x, v.y, v.z}
         const auto r = q.i * v.x + q.j * v.y + q.k * v.z;
         const auto i = q.r * v.x + q.j * v.z - q.k * v.y;
         const auto j = q.r * v.y - q.i * v.z + q.k * v.x;
@@ -274,21 +274,41 @@ namespace Raychel {
     }
 
     template <typename T>
-    QuaternionImp<T> look_at(const vec3Imp<T>& _old_forward, const vec3Imp<T>& _new_forward) noexcept
+    vec3Imp<T> orthogonal(const vec3Imp<T>& v)
     {
-        const auto old_forward = normalize(_old_forward);
-        const auto new_forward = normalize(_new_forward);
+        auto orth = cross(vec3Imp<T>{1, 0, 0}, v);
+        if(magSq(orth) == 0) {
+            orth = cross(vec3Imp<T>{0, 1, 0}, v);
+        }
+        return normalize(orth);
+    }
 
-        if (dot(old_forward, new_forward) < -0.98) {
-            return {vec3Imp<T>{0, 1, 0}, pi<T>};
+    template <typename T>
+    QuaternionImp<T> look_at(const vec3Imp<T>& old_forward, const vec3Imp<T>& new_forward) noexcept
+    {
+        constexpr auto threshold = (T)0.9995;
+
+        const auto k_cos_theta = dot(old_forward, new_forward);
+        const auto k = std::sqrt(magSq(old_forward) * magSq(new_forward));
+
+        if ((k_cos_theta / k) < -threshold) {
+            const auto orth = orthogonal(old_forward);
+            return QuaternionImp<T>{
+                0,
+                orth.x,
+                orth.y,
+                orth.z
+            };
         }
 
-        const auto half = normalize(old_forward + new_forward);
+        const auto ijk = cross(old_forward, new_forward);
 
-        const auto r = dot(old_forward, half);
-        const auto ijk = cross(old_forward, half);
-
-        return {r, ijk.x, ijk.y, ijk.z};
+        return normalize(QuaternionImp<T>{
+            k_cos_theta + k,
+            ijk.x,
+            ijk.y,
+            ijk.z
+        });
     }
 } // namespace Raychel
 
