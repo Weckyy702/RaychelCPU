@@ -32,7 +32,8 @@ namespace Raychel {
     enum class TextureType {
         function,
         image,
-        constant
+        constant,
+        reference
         //TODO: implement more types
     };
 } // namespace Raychel

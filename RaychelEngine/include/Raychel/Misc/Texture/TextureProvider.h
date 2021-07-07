@@ -19,6 +19,7 @@ namespace Raychel {
         using value_type_ = std::remove_cv_t<std::remove_reference_t<T>>;
         using sample_func = std::function<value_type_(const vec3&, const vec3&)>;
         using texture_t = Texture<value_type_>;
+        using reference_t = const value_type_*;
 
     public:
         using value_type = value_type_;
@@ -35,24 +36,31 @@ namespace Raychel {
         {}
 
         //NOLINTNEXTLINE: these constructors are supposed to be implicit
-        /*implicit*/ TextureProvider(const value_type& constant) : constant_{constant}
+        /*implicit*/ TextureProvider(const value_type& constant) : type_{TextureType::constant}, constant_{constant}
         {}
+
+        //NOLINTNEXTLINE: these constructors are supposed to be implicit
+        /*implicit*/ TextureProvider(reference_t reference) : type_{TextureType::reference}, reference_{reference}
+        {}
+
 
         TextureProvider(const TextureProvider& rhs) : type_{rhs.type_}
         {
             switch (type_) {
                 case TextureType::function:
                     new (&func_) sample_func{rhs.func_};
-                    break;
+                    return;
                 case TextureType::image:
                     new (&texture_) texture_t{rhs.texture_};
-                    break;
+                    return;
                 case TextureType::constant:
                     new (&constant_) value_type{rhs.constant_};
-                    break;
-                default:
-                    RAYCHEL_ASSERT_NOT_REACHED;
+                    return;
+                case TextureType::reference:
+                    new (&reference_) reference_t{rhs.reference_};
+                    return;
             }
+            RAYCHEL_ASSERT_NOT_REACHED;
         }
 
         TextureProvider(TextureProvider&& rhs) noexcept : type_{rhs.type_}
@@ -60,16 +68,18 @@ namespace Raychel {
             switch (type_) {
                 case TextureType::function:
                     new (&func_) sample_func{std::move(rhs.func_)};
-                    break;
+                    return;
                 case TextureType::image:
                     new (&texture_) texture_t{std::move(rhs.texture_)};
-                    break;
+                    return;
                 case TextureType::constant:
                     new (&constant_) value_type{std::move(rhs.constant_)};
-                    break;
-                default:
-                    RAYCHEL_ASSERT_NOT_REACHED;
+                    return;
+                case TextureType::reference:
+                    new(&reference_) reference_t{rhs.reference_};
+                    return;
             }
+            RAYCHEL_ASSERT_NOT_REACHED;
         }
 
         TextureProvider& operator=(const TextureProvider& rhs) noexcept
@@ -80,17 +90,18 @@ namespace Raychel {
             switch (type_) {
                 case TextureType::function:
                     new (&func_) sample_func{rhs.func_};
-                    break;
+                    return *this;
                 case TextureType::image:
                     new (&texture_) texture_t{rhs.texture_};
-                    break;
+                    return *this;
                 case TextureType::constant:
                     new (&constant_) value_type{rhs.constant_};
-                    break;
-                default:
-                    RAYCHEL_ASSERT_NOT_REACHED;
+                    return *this;
+                case TextureType::reference:
+                    new(&reference_) reference_t{rhs.reference_};
+                    return *this;
             }
-            return *this;
+            RAYCHEL_ASSERT_NOT_REACHED;
         }
 
         TextureProvider& operator=(TextureProvider&& rhs) noexcept
@@ -101,17 +112,18 @@ namespace Raychel {
             switch (type_) {
                 case TextureType::function:
                     new (&func_) sample_func{std::move(rhs.func_)};
-                    break;
+                    return *this;
                 case TextureType::image:
                     new (&texture_) texture_t{std::move(rhs.texture_)};
-                    break;
+                    return *this;
                 case TextureType::constant:
                     new (&constant_) value_type{std::move(rhs.constant_)};
-                    break;
-                default:
-                    RAYCHEL_ASSERT_NOT_REACHED;
+                    return *this;
+                case TextureType::reference:
+                    new(&reference_) reference_t{rhs.reference_};
+                    return *this;
             }
-            return *this;
+            RAYCHEL_ASSERT_NOT_REACHED;
         }
 
         /**
@@ -131,6 +143,9 @@ namespace Raychel {
                     return _get_value_from_texture(pos, normal);
                 case TextureType::constant:
                     return constant_;
+                case TextureType::reference:
+                    RAYCHEL_ASSERT(reference_);
+                    return *reference_;
             }
             RAYCHEL_ASSERT_NOT_REACHED;
         }
@@ -146,14 +161,17 @@ namespace Raychel {
             switch (type_) {
                 case TextureType::function:
                     func_.~sample_func();
-                    break;
+                    return;
                 case TextureType::image:
                     texture_.~texture_t();
-                    break;
+                    return;
                 case TextureType::constant:
                     constant_.~value_type();
-                    break;
+                    return;
+                case TextureType::reference:
+                    return;
             }
+            RAYCHEL_ASSERT_NOT_REACHED;
         }
 
         [[nodiscard]] value_type _get_value_from_texture(const vec3& /*unused*/, const normalized3& /*unused*/) const
@@ -173,6 +191,7 @@ namespace Raychel {
             sample_func func_;
             texture_t texture_;
             value_type constant_;
+            reference_t reference_;
         };
     };
 

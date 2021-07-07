@@ -45,6 +45,7 @@ namespace Raychel {
         using value_type_ = std::remove_cv_t<std::remove_reference_t<T>>;
         using sample_func = std::function<value_type_(const vec3&)>;
         using provider_list = std::array<TextureProvider<value_type_>, 6>;
+        using reference_t = const value_type_*;
 
     public:
         using value_type = value_type_;
@@ -53,15 +54,19 @@ namespace Raychel {
         {}
 
         //NOLINTNEXTLINE: these constructors are supposed to be implicit
-        CubeTexture(const sample_func& func) : type_{TextureType::function}, func_{func}
+        /*implicit*/ CubeTexture(const sample_func& func) : type_{TextureType::function}, func_{func}
         {}
 
         //NOLINTNEXTLINE: these constructors are supposed to be implicit
-        CubeTexture(const provider_list& providers) : type_{TextureType::image}, providers_{providers}
+        /*implicit*/ CubeTexture(const provider_list& providers) : type_{TextureType::image}, providers_{providers}
         {}
 
         //NOLINTNEXTLINE: these constructors are supposed to be implicit
-        CubeTexture(const value_type& constant) : constant_{constant}
+        /*implicit*/ CubeTexture(const value_type& constant) : type_{TextureType::constant}, constant_{constant}
+        {}
+
+        //NOLINTNEXTLINE: these constructors are supposed to be implicit
+        /*implicit*/ CubeTexture(reference_t reference) : type_{TextureType::reference}, reference_{reference}
         {}
 
         CubeTexture(const CubeTexture& rhs) : type_{rhs.type_}
@@ -69,16 +74,18 @@ namespace Raychel {
             switch (type_) {
                 case TextureType::function:
                     new (&func_) sample_func{rhs.func_};
-                    break;
+                    return;
                 case TextureType::image:
                     new (&providers_) provider_list{rhs.providers_};
-                    break;
+                    return;
                 case TextureType::constant:
                     new (&constant_) value_type{rhs.constant_};
-                    break;
-                default:
-                    RAYCHEL_ASSERT_NOT_REACHED;
+                    return;
+                case TextureType::reference:
+                    new (&reference_) reference_t {rhs.reference_};
+                    return;
             }
+            RAYCHEL_ASSERT_NOT_REACHED;
         }
 
         CubeTexture(CubeTexture&& rhs) noexcept : type_{rhs.type_}
@@ -93,9 +100,11 @@ namespace Raychel {
                 case TextureType::constant:
                     new (&constant_) value_type{std::move(rhs.constant_)};
                     break;
-                default:
-                    RAYCHEL_ASSERT_NOT_REACHED;
+                case TextureType::reference:
+                    new (&reference_) reference_t {rhs.reference_};
+                    return;
             }
+            RAYCHEL_ASSERT_NOT_REACHED;
         }
 
         CubeTexture& operator=(const CubeTexture& rhs) noexcept
@@ -106,17 +115,18 @@ namespace Raychel {
             switch (type_) {
                 case TextureType::function:
                     new (&func_) sample_func{rhs.func_};
-                    break;
+                    return *this;
                 case TextureType::image:
                     new (&providers_) provider_list{rhs.providers_};
-                    break;
+                    return *this;
                 case TextureType::constant:
                     new (&constant_) value_type{rhs.constant_};
-                    break;
-                default:
-                    RAYCHEL_ASSERT_NOT_REACHED;
+                    return *this;
+                case TextureType::reference:
+                    new (&reference_) reference_t {rhs.reference_};
+                    return *this;
             }
-            return *this;
+            RAYCHEL_ASSERT_NOT_REACHED;
         }
 
         CubeTexture& operator=(CubeTexture&& rhs) noexcept
@@ -127,18 +137,18 @@ namespace Raychel {
             switch (type_) {
                 case TextureType::function:
                     new (&func_) sample_func{std::move(rhs.func_)};
-                    break;
+                    return *this;
                 case TextureType::image:
                     new (&providers_) provider_list{std::move(rhs.providers_)};
-                    break;
+                    return *this;
                 case TextureType::constant:
                     new (&constant_) value_type{std::move(rhs.constant_)};
-                    break;
-                default:
-                    RAYCHEL_ASSERT_NOT_REACHED;
+                    return *this;
+                case TextureType::reference:
+                    new (&reference_) reference_t {rhs.reference_};
+                    return *this;
             }
-
-            return *this;
+            RAYCHEL_ASSERT_NOT_REACHED;
         }
 
         /**
@@ -159,6 +169,9 @@ namespace Raychel {
                     return _evaluate_cube_map(dir);
                 case TextureType::constant:
                     return constant_;
+                case TextureType::reference:
+                    RAYCHEL_ASSERT(reference_);
+                    return *reference_;
             }
             RAYCHEL_ASSERT_NOT_REACHED;
         }
@@ -174,14 +187,17 @@ namespace Raychel {
             switch (type_) {
                 case TextureType::function:
                     func_.~sample_func();
-                    break;
+                    return;
                 case TextureType::image:
                     providers_.~provider_list();
-                    break;
+                    return;
                 case TextureType::constant:
                     constant_.~value_type();
-                    break;
+                    return;
+                case TextureType::reference:
+                    return;
             }
+            RAYCHEL_ASSERT_NOT_REACHED;
         }
 
         value_type _evaluate_cube_map(const normalized3& dir) const
@@ -202,6 +218,7 @@ namespace Raychel {
             sample_func func_;
             provider_list providers_;
             value_type constant_;
+            reference_t reference_;
         };
     };
 
