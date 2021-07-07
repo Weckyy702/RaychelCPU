@@ -59,7 +59,7 @@ namespace Raychel {
         *\return IRaymarchable_p& reference to the newly created object
         */
         template <typename T, typename... Args>
-        IRaymarchable_p& add_object(Args&&... args)
+        T& add_object(Args&&... args)
         {
             static_assert(
                 std::is_base_of_v<IRaymarchable, T>,
@@ -71,7 +71,7 @@ namespace Raychel {
             objects_.emplace_back(new T(std::forward<Args>(args)...));
             _notify_renderer();
 
-            return objects_.back();
+            return static_cast<T&>(*(objects_.back().get()));
         }
 
         /**
@@ -83,7 +83,7 @@ namespace Raychel {
         *\return ILamp_p& reference to the newly created lamp
         */
         template <typename T, typename... Args>
-        ILamp_p& add_lamp(Args&&... args)
+        T& add_lamp(Args&&... args)
         {
             static_assert(std::is_base_of_v<ILamp, T>, "Only Objects that derive from Raychel::ILamp can be added as lamps!");
             static_assert(
@@ -93,7 +93,7 @@ namespace Raychel {
             lamps_.emplace_back(new T(std::forward<Args>(args)...));
             _notify_renderer();
 
-            return lamps_.back();
+            return static_cast<T&>(*(lamps_.back().get()));
         }
 
         /**

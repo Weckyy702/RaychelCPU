@@ -4,6 +4,9 @@
 #include "Raychel/Core/RaychelMath/Impl/vec3Impl.inl"
 #include "Raychel/Core/RaychelMath/vec3.h"
 
+#include "Raychel/Core/RaychelMath/Impl/vectorImpl.inl"
+#include "Raychel/Core/RaychelMath/vector.h"
+
 //clang-format doesn't like these macros
 // clang-format off
 

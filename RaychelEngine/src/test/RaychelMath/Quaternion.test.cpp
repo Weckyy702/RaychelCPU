@@ -400,8 +400,9 @@ RAYCHEL_BEGIN_TEST("Quaternion look_at", "[RaychelMath][Quaternion]")
 
     vec3 origin{};
     vec3 target{0, 0, 12};
+    vec3 target_dir = normalize(target-origin);
 
-    auto dir = look_at(forward, target-origin);
+    auto dir = look_at(forward, target_dir);
 
     REQUIRE(dir.r == 1);
     REQUIRE(dir.i == 0);
@@ -410,7 +411,7 @@ RAYCHEL_BEGIN_TEST("Quaternion look_at", "[RaychelMath][Quaternion]")
 
 
     target = vec3{1, 0, 0};
-    dir = look_at(forward, target-origin);
+    dir = look_at(forward, target_dir);
 
     REQUIRE(equivalent<TestType>(dir.r, one_over_sqrt2));
     REQUIRE(dir.i == 0);
@@ -421,18 +422,14 @@ RAYCHEL_BEGIN_TEST("Quaternion look_at", "[RaychelMath][Quaternion]")
     origin = vec3{1, 1, 1};
     target = vec3{};
 
-    dir = look_at(forward, target-origin);
+    dir = look_at(forward, target_dir);
 
-    auto q = Quaternion{-cross(forward, normalize(target-origin)), std::acos(dot(forward, normalize(target-origin)))};
-
-    REQUIRE(equivalent<TestType>(dir.r, q.r));
-    REQUIRE(equivalent<TestType>(dir.i, q.i));
-    REQUIRE(equivalent<TestType>(dir.j, q.j));
-    REQUIRE(equivalent<TestType>(dir.k, q.k));
-
+    REQUIRE((forward * dir) == normalize(target_dir));
 
     origin = normalize(vec3{12, 7, 19}) * (TestType)7;
+    dir = look_at(forward, target_dir);
 
-    dir = look_at(forward, target-origin);
+    REQUIRE((forward * dir) == normalize(target_dir));
+
 
 RAYCHEL_END_TEST

@@ -28,6 +28,7 @@
 #ifndef RAYCHEL_ASSERT_H
 #define RAYCHEL_ASSERT_H
 
+#include <exception>
 #include "Logger.h"
 #include "compat.h"
 
@@ -40,7 +41,7 @@
     Logger::fatal(RAYCHEL_FUNC_NAME, " at (", __FILE__, ":", __LINE__, "): ", __VA_ARGS__, '\n');                                \
     std::terminate();
 
-#if defined(RAYCHEL_DEBUG) || !defined(NDEBUG)
+#if defined(RAYCHEL_DEBUG) || !defined(NDEBUG) || defined(RAYCHEL_NO_GSL)
     #define RAYCHEL_ASSERT(exp)                                                                                                  \
         if (!(exp)) {                                                                                                            \
             RAYCHEL_TERMINATE("Assertion '", RAYCHEL_STRINGIFY(exp), "' failed!");                                               \
@@ -50,6 +51,8 @@
 #endif
 
 #define RAYCHEL_ASSERT_NOT_REACHED RAYCHEL_TERMINATE("Assertion failed! Expected to not execute ", __FILE__, ":", __LINE__)
+
+#define RAYCHEL_TODO(todo) RAYCHEL_TERMINATE("Terminating on unimplemented feature ", todo)
 
 #define RAYCHEL_ASSERT_NORMALIZED(vec) RAYCHEL_ASSERT(equivalent(magSq(vec), 1.0f));
 

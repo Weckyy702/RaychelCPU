@@ -92,6 +92,8 @@ else()
         -Wshadow 
         -Wno-unknown-pragmas
         -Wconversion
+        -Werror=switch
+        -Werror=return-type
     )
 endif()
 

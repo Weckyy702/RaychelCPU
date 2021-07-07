@@ -327,53 +327,12 @@ namespace Raychel {
         };
     }
 
-    template <typename T, typename>
-    vec3Imp<T> rotateX(const vec3Imp<T>& v, T theta) noexcept
-    {
-        using std::sin, std::cos;
-        return {
-            v.x,
-            v.y * cos(theta) - v.z * sin(theta),
-            v.y * sin(theta) + v.z * cos(theta)
-        };
-    }
-
-    template <typename T, typename>
-    vec3Imp<T> rotateY(const vec3Imp<T>& v, T theta) noexcept
-    {
-        using std::sin, std::cos;
-        return {
-            v.x * cos(theta) + v.z * sin(theta),
-            v.y,
-            -v.x * sin(theta) + v.z * cos(theta)
-        };
-    }
-
-    template <typename T, typename>
-    vec3Imp<T> rotateZ(const vec3Imp<T>& v, T theta) noexcept
-    {
-        //Raychels z-axis still seems to be inverted, so we have to invert some of the components
-        using std::sin, std::cos;
-        return {
-            v.x * cos(theta) - v.y * sin(theta),
-            v.x * sin(theta) + v.y * cos(theta),
-            v.z
-        };
-    }
-
     // clang-format on
 
     template <typename T>
     constexpr vec3Imp<T> lerp(const vec3Imp<T>& a, const vec3Imp<T>& b, T x) noexcept
     {
         return (x * b) + ((1.0 - x) * a);
-    }
-
-    template <typename T, typename>
-    constexpr vec3Imp<T> reflect(const vec3Imp<T>& direction, const vec3Imp<T>& normal) noexcept
-    {
-        RAYCHEL_ASSERT_NORMALIZED(direction);
-        return direction - (normal * T(dot(direction, normal) * 2.0));
     }
 
 } // namespace Raychel

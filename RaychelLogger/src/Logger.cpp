@@ -195,7 +195,7 @@ namespace Logger {
             const auto startTime = timePoints.at(label);
             return duration_cast<duration_t>(endPoint - startTime);
         }
-        error("Label ", label, "not found!\n");
+        error("Label ", label, " not found!\n");
         return duration_t(-1);
     }
 

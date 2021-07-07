@@ -48,7 +48,7 @@ namespace Raychel {
             return direction_ * -10'000.0F; //a directional light is 'infinitely' far away
         }
 
-    private:
+    //private:
         vec3 direction_;
     };
 

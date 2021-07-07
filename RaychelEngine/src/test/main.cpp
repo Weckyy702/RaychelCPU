@@ -10,6 +10,8 @@
 #include "Raychel/Engine/Rendering/RenderTarget/NullTarget.h"
 #include "Raychel/Engine/Rendering/Renderer.h"
 #include "Raychel/Raychel.h"
+#include "Raychel/Core/RaychelMath/vector.h"
+#include "Raychel/Core/RaychelMath/Impl/vectorImpl.inl"
 
 #include "Raychel/Engine/Materials/Materials.h"
 #include "Raychel/Misc/Texture/CubeTexture.h"
@@ -22,28 +24,26 @@ int main(int /*unused*/, const char** argv)
     Logger::setOutStream(std::cerr);
 
     Logger::log("Welcome to Raychel Version ", RAYCHEL_VERSION_TAG, " at ", *argv, '\n');
-
     Scene scene;
 
-    scene.set_background_texture({[](const vec3& dir) {
-        (void)dir;
-        return color{std::pow(std::max(dir.y, 0.0F), 0.75F)};
-    }});
+    scene.set_background_texture({color{0}});
 
     const Quaternion start_rotation{};
-    const vec3 cam_offset = vec3{0, 0, 7};
+    const vec3 cam_offset = vec3{0, 0, -7};
 
     auto& cam = scene.set_camera({Transform{cam_offset, start_rotation}, 1.5});
 
     scene.add_object<SdSphere>(make_object_data({vec3{0, 0, 0}, Quaternion{}}, DiffuseMaterial{color{1}}), 1.0F);
+    // scene.add_object<SdSphere>(make_object_data({normalize(vec3{1, 2, -1}), Quaternion{}}, DiffuseMaterial{color{1}}), .375F);
+    // scene.add_object<SdSphere>(make_object_data({normalize(vec3{-1, 2, -1}), Quaternion{}}, DiffuseMaterial{color{1}}), .375F);
     scene.add_object<SdPlane>(make_object_data({}, DiffuseMaterial{color{1}}), vec3{0, 1, 0}, -1.0F);
 
     scene.add_lamp<DirectionalLight>(LampData{color{1, 0, 0}, 0.75F, 0.0F}, vec3{0, -1, 1});
     scene.add_lamp<DirectionalLight>(LampData{color{0, 1, 0}, 0.875F, 0.0F}, vec3{-1, -1, 1});
-    scene.add_lamp<DirectionalLight>(LampData{color{0, 0, 1}, 1.0F, 0.0F}, vec3{1, -1, 1});
-    scene.add_lamp<DirectionalLight>(LampData{color{1}, 1.0F, 0.0F}, vec3{0, 1, 0});
+    auto& blue_lamp = scene.add_lamp<DirectionalLight>(LampData{color{0, 0, 1}, 1.0F, 0.0F}, vec3{1, -1, 1});
+    //scene.add_lamp<DirectionalLight>(LampData{color{1}, 1.0F, 0.0F}, vec3{0, 1, 0});
 
-    const vec2i size = vec2i{50, 25}*2UL;//vec2i{3840, 2160} / 2UL;
+    const vec2i size = vec2i{3840, 2160} / 4UL;
 
     RenderController& renderer = scene.get_renderer();
 
@@ -51,13 +51,15 @@ int main(int /*unused*/, const char** argv)
 
     renderer.set_output_size(size);
 
-    //new ImageTargetPng{size, "../../results/res", 4}; // new NullTarget{size};
-    gsl::owner<RenderTarget*> target = new AsciiTarget{size, true}; 
+    // new AsciiTarget{size, true, " .:-=+*#%@"}; // new NullTarget{size};
+    gsl::owner<RenderTarget*> target = new ImageTargetPng{size, "../../results/res", 4};
 
     auto label = Logger::startTimer("Total time");
 
     float a = 0;
-    for (size_t i = 0;; i++) {
+    for (size_t i = 0; i < 360; i++) {
+
+        cam.look_at(vec3{});
 
         auto render_label = Logger::startTimer("Render time");
         auto results = renderer.get_rendered_image();
@@ -73,9 +75,9 @@ int main(int /*unused*/, const char** argv)
         target->finishFramebufferWrite();
         Logger::logDuration(file_label);
 
-        cam.transform_.position = rotateY(cam_offset, a);
+        blue_lamp.direction_ = rotateX(normalize(vec3{1, -1, 1}), a*0.25F);
+        //cam.transform_.position = rotateY(cam_offset, a);
         //cam.transform_.position.y = 2.0F * std::sin(a * 2.0F);
-        cam.look_at(vec3{});
 
         a += 1.0F / 30.0F;
     }

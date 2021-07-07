@@ -67,6 +67,17 @@ namespace Raychel {
             : RenderTarget{size}, use_color_{use_color}, character_set_{char_set}, manager_{this}
         {}
 
+        AsciiTarget(const vec2i& size, bool use_color, std::string_view char_set)
+            : RenderTarget{size}, use_color_{use_color}, manager_{this}
+        {
+            
+            character_set_.clear();
+            character_set_.reserve(char_set.size());
+            for(const auto& c : char_set) {
+                character_set_.push_back(c);
+            }
+        }
+
         RAYCHEL_MAKE_NONCOPY_NONMOVE(AsciiTarget);
 
         RAYCHEL_EXPORT void writeFramebuffer(const Texture<RenderResult>& framebuffer) override;
@@ -79,7 +90,7 @@ namespace Raychel {
         friend class details::ConsoleManager;
 
         bool use_color_ = false;
-        const std::vector<char> character_set_ = {'.', ':', ';', '~', '=', '#', '0', 'B', '8', '%', '&'};
+        std::vector<char> character_set_ = {' ', '#'};//{'.', ':', ';', '~', '=', '#', '0', 'B', '8', '%', '&'};
 
         details::ConsoleManager manager_;
     };

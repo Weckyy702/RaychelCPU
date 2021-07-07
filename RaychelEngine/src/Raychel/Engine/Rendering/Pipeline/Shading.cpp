@@ -11,6 +11,8 @@
 #include "Raychel/Engine/Objects/Interface.h"
 #include "Raychel/Engine/Rendering/Pipeline/Shading.h"
 #include "Raychel/Misc/Texture/CubeTexture.h"
+#include "Raychel/Core/RaychelMath/vector.h"
+#include "Raychel/Core/RaychelMath/Impl/vectorImpl.inl"
 
 namespace Raychel {
 
@@ -186,18 +188,32 @@ namespace Raychel {
         const ILamp* lamp, const vec3& surface_point, const normalized3& normal) const noexcept
     {
         const vec3 light_vector = lamp->get_light_vector(surface_point);
+
         const auto light_dist = mag(light_vector);
-        const vec3 light_dir = light_vector / light_dist;
+        const auto light_dir = light_vector / light_dist;
 
-        if (dot(normal, light_dir) > 0.0F && !raymarch(surface_point, light_dir, light_dist, nullptr, nullptr)) {
-            const float light_size = lamp->get_size();
-
-            if (light_size == 0.0F) {
-                return lamp->get_lighting(surface_point) * lambert(normal, light_dir);
-            }
-            RAYCHEL_ASSERT_NOT_REACHED; //TODO: implement smooth lighting
+        if(lamp->get_size() == 0.0F) {
+            return get_lighing_sample(lamp, surface_point, normal, light_dir, light_dist);
         }
+        return calculate_smooth_lamp_lighting(lamp, surface_point, normal, light_dir, light_dist);
+    }
 
+    color RaymarchRenderer::calculate_smooth_lamp_lighting(const ILamp* lamp, const vec3& surface_point, const normalized3& normal, const normalized3& light_dir, float light_dist) const noexcept
+    {
+        //const float lamp_size= lamp->get_size();
+        color res;
+        for(size_t i = 0; i < render_options.smooth_lighting_samples; i++) {
+            const vec3 dir = get_random_direction_on_hemisphere(normal, rng_);
+            res += get_lighing_sample(lamp, surface_point, normal, dir, light_dist) / (float)render_options.smooth_lighting_samples;
+        }
+        return res;
+    }
+
+    color RaymarchRenderer::get_lighing_sample(const ILamp* lamp, const vec3& surface_point, const normalized3& normal, const normalized3& light_dir, float light_dist) const noexcept
+    {
+        if(dot(light_dir, normal) > 0.0F && !raymarch(surface_point, light_dir, light_dist, nullptr, nullptr)) {
+            return lamp->get_lighting(surface_point) * lambert(normal, light_dir);
+        }
         return color{};
     }
 

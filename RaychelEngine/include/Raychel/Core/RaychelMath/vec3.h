@@ -168,53 +168,20 @@ namespace Raychel {
     vec3Imp<T> min(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
 
     //normalizing vectors only makes sense for floating-point types
-    template <typename T, typename = std::enable_if_t<std::is_floating_point_v<T>>>
+    template <typename T, RAYCHEL_ENABLE_IF_FLOATING_POINT(T)>
     vec3Imp<T> normalize(const vec3Imp<T>&) noexcept;
 
     template <typename T, typename = std::enable_if_t<std::is_signed_v<T>>>
     vec3Imp<T> abs(const vec3Imp<T>&) noexcept;
 
-    template <typename T, typename = std::enable_if_t<std::is_floating_point_v<T>>>
+    template <typename T, RAYCHEL_ENABLE_IF_FLOATING_POINT(T)>
     vec3Imp<T> sin(const vec3Imp<T>&) noexcept;
 
-    template <typename T, typename = std::enable_if_t<std::is_floating_point_v<T>>>
+    template <typename T, RAYCHEL_ENABLE_IF_FLOATING_POINT(T)>
     vec3Imp<T> cos(const vec3Imp<T>&) noexcept;
 
-    template <typename T, typename = std::enable_if_t<std::is_floating_point_v<T>>>
+    template <typename T, RAYCHEL_ENABLE_IF_FLOATING_POINT(T)>
     constexpr vec3Imp<T> cross(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
-
-    /**
-	*\brief Rotate the vector theta radians around positive X
-	*
-	*\tparam T Type of the vector
-	*\param v Vector to rotate
-	*\param theta Angle to rotate by. Must be in radians
-	*\return vec3Imp<T> 
-	*/
-    template <typename T, typename = std::enable_if_t<std::is_floating_point_v<T>>>
-    vec3Imp<T> rotateX(const vec3Imp<T>& v, T) noexcept;
-
-    /**
-	*\brief Rotate the vector theta radians around positive Y
-	*
-	*\tparam T Type of the vector
-	*\param v Vector to rotate
-	*\param theta Angle to rotate by. Must be in radians
-	*\return vec3Imp<T> 
-	*/
-    template <typename T, typename = std::enable_if_t<std::is_floating_point_v<T>>>
-    vec3Imp<T> rotateY(const vec3Imp<T>& v, T) noexcept;
-
-    /**
-	*\brief Rotate the vector theta radians around positive Z
-	*
-	*\tparam T Type of the vector
-	*\param v Vector to rotate
-	*\param theta Angle to rotate by. Must be in radians
-	*\return vec3Imp<T> 
-	*/
-    template <typename T, typename = std::enable_if_t<std::is_floating_point_v<T>>>
-    vec3Imp<T> rotateZ(const vec3Imp<T>& v, T) noexcept;
 
     /**
 	*\brief Linearly interpolate two vectors
@@ -225,19 +192,9 @@ namespace Raychel {
 	*\param x value of interpolation
 	*\return constexpr vec2Imp<T> 
 	*/
-    template <typename T, typename = std::enable_if_t<std::is_floating_point_v<T>>>
+    template <typename T, RAYCHEL_ENABLE_IF_FLOATING_POINT(T)>
     constexpr vec3Imp<T> lerp(const vec3Imp<T>& a, const vec3Imp<T>& b, T) noexcept;
 
-    /**
-	*\brief Reflect vector along normal
-	*
-	*\tparam T Type of the vector
-	*\param dir direction to be reflected
-	*\param normal normal to reflect around
-	*\return vec3 the reflected vector
-	*/
-    template <typename T, typename = std::enable_if_t<std::is_floating_point_v<T>>>
-    constexpr vec3Imp<T> reflect(const vec3Imp<T>& dir, const vec3Imp<T>& normal) noexcept;
 } // namespace Raychel
 
 #endif /*!RAYCHEL_VEC3_H*/

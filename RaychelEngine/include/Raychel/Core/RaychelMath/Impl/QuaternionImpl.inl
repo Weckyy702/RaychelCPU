@@ -286,29 +286,50 @@ namespace Raychel {
     template <typename T>
     QuaternionImp<T> look_at(const vec3Imp<T>& old_forward, const vec3Imp<T>& new_forward) noexcept
     {
-        constexpr auto threshold = (T)0.9995;
+        constexpr auto threshold = (T)0.9998;
 
-        const auto k_cos_theta = dot(old_forward, new_forward);
-        const auto k = std::sqrt(magSq(old_forward) * magSq(new_forward));
+        // const auto k_cos_theta = dot(old_forward, new_forward);
+        // const auto k = std::sqrt(magSq(old_forward) * magSq(new_forward));
 
-        if ((k_cos_theta / k) < -threshold) {
-            const auto orth = orthogonal(old_forward);
+        // // if ((k_cos_theta / k) < -threshold) {
+        // //     const auto orth = orthogonal(old_forward);
+        // //     return QuaternionImp<T>{
+                    // orth,
+                    // pi<T>
+        // //     };
+        // // }
+
+        // const auto ijk = cross(old_forward, new_forward);
+
+        // return normalize(QuaternionImp<T>{
+        //     k_cos_theta + k,
+        //     ijk.x,
+        //     ijk.y,
+        //     ijk.z
+        // });
+        
+
+        const auto u = normalize(old_forward);
+        const auto v = normalize(new_forward);
+
+        if(dot(u, v) < -threshold) {
+            const auto orth = orthogonal(u);
             return QuaternionImp<T>{
-                0,
-                orth.x,
-                orth.y,
-                orth.z
+                orth,
+                pi<T>
             };
         }
+        if(dot(u, v) > threshold) {
+            return {};
+        }
 
-        const auto ijk = cross(old_forward, new_forward);
+        const auto angle = std::acos(dot(u, v));
+        const auto axis = normalize(cross(u, v));
 
-        return normalize(QuaternionImp<T>{
-            k_cos_theta + k,
-            ijk.x,
-            ijk.y,
-            ijk.z
-        });
+        return QuaternionImp<T>{
+            axis,
+            angle
+        };
     }
 } // namespace Raychel
 

@@ -31,7 +31,7 @@
 #include <vector>
 
 #include "Raychel/Core/Types.h"
-#include "Raychel/Core/utils.h"
+#include "Raychel/Misc/Utils/DynArray.h"
 
 namespace Raychel {
     /**
@@ -44,8 +44,7 @@ namespace Raychel {
     {
 
         using value_type_ = std::remove_cv_t<std::remove_reference_t<Pixel_t>>;
-        using iterator_ = typename std::vector<value_type_>::iterator;
-        using const_iterator_ = typename std::vector<value_type_>::const_iterator;
+        using iterator_ = value_type_*;
 
     public:
         using value_type = value_type_;
@@ -84,26 +83,24 @@ namespace Raychel {
             return pixel_buffer_.end();
         }
 
-        [[nodiscard]] const_iterator_ begin() const noexcept
+        [[nodiscard]] iterator_ begin() const noexcept
         {
-            return pixel_buffer_.cbegin();
+            return pixel_buffer_.begin();
         }
 
-        [[nodiscard]] const_iterator_ end() const noexcept
+        [[nodiscard]] iterator_ end() const noexcept
         {
-            return pixel_buffer_.cend();
+            return pixel_buffer_.end();
         }
 
     private:
         [[nodiscard]] value_type& read(size_t idx)
         {
-            RAYCHEL_ASSERT(idx < pixel_buffer_.size());
             return pixel_buffer_.at(idx);
         }
 
         [[nodiscard]] const value_type& read(size_t idx) const
         {
-            RAYCHEL_ASSERT(idx < pixel_buffer_.size());
             return pixel_buffer_.at(idx);
         }
 
@@ -120,7 +117,7 @@ namespace Raychel {
         }
 
         vec2i size_;
-        std::vector<value_type> pixel_buffer_;
+        DynArray<value_type_> pixel_buffer_;
     };
 
     template <typename T>

@@ -64,3 +64,18 @@ target_link_libraries(RaychelCPU_test PRIVATE
     RaychelLogger
     Raychel
 )
+
+
+
+add_executable(Random_test
+    random_main.cpp
+)
+
+target_compile_options(Random_test PUBLIC
+    ${RAYCHEL_COMPILE_FLAGS}
+)
+
+target_link_libraries(Random_test PRIVATE
+    RaychelLogger
+    Raychel
+)

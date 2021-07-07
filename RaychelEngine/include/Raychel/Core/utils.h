@@ -93,6 +93,8 @@
     RAYCHEL_DEFAULT_MOVE_CTOR(type_name)                                                                                         \
     RAYCHEL_DEFAULT_MOVE_OP(type_name)
 
+#define RAYCHEL_ENABLE_IF_FLOATING_POINT(type_name) typename = std::enable_if_t<std::is_floating_point_v<type_name>>
+
 namespace Raychel {
 
     //NOLINTNEXTLINE(misc-unused-using-decls)

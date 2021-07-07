@@ -74,6 +74,8 @@ namespace Raychel {
 
         //maximum distance a point can be away form a surface while still being cosidered *on* the surface [m]
         float epsilon = 1e-5F;
+
+        size_t smooth_lighting_samples=10;
     };
 
     /**

@@ -7,6 +7,8 @@
 #include "Raychel/Core/Types.h"
 #include "Raychel/Core/export.h"
 #include "Raychel/Misc/Texture/CubeTexture.h"
+#include "Raychel/Misc/RNG/BufferedRNG.h"
+
 namespace Raychel {
 
     class RaymarchRenderer
@@ -69,6 +71,12 @@ namespace Raychel {
         RAYCHEL_EXPORT color
         calculate_lamp_lighting(const ILamp* lamp, const vec3& surface_point, const normalized3& normal) const noexcept;
 
+        RAYCHEL_EXPORT color
+        calculate_smooth_lamp_lighting(const ILamp* lamp, const vec3& surface_point, const normalized3& normal, const normalized3& light_dir, float light_dist) const noexcept;
+
+        RAYCHEL_EXPORT color
+        get_lighing_sample(const ILamp* lamp, const vec3& surface_point, const normalized3& normal, const normalized3& light_dir, float light_dist) const noexcept;
+
 #pragma endregion
 
         void _register_render_exception(gsl::czstring<> origin, gsl::czstring<> msg, bool fatal)
@@ -110,6 +118,10 @@ namespace Raychel {
             float normal_bias{1e-5F};
             float surface_bias{5e-4F};
         } options_;
+
+        RenderOptions render_options;
+
+        const BufferedRNG<number_t> rng_{1'000};
 
         mutable std::atomic_bool failed_{false};
         mutable exception_context current_exception_;
